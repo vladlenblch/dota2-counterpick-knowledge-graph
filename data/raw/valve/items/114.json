@@ -1,0 +1,107 @@
+{
+  "result": {
+    "data": {
+      "items": [
+        {
+          "id": 114,
+          "name": "item_heart",
+          "name_loc": "Heart of Tarrasque",
+          "desc_loc": "<h1>Passive: Behemoth's Blood</h1>Your health regeneration is increased by %missing_health_regen%%% of your missing health.",
+          "lore_loc": "Preserved heart of an extinct monster, it bolsters the bearer's fortitude.",
+          "notes_loc": [
+            "Multiple instances of Behemoth's Blood do not stack."
+          ],
+          "shard_loc": "",
+          "scepter_loc": "",
+          "facets_loc": [],
+          "type": 0,
+          "behavior": "2",
+          "target_team": 0,
+          "target_type": 0,
+          "flags": 0,
+          "damage": 0,
+          "immunity": 0,
+          "dispellable": 0,
+          "max_level": 0,
+          "cast_ranges": [
+            0
+          ],
+          "cast_points": [
+            0
+          ],
+          "channel_times": [
+            0
+          ],
+          "cooldowns": [
+            0
+          ],
+          "durations": [
+            0
+          ],
+          "damages": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "mana_costs": [
+            0
+          ],
+          "gold_costs": [],
+          "health_costs": [],
+          "special_values": [
+            {
+              "name": "bonus_strength",
+              "values_float": [
+                40
+              ],
+              "is_percentage": false,
+              "heading_loc": "+$str",
+              "bonuses": [],
+              "values_shard": [],
+              "values_scepter": [],
+              "required_facet": ""
+            },
+            {
+              "name": "hp_regen",
+              "values_float": [
+                1
+              ],
+              "is_percentage": true,
+              "heading_loc": "+Max Health Regen",
+              "bonuses": [],
+              "values_shard": [],
+              "values_scepter": [],
+              "required_facet": ""
+            },
+            {
+              "name": "missing_health_regen",
+              "values_float": [
+                1.5
+              ],
+              "is_percentage": false,
+              "heading_loc": "",
+              "bonuses": [],
+              "values_shard": [],
+              "values_scepter": [],
+              "required_facet": ""
+            }
+          ],
+          "is_item": true,
+          "ability_has_scepter": false,
+          "ability_has_shard": false,
+          "ability_is_granted_by_scepter": false,
+          "ability_is_granted_by_shard": false,
+          "ability_is_innate": false,
+          "item_cost": 5300,
+          "item_initial_charges": 0,
+          "item_neutral_tier": 4294967295,
+          "item_stock_max": 0,
+          "item_stock_time": 0,
+          "item_quality": 4
+        }
+      ]
+    },
+    "status": 1
+  }
+}

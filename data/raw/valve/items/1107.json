@@ -1,0 +1,153 @@
+{
+  "result": {
+    "data": {
+      "items": [
+        {
+          "id": 1107,
+          "name": "item_phylactery",
+          "name_loc": "Phylactery",
+          "desc_loc": "<h1>Passive: Empower Spell</h1> The next Unit Target spell you cast on an enemy deals a separate %bonus_spell_damage% bonus damage to the target and slows them by %slow%%% for %slow_duration%s.",
+          "lore_loc": "An amulet overflowing with powerful magics.",
+          "notes_loc": [],
+          "shard_loc": "",
+          "scepter_loc": "",
+          "facets_loc": [],
+          "type": 0,
+          "behavior": "2",
+          "target_team": 0,
+          "target_type": 0,
+          "flags": 0,
+          "damage": 0,
+          "immunity": 0,
+          "dispellable": 0,
+          "max_level": 0,
+          "cast_ranges": [
+            0
+          ],
+          "cast_points": [
+            0
+          ],
+          "channel_times": [
+            0
+          ],
+          "cooldowns": [
+            9
+          ],
+          "durations": [
+            0
+          ],
+          "damages": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "mana_costs": [
+            0
+          ],
+          "gold_costs": [],
+          "health_costs": [],
+          "special_values": [
+            {
+              "name": "bonus_all_stats",
+              "values_float": [
+                6
+              ],
+              "is_percentage": false,
+              "heading_loc": "+$all",
+              "bonuses": [],
+              "values_shard": [],
+              "values_scepter": [],
+              "required_facet": ""
+            },
+            {
+              "name": "bonus_health_regen",
+              "values_float": [
+                5.5
+              ],
+              "is_percentage": false,
+              "heading_loc": "+$hp_regen",
+              "bonuses": [],
+              "values_shard": [],
+              "values_scepter": [],
+              "required_facet": ""
+            },
+            {
+              "name": "bonus_mana_regen",
+              "values_float": [
+                2.25
+              ],
+              "is_percentage": false,
+              "heading_loc": "+$mana_regen",
+              "bonuses": [],
+              "values_shard": [],
+              "values_scepter": [],
+              "required_facet": ""
+            },
+            {
+              "name": "slow",
+              "values_float": [
+                30
+              ],
+              "is_percentage": false,
+              "heading_loc": "",
+              "bonuses": [],
+              "values_shard": [],
+              "values_scepter": [],
+              "required_facet": ""
+            },
+            {
+              "name": "bonus_spell_damage",
+              "values_float": [
+                150
+              ],
+              "is_percentage": false,
+              "heading_loc": "",
+              "bonuses": [],
+              "values_shard": [],
+              "values_scepter": [],
+              "required_facet": ""
+            },
+            {
+              "name": "slow_duration",
+              "values_float": [
+                3
+              ],
+              "is_percentage": false,
+              "heading_loc": "",
+              "bonuses": [],
+              "values_shard": [],
+              "values_scepter": [],
+              "required_facet": ""
+            },
+            {
+              "name": "AbilityCooldown",
+              "values_float": [
+                9
+              ],
+              "is_percentage": false,
+              "heading_loc": "",
+              "bonuses": [],
+              "values_shard": [],
+              "values_scepter": [],
+              "required_facet": ""
+            }
+          ],
+          "is_item": true,
+          "ability_has_scepter": false,
+          "ability_has_shard": false,
+          "ability_is_granted_by_scepter": false,
+          "ability_is_granted_by_shard": false,
+          "ability_is_innate": false,
+          "item_cost": 2600,
+          "item_initial_charges": 0,
+          "item_neutral_tier": 4294967295,
+          "item_stock_max": 0,
+          "item_stock_time": 0,
+          "item_quality": 2
+        }
+      ]
+    },
+    "status": 1
+  }
+}

@@ -1,0 +1,225 @@
+{
+  "result": {
+    "data": {
+      "items": [
+        {
+          "id": 269,
+          "name": "item_holy_locket",
+          "name_loc": "Holy Locket",
+          "desc_loc": "<h1>Active: Energy Charge</h1>Target an allied unit to increase their incoming Heal Amplification by %incoming_heal_increase_active%%% for %active_buff_duration%s and instantly restore %health_restore_per_charge% health and %mana_restore_per_charge% mana per charge stored. <br><br>Automatically gains a charge every %AbilityChargeRestoreTime% seconds and whenever a visible enemy within %charge_radius% range uses an ability.\n\n<h1>Passive: Holy Blessing</h1>Amplifies heals you provide by %heal_increase_passive%%%.",
+          "lore_loc": "A prized relic long thought lost forever in a failed crusade.",
+          "notes_loc": [],
+          "shard_loc": "",
+          "scepter_loc": "",
+          "facets_loc": [],
+          "type": 0,
+          "behavior": "33556488",
+          "target_team": 1,
+          "target_type": 1,
+          "flags": 0,
+          "damage": 0,
+          "immunity": 0,
+          "dispellable": 0,
+          "max_level": 0,
+          "cast_ranges": [
+            600
+          ],
+          "cast_points": [
+            0
+          ],
+          "channel_times": [
+            0
+          ],
+          "cooldowns": [
+            0
+          ],
+          "durations": [
+            0
+          ],
+          "damages": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "mana_costs": [
+            0
+          ],
+          "gold_costs": [],
+          "health_costs": [],
+          "special_values": [
+            {
+              "name": "heal_increase_passive",
+              "values_float": [
+                10
+              ],
+              "is_percentage": false,
+              "heading_loc": "",
+              "bonuses": [],
+              "values_shard": [],
+              "values_scepter": [],
+              "required_facet": ""
+            },
+            {
+              "name": "max_charges",
+              "values_float": [
+                25
+              ],
+              "is_percentage": false,
+              "heading_loc": "",
+              "bonuses": [],
+              "values_shard": [],
+              "values_scepter": [],
+              "required_facet": ""
+            },
+            {
+              "name": "charge_radius",
+              "values_float": [
+                1200
+              ],
+              "is_percentage": false,
+              "heading_loc": "",
+              "bonuses": [],
+              "values_shard": [],
+              "values_scepter": [],
+              "required_facet": ""
+            },
+            {
+              "name": "bonus_all_stats",
+              "values_float": [
+                7
+              ],
+              "is_percentage": false,
+              "heading_loc": "+$all",
+              "bonuses": [],
+              "values_shard": [],
+              "values_scepter": [],
+              "required_facet": ""
+            },
+            {
+              "name": "health_restore_per_charge",
+              "values_float": [
+                17
+              ],
+              "is_percentage": false,
+              "heading_loc": "",
+              "bonuses": [],
+              "values_shard": [],
+              "values_scepter": [],
+              "required_facet": ""
+            },
+            {
+              "name": "mana_restore_per_charge",
+              "values_float": [
+                15
+              ],
+              "is_percentage": false,
+              "heading_loc": "",
+              "bonuses": [],
+              "values_shard": [],
+              "values_scepter": [],
+              "required_facet": ""
+            },
+            {
+              "name": "incoming_heal_increase_active",
+              "values_float": [
+                15
+              ],
+              "is_percentage": false,
+              "heading_loc": "",
+              "bonuses": [],
+              "values_shard": [],
+              "values_scepter": [],
+              "required_facet": ""
+            },
+            {
+              "name": "active_buff_duration",
+              "values_float": [
+                4
+              ],
+              "is_percentage": false,
+              "heading_loc": "",
+              "bonuses": [],
+              "values_shard": [],
+              "values_scepter": [],
+              "required_facet": ""
+            },
+            {
+              "name": "charge_gain_timer",
+              "values_float": [
+                10
+              ],
+              "is_percentage": false,
+              "heading_loc": "",
+              "bonuses": [],
+              "values_shard": [],
+              "values_scepter": [],
+              "required_facet": ""
+            },
+            {
+              "name": "use_cooldown",
+              "values_float": [
+                13
+              ],
+              "is_percentage": false,
+              "heading_loc": "COOLDOWN:",
+              "bonuses": [],
+              "values_shard": [],
+              "values_scepter": [],
+              "required_facet": ""
+            },
+            {
+              "name": "AbilityCastRange",
+              "values_float": [
+                600
+              ],
+              "is_percentage": false,
+              "heading_loc": "",
+              "bonuses": [],
+              "values_shard": [],
+              "values_scepter": [],
+              "required_facet": ""
+            },
+            {
+              "name": "AbilityCharges",
+              "values_float": [
+                25
+              ],
+              "is_percentage": false,
+              "heading_loc": "",
+              "bonuses": [],
+              "values_shard": [],
+              "values_scepter": [],
+              "required_facet": ""
+            },
+            {
+              "name": "AbilityChargeRestoreTime",
+              "values_float": [
+                10
+              ],
+              "is_percentage": false,
+              "heading_loc": "",
+              "bonuses": [],
+              "values_shard": [],
+              "values_scepter": [],
+              "required_facet": ""
+            }
+          ],
+          "is_item": true,
+          "ability_has_scepter": false,
+          "ability_has_shard": false,
+          "ability_is_granted_by_scepter": false,
+          "ability_is_granted_by_shard": false,
+          "ability_is_innate": false,
+          "item_cost": 2250,
+          "item_initial_charges": 1,
+          "item_neutral_tier": 4294967295,
+          "item_stock_max": 0,
+          "item_stock_time": 0,
+          "item_quality": 3
+        }
+      ]
+    },
+    "status": 1
+  }
+}

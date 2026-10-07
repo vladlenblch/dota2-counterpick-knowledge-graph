@@ -1,1 +1,9 @@
 .DS_Store
+.venv/
+__pycache__/
+.pytest_cache/
+data/raw/.*-*/
+data/raw/dotabuff/html/
+.env
+
+.env

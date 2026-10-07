@@ -1,0 +1,47 @@
+{
+  "errors": [],
+  "dotabuff_parse_errors": [],
+  "source_status": {
+    "valve": {
+      "raw_snapshot": true,
+      "hero_rows": 127,
+      "ability_rows": 734,
+      "item_rows": 507
+    },
+    "opendota": {
+      "raw_snapshot": true,
+      "matchup_rows": 15968
+    },
+    "stratz": {
+      "raw_snapshot": false,
+      "position_rows": 0,
+      "matchup_rows": 0,
+      "synergy_rows": 0
+    },
+    "dotabuff": {
+      "saved_html_pages": 0,
+      "matchup_rows": 0,
+      "item_rows": 0,
+      "parse_errors": 0
+    }
+  },
+  "source_manifests": {
+    "valve": {
+      "retrieved_at": "2026-10-07T19:09:31+00:00",
+      "hero_count": 127,
+      "named_item_count": 507,
+      "errors": []
+    },
+    "opendota": {
+      "retrieved_at": "2026-10-07T19:10:06+00:00",
+      "heroes": 127,
+      "errors": [
+        {
+          "endpoint": "constants/rank_tier",
+          "error": "HTTP Error 404: Not Found"
+        }
+      ]
+    },
+    "stratz": {}
+  }
+}

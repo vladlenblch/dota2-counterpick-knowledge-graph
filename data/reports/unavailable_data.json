@@ -1,0 +1,37 @@
+[
+  {
+    "source": "stratz",
+    "data": [
+      "positions",
+      "rank statistics",
+      "matchups",
+      "synergies",
+      "hero items"
+    ],
+    "reason": "GraphQL schema request returned HTTP 403 despite a local token; no challenge bypass attempted"
+  },
+  {
+    "source": "dotabuff",
+    "data": [
+      "hero meta",
+      "counters",
+      "hero items"
+    ],
+    "reason": "Direct request returned HTTP 403; awaiting manually saved HTML under data/raw/dotabuff/html"
+  },
+  {
+    "source": "opendota",
+    "data": [
+      "overall pick/ban rates",
+      "item usage rates"
+    ],
+    "reason": "Public aggregate response lacks the required denominators"
+  },
+  {
+    "source": "opendota",
+    "data": [
+      "34 directional matchup pairs"
+    ],
+    "reason": "Not present in source responses; see matchup_coverage.json"
+  }
+]

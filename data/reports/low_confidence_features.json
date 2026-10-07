@@ -1,0 +1,2082 @@
+[
+  {
+    "hero_id": 1,
+    "feature": "HARD_CONTROL",
+    "value": 1.0,
+    "confidence": 0.85,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Mana Void: For each point of mana missing by the target unit, damage is dealt to it and surrounding enemies. The main target is also mini-stunned."
+  },
+  {
+    "hero_id": 2,
+    "feature": "ANTI_ILLUSION",
+    "value": 1.0,
+    "confidence": 0.8,
+    "derivation_method": "manual",
+    "evidence": "Valve Counter Helix is repeated pure damage to all nearby enemies after attacks against Axe; illusion groups provide many attack triggers and are all hit."
+  },
+  {
+    "hero_id": 2,
+    "feature": "AOE_DAMAGE",
+    "value": 1.0,
+    "confidence": 0.85,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Counter Helix: After a set number of attacks, Axe will perform a helix counter attack, dealing pure damage to all nearby enemies.; radius = 275.0; damage code = 4"
+  },
+  {
+    "hero_id": 2,
+    "feature": "HARD_CONTROL",
+    "value": 1.0,
+    "confidence": 0.85,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Berserker's Call: Axe taunts nearby enemy units, forcing them to attack him while he gains bonus armor during the duration."
+  },
+  {
+    "hero_id": 3,
+    "feature": "HARD_CONTROL",
+    "value": 1.0,
+    "confidence": 0.85,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Nightmare: Puts the target enemy or friendly Hero to sleep. Sleeping units walk in Bane's chosen direction and are awakened when damaged. If the target was directly attacked, the Nightmare passes to the attacking unit. Bane can attack and damage Nightmared targets freely. Can be put on alt-cast to have the target stand still."
+  },
+  {
+    "hero_id": 3,
+    "feature": "MAX_CONTROL_DURATION",
+    "value": 6.0,
+    "confidence": 0.8,
+    "derivation_method": "derived",
+    "evidence": "Maximum duration among detected hard control abilities"
+  },
+  {
+    "hero_id": 5,
+    "feature": "AOE_DAMAGE",
+    "value": 1.0,
+    "confidence": 0.85,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Crystal Nova: A burst of damaging frost slows enemy movement in the targeted area.; radius = 425.0; damage code = 2"
+  },
+  {
+    "hero_id": 7,
+    "feature": "ANTI_ILLUSION",
+    "value": 1.0,
+    "confidence": 0.85,
+    "derivation_method": "manual",
+    "evidence": "Valve Echo Slam says each enemy hit causes another echo that damages nearby units. A larger illusion group increases echoes, making this an explicit multi-unit interaction beyond generic AoE damage."
+  },
+  {
+    "hero_id": 7,
+    "feature": "AOE_DAMAGE",
+    "value": 1.0,
+    "confidence": 0.85,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Fissure: Slams the ground with a mighty totem, creating an impassable ridge of stone while stunning and damaging enemy units along its line.; radius = 225.0; damage code = 2"
+  },
+  {
+    "hero_id": 7,
+    "feature": "HARD_CONTROL",
+    "value": 1.0,
+    "confidence": 0.85,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Fissure: Slams the ground with a mighty totem, creating an impassable ridge of stone while stunning and damaging enemy units along its line."
+  },
+  {
+    "hero_id": 7,
+    "feature": "MAX_CONTROL_DURATION",
+    "value": 1.6,
+    "confidence": 0.8,
+    "derivation_method": "derived",
+    "evidence": "Maximum duration among detected hard control abilities"
+  },
+  {
+    "hero_id": 8,
+    "feature": "AOE_DAMAGE",
+    "value": 1.0,
+    "confidence": 0.85,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Blade Fury: Causes a bladestorm of destructive force around Juggernaut, rendering him debuff immune with %immunity_resist%%% magic resistance and dealing damage every %blade_fury_damage_tick%s to nearby enemy units. Applies a strong dispel at the end of the spin.; radius = 260.0; damage code = 2"
+  },
+  {
+    "hero_id": 8,
+    "feature": "HIGH_MOBILITY",
+    "value": 1.0,
+    "confidence": 0.8,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Omnislash: Juggernaut leaps towards the target enemy units, and then slashes the target and other nearby enemy units at an increased attack rate. Juggernaut is invulnerable for the duration. DISPEL TYPE: Basic Dispel"
+  },
+  {
+    "hero_id": 8,
+    "feature": "SUMMONER",
+    "value": 1.0,
+    "confidence": 0.85,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Healing Ward: Summons a Healing Ward which heals all nearby allied units, based on their max health. The Healing Ward moves at %healing_ward_movespeed_tooltip% movement speed after being summoned. Lasts %abilityduration% seconds."
+  },
+  {
+    "hero_id": 9,
+    "feature": "HARD_CONTROL",
+    "value": 1.0,
+    "confidence": 0.85,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Sacred Arrow: Fires a long-range arrow with deadly precision, which stuns and damages the first enemy unit it strikes. The stun duration ranges from %arrow_min_stun% to %arrow_max_stun% seconds, with bonus damage up to %arrow_bonus_damage% added, based on the distance the arrow travels to its target. Instantly kills the first non-ancient creep it hits."
+  },
+  {
+    "hero_id": 9,
+    "feature": "HIGH_MOBILITY",
+    "value": 1.0,
+    "confidence": 0.8,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Leap: Mirana leaps forward into battle, empowering herself with a ferocious roar that grants bonus attack and movement speed. Speed bonus lasts %leap_bonus_duration% seconds."
+  },
+  {
+    "hero_id": 9,
+    "feature": "MAX_CONTROL_DURATION",
+    "value": 3.11,
+    "confidence": 0.8,
+    "derivation_method": "derived",
+    "evidence": "Maximum duration among detected hard control abilities"
+  },
+  {
+    "hero_id": 10,
+    "feature": "AOE_DAMAGE",
+    "value": 1.0,
+    "confidence": 0.85,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Waveform: Morphling dissolves into liquid and surges forward, damaging enemy units in his path. Morphling is invulnerable during Waveform.; radius = textual multi-target; damage code = 2"
+  },
+  {
+    "hero_id": 10,
+    "feature": "HARD_CONTROL",
+    "value": 1.0,
+    "confidence": 0.85,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Adaptive Strike: Launches a surge of water toward an enemy unit, stunning them, knocking them back, and dealing base damage plus additional damage based on Morphling's agility times a multiplier. If Morphling's agility is 50% higher than strength, the maximum agility multiplier is used. Knockback distance and stun duration are based on Morphling's strength. If his strength is 50% higher than his agility, the maximum knockback distance and stun duration is used."
+  },
+  {
+    "hero_id": 11,
+    "feature": "AOE_DAMAGE",
+    "value": 1.0,
+    "confidence": 0.85,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Shadowraze: Shadow Fiend razes the ground directly in front of him, dealing damage to enemy units in the area, dealing bonus damage based on his current Necromastery Soul amount. Adds a stacking damage amplifier on the target that causes the enemy to take bonus Shadowraze damage per stack.; radius = 250.0; damage code = 2"
+  },
+  {
+    "hero_id": 11,
+    "feature": "HARD_CONTROL",
+    "value": 1.0,
+    "confidence": 0.85,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Requiem of Souls: Shadow Fiend gathers up to %max_soul_release% of his captured souls to release them as lines of demonic energy. Units near Shadow Fiend when the souls are released can be damaged by several lines of energy. Any unit damaged by Requiem of Souls will be feared and have its movement speed and magic resistance reduced for %requiem_slow_duration% seconds for each line hit up to a maximum of %requiem_slow_duration_max%. Lines of energy are created for every soul capture"
+  },
+  {
+    "hero_id": 12,
+    "feature": "DEPENDS_ON_ILLUSIONS",
+    "value": 1.0,
+    "confidence": 0.85,
+    "derivation_method": "manual",
+    "evidence": "Valve Juxtapose creates illusions on attack and allows illusions to create further illusions; Illusory Armaments strengthens those illusions. This is a core repeated mechanic, not a single utility illusion."
+  },
+  {
+    "hero_id": 12,
+    "feature": "HIGH_MOBILITY",
+    "value": 1.0,
+    "confidence": 0.8,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Phantom Rush: When targeting an enemy for an attack, Phantom Lancer quickly charges into range, gaining increased movement speed and evasion."
+  },
+  {
+    "hero_id": 13,
+    "feature": "ANTI_MOBILITY",
+    "value": 1.0,
+    "confidence": 0.8,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Dream Coil: Creates a coil of volatile magic that latches onto enemy Heroes, damaging and leashing them. If the enemy hero stretches the coil by moving too far away, it snaps, stunning and dealing additional damage."
+  },
+  {
+    "hero_id": 13,
+    "feature": "AOE_DAMAGE",
+    "value": 1.0,
+    "confidence": 0.85,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Illusory Orb: Vector Targeted. Puck launches a magic orb that travels along the path, damaging enemy units along the way. The orb deals an additional %damage_over_time_pct%%% of its impact damage every %damage_interval%s in its area of effect, but if it exceeds the max cast range it will be destroyed. At any point, Puck may teleport to the orb's location using Ethereal Jaunt. Can be put on alt-cast to launch the Orb straight ahead.; radius = 225.0; damage code = 2"
+  },
+  {
+    "hero_id": 13,
+    "feature": "HARD_CONTROL",
+    "value": 1.0,
+    "confidence": 0.85,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Dream Coil: Creates a coil of volatile magic that latches onto enemy Heroes, damaging and leashing them. If the enemy hero stretches the coil by moving too far away, it snaps, stunning and dealing additional damage."
+  },
+  {
+    "hero_id": 13,
+    "feature": "HIGH_MOBILITY",
+    "value": 1.0,
+    "confidence": 0.8,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Illusory Orb: Vector Targeted. Puck launches a magic orb that travels along the path, damaging enemy units along the way. The orb deals an additional %damage_over_time_pct%%% of its impact damage every %damage_interval%s in its area of effect, but if it exceeds the max cast range it will be destroyed. At any point, Puck may teleport to the orb's location using Ethereal Jaunt. Can be put on alt-cast to launch the Orb straight ahead."
+  },
+  {
+    "hero_id": 13,
+    "feature": "MAX_CONTROL_DURATION",
+    "value": 2.5,
+    "confidence": 0.8,
+    "derivation_method": "derived",
+    "evidence": "Maximum duration among detected hard control abilities"
+  },
+  {
+    "hero_id": 14,
+    "feature": "AOE_DAMAGE",
+    "value": 1.0,
+    "confidence": 0.85,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Meat Hook: Launches a bloody hook toward a unit or location. The hook will snag the first unit it encounters, dragging the unit back to Pudge, killing it if it's a non-ancient creep and dealing damage if it is an enemy otherwise.; radius = 500.0; damage code = 4"
+  },
+  {
+    "hero_id": 15,
+    "feature": "AOE_DAMAGE",
+    "value": 1.0,
+    "confidence": 0.85,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Plasma Field: Releases a wave of energetic plasma that grows in power as it expands, but also zaps on contraction, slowing and dealing damage to enemy units caught in its path. Damage and slow increases with distance from Razor. The Plasma Field hits each unit twice, once each direction.; radius = 700.0; damage code = 2"
+  },
+  {
+    "hero_id": 16,
+    "feature": "AOE_DAMAGE",
+    "value": 1.0,
+    "confidence": 0.85,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Sand Storm: Sand King creates a fearsome sandstorm that damages enemy units and grants Sand King Invisibility while he is in it. The effect ends when Sand King leaves the area.; radius = 700.0; damage code = 2"
+  },
+  {
+    "hero_id": 16,
+    "feature": "HARD_CONTROL",
+    "value": 1.0,
+    "confidence": 0.85,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Burrowstrike: Sand King burrows into the ground and tunnels forward, damaging and stunning enemy units above him as he resurfaces. Adds Caustic Finale poison to heroes hit Can be put on alt-cast to immediately cast in the desired direction, without walking towards the targeted location."
+  },
+  {
+    "hero_id": 17,
+    "feature": "AOE_DAMAGE",
+    "value": 1.0,
+    "confidence": 0.85,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Static Remnant: Creates an explosively charged image of Storm Spirit that walks to the target position and lasts for %abilityduration% seconds. Will detonate and deal damage if an enemy unit comes near it.; radius = 300.0; damage code = 2"
+  },
+  {
+    "hero_id": 17,
+    "feature": "HIGH_MOBILITY",
+    "value": 1.0,
+    "confidence": 0.8,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Ball Lightning: Storm Spirit becomes volatile electricity, charging across the battlefield until he depletes his mana or reaches his target. The activation mana cost is %ball_lightning_initial_mana_base%+%ball_lightning_initial_mana_percentage%%% of his total mana pool, and the cost per 100 units traveled is %ball_lightning_travel_cost_base%+%ball_lightning_travel_cost_percent%%% of his total mana pool. Damage is expressed in damage per 100 units traveled."
+  },
+  {
+    "hero_id": 18,
+    "feature": "AOE_DAMAGE",
+    "value": 1.0,
+    "confidence": 0.85,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Storm Hammer: Sven unleashes his magical gauntlet that deals damage and stuns enemy units in a small area around the target.; radius = 225.0; damage code = 2"
+  },
+  {
+    "hero_id": 18,
+    "feature": "HARD_CONTROL",
+    "value": 1.0,
+    "confidence": 0.85,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Storm Hammer: Sven unleashes his magical gauntlet that deals damage and stuns enemy units in a small area around the target."
+  },
+  {
+    "hero_id": 18,
+    "feature": "MAX_CONTROL_DURATION",
+    "value": 1.75,
+    "confidence": 0.8,
+    "derivation_method": "derived",
+    "evidence": "Maximum duration among detected hard control abilities"
+  },
+  {
+    "hero_id": 19,
+    "feature": "AOE_DAMAGE",
+    "value": 1.0,
+    "confidence": 0.85,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Toss: Grabs the nearest unit in a %grab_radius% radius around Tiny, ally or enemy, and launches it at the target unit or rune to deal damage where they land.; radius = 300.0; damage code = 2"
+  },
+  {
+    "hero_id": 19,
+    "feature": "HARD_CONTROL",
+    "value": 1.0,
+    "confidence": 0.85,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Avalanche: Bombards an area with rocks, continously doing small intervals of damage and stun to enemy units."
+  },
+  {
+    "hero_id": 19,
+    "feature": "MAX_CONTROL_DURATION",
+    "value": 0.3,
+    "confidence": 0.8,
+    "derivation_method": "derived",
+    "evidence": "Maximum duration among detected hard control abilities"
+  },
+  {
+    "hero_id": 20,
+    "feature": "HARD_CONTROL",
+    "value": 1.0,
+    "confidence": 0.85,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Magic Missile: Fires a magic missile at an enemy unit, stunning and dealing damage."
+  },
+  {
+    "hero_id": 20,
+    "feature": "SAVE",
+    "value": 1.0,
+    "confidence": 0.8,
+    "derivation_method": "manual",
+    "evidence": "Valve Nether Swap can reposition an allied hero and grants allied swapped units a protective barrier."
+  },
+  {
+    "hero_id": 21,
+    "feature": "AOE_DAMAGE",
+    "value": 1.0,
+    "confidence": 0.85,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Powershot: CHANNELED - Windranger charges her bow for up to %abilitychanneltime% second for a single powerful shot, which deals more damage the longer it is charged. The arrow damages and slows enemies' movement speed along its path. For each enemy that Powershot hits, its damage and slow is reduced.; radius = 400.0; damage code = 2"
+  },
+  {
+    "hero_id": 22,
+    "feature": "AOE_DAMAGE",
+    "value": 1.0,
+    "confidence": 0.85,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Arc Lightning: Hurls a bolt of lightning that leaps through nearby enemy units that deal damage.; radius = 450.0; damage code = 2"
+  },
+  {
+    "hero_id": 22,
+    "feature": "HIGH_MOBILITY",
+    "value": 1.0,
+    "confidence": 0.8,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Arc Lightning: Hurls a bolt of lightning that leaps through nearby enemy units that deal damage."
+  },
+  {
+    "hero_id": 23,
+    "feature": "AOE_DAMAGE",
+    "value": 1.0,
+    "confidence": 0.85,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Torrent: Summons a rising torrent that, after a short delay, hurls enemy units into the sky, stunning, dealing damage and slowing movement speed.; radius = 250.0; damage code = 2"
+  },
+  {
+    "hero_id": 23,
+    "feature": "HARD_CONTROL",
+    "value": 1.0,
+    "confidence": 0.85,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Torrent: Summons a rising torrent that, after a short delay, hurls enemy units into the sky, stunning, dealing damage and slowing movement speed."
+  },
+  {
+    "hero_id": 23,
+    "feature": "MAX_CONTROL_DURATION",
+    "value": 1.4,
+    "confidence": 0.8,
+    "derivation_method": "derived",
+    "evidence": "Maximum duration among detected hard control abilities"
+  },
+  {
+    "hero_id": 25,
+    "feature": "HARD_CONTROL",
+    "value": 1.0,
+    "confidence": 0.85,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Light Strike Array: Summons a column of flames that damages and stuns enemies."
+  },
+  {
+    "hero_id": 25,
+    "feature": "MAX_CONTROL_DURATION",
+    "value": 2.4,
+    "confidence": 0.8,
+    "derivation_method": "derived",
+    "evidence": "Maximum duration among detected hard control abilities"
+  },
+  {
+    "hero_id": 26,
+    "feature": "AOE_DAMAGE",
+    "value": 1.0,
+    "confidence": 0.85,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Finger of Death: Rips at an enemy unit, trying to turn it inside-out, dealing massive damage to the target. After using Finger of Death, Lion's hand becomes empowered, allowing him to use a cleaving melee attack with %punch_attack_range% range with bonus movement speed. Finger of Death gains permanent bonus damage for it and the fist for each enemy Hero it or the fist kills. The melee attack may be disabled by setting the ability to Alt Cast.; radius = textual multi-target; damage "
+  },
+  {
+    "hero_id": 26,
+    "feature": "HARD_CONTROL",
+    "value": 1.0,
+    "confidence": 0.85,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Earth Spike: Rock spikes burst from the earth along a straight path. Enemy units are hurled into the air, then are stunned and take damage when they fall."
+  },
+  {
+    "hero_id": 27,
+    "feature": "AOE_DAMAGE",
+    "value": 1.0,
+    "confidence": 0.85,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Mass Serpent Ward: Summons %ward_count% Serpent Wards to attack enemy units and structures. The Wards are immune to magic. Creeps deal half damage to the Serpent Ward.; radius = 150.0; damage code = 1"
+  },
+  {
+    "hero_id": 28,
+    "feature": "AOE_DAMAGE",
+    "value": 1.0,
+    "confidence": 0.85,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Slithereen Crush: Slams the ground, leaving a puddle of water, and stunning and damaging nearby enemy units. After the stun, the affected units are slowed.; radius = 325.0; damage code = 1"
+  },
+  {
+    "hero_id": 28,
+    "feature": "HARD_CONTROL",
+    "value": 1.0,
+    "confidence": 0.85,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Slithereen Crush: Slams the ground, leaving a puddle of water, and stunning and damaging nearby enemy units. After the stun, the affected units are slowed."
+  },
+  {
+    "hero_id": 28,
+    "feature": "MAX_CONTROL_DURATION",
+    "value": 0.8,
+    "confidence": 0.8,
+    "derivation_method": "derived",
+    "evidence": "Maximum duration among detected hard control abilities"
+  },
+  {
+    "hero_id": 29,
+    "feature": "ANTI_MOBILITY",
+    "value": 1.0,
+    "confidence": 0.8,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Dead in the Water: Tidehunter attaches a heavy anchor to an enemy hero. The hero is leashed while attached to the anchor. Attempting to move more than %chain_length% units away from the anchor forces the hero to %max_movement_speed% move speed, dragging the anchor behind them. The anchor can be destroyed with %attacks_to_destroy% hero attacks."
+  },
+  {
+    "hero_id": 29,
+    "feature": "AOE_DAMAGE",
+    "value": 1.0,
+    "confidence": 0.85,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Anchor Smash: Tidehunter swings his mighty anchor to attack and deal bonus damage to nearby enemies and reduce their attack damage. The radius of Anchor Smash is Tidehunter's attack range plus %additional_range% units.; radius = textual multi-target; damage code = 1"
+  },
+  {
+    "hero_id": 29,
+    "feature": "HARD_CONTROL",
+    "value": 1.0,
+    "confidence": 0.85,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Ravage: Slams the ground, causing tentacles to erupt in all directions, damaging and stunning all nearby enemy units."
+  },
+  {
+    "hero_id": 30,
+    "feature": "AOE_DAMAGE",
+    "value": 1.0,
+    "confidence": 0.85,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Maledict: Curses all enemy Heroes and player-controlled targets in a small area, causing them to take a set amount of damage each second, as well as bursts of damage every 4 seconds based on how much health they have lost since the curse began.; radius = 200.0; damage code = 2"
+  },
+  {
+    "hero_id": 30,
+    "feature": "HARD_CONTROL",
+    "value": 1.0,
+    "confidence": 0.85,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Paralyzing Cask: Launches a cask of paralyzing powder that ricochets between enemy units, stunning and damaging those it hits. Damage increases each bounce."
+  },
+  {
+    "hero_id": 30,
+    "feature": "SUMMONER",
+    "value": 1.0,
+    "confidence": 0.85,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Death Ward: CHANNELED - Summons a deadly ward to attack enemy heroes within its attack range. Lasts a maximum of %abilitychanneltime% seconds. Death Ward has %bonus_accuracy%%% bonus accuracy."
+  },
+  {
+    "hero_id": 31,
+    "feature": "AOE_DAMAGE",
+    "value": 1.0,
+    "confidence": 0.85,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Frost Blast: Blasts the target enemy unit with damaging frost, dealing area damage and slowing movement and attack rates for %abilityduration% seconds. The primary target receives both base and area damage.; radius = 200.0; damage code = 2"
+  },
+  {
+    "hero_id": 32,
+    "feature": "HIGH_MOBILITY",
+    "value": 1.0,
+    "confidence": 0.8,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Blink Strike: Teleports behind the target unit, momentarily slowing them by %slow_pct_tooltip%%% and attacking them with bonus damage if it is an enemy."
+  },
+  {
+    "hero_id": 33,
+    "feature": "MAX_CONTROL_DURATION",
+    "value": 0.9,
+    "confidence": 0.8,
+    "derivation_method": "derived",
+    "evidence": "Maximum duration among detected hard control abilities"
+  },
+  {
+    "hero_id": 33,
+    "feature": "SUMMONER",
+    "value": 1.0,
+    "confidence": 0.85,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Demonic Summoning: Summons three fragments of Enigma himself at the cost of health. The eidolons health is increased by %current_health_pct%%% of Enigma's current health. These eidolons are all under Enigma's control, and repeated successful attacks cause them to multiply. When this happens, the eidolons have their health restored."
+  },
+  {
+    "hero_id": 34,
+    "feature": "ANTI_MOBILITY",
+    "value": 1.0,
+    "confidence": 0.8,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Warp Flare: Throws a flare towards an enemy, dealing damage, teleporting them away, rooting them and reducing their Cast and Attack Range for %debuff_duration% seconds. The target is teleported further the closer they are to Tinker."
+  },
+  {
+    "hero_id": 34,
+    "feature": "HIGH_MOBILITY",
+    "value": 1.0,
+    "confidence": 0.8,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Warp Flare: Throws a flare towards an enemy, dealing damage, teleporting them away, rooting them and reducing their Cast and Attack Range for %debuff_duration% seconds. The target is teleported further the closer they are to Tinker."
+  },
+  {
+    "hero_id": 34,
+    "feature": "SUMMONER",
+    "value": 1.0,
+    "confidence": 0.85,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Deploy Turrets: Deploys 3 uncontrollable turrets at the target location. Enemies hit by the impact take damage and are pushed away from the landing point. If Tinker is hit, he also gets pushed by the impact. Once deployed, the turret fires missiles in the direction of the nearest enemy hero."
+  },
+  {
+    "hero_id": 35,
+    "feature": "AOE_DAMAGE",
+    "value": 1.0,
+    "confidence": 0.85,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Concussive Grenade: Launches a grenade at the target area, dealing damage to enemies and knocking them and Sniper back. Enemies affected are disarmed and have their movement slowed after the knockback.; radius = 375.0; damage code = 2"
+  },
+  {
+    "hero_id": 35,
+    "feature": "HARD_CONTROL",
+    "value": 1.0,
+    "confidence": 0.85,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Assassinate: Sniper locks onto a target enemy unit and, after a short aiming duration, fires a devastating shot that deals Sniper's attack damage plus bonus damage at long range and mini-stuns the target. Whenever Sniper kills an enemy hero, Assassinate is refreshed."
+  },
+  {
+    "hero_id": 36,
+    "feature": "HARD_CONTROL",
+    "value": 1.0,
+    "confidence": 0.85,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Reaper's Scythe: Stuns the target enemy hero, then deals damage based on how much life it is missing. If Necrophos kills an enemy this way, he'll permanently gain Health and Mana Regen. Any kill under this effect is credited to Necrophos."
+  },
+  {
+    "hero_id": 36,
+    "feature": "MAX_CONTROL_DURATION",
+    "value": 1.5,
+    "confidence": 0.8,
+    "derivation_method": "derived",
+    "evidence": "Maximum duration among detected hard control abilities"
+  },
+  {
+    "hero_id": 37,
+    "feature": "AOE_DAMAGE",
+    "value": 1.0,
+    "confidence": 0.85,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Shadow Word: Warlock whispers an incantation, casting a spell on a unit that makes it deal damage to nearby enemy units and heal nearby ally units. Target Unit will also heal or be damaged depending on whether they are ally or enemy.; radius = textual multi-target; damage code = 2"
+  },
+  {
+    "hero_id": 37,
+    "feature": "HARD_CONTROL",
+    "value": 1.0,
+    "confidence": 0.85,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Chaotic Offering: Summons a Golem from the depths, stunning enemies for %stun_duration% seconds. The Golem lives %golem_duration% seconds, takes reduced damage from spells, has increased Slow Resistance, has Permanent Immolation and Flaming Fists on attack."
+  },
+  {
+    "hero_id": 37,
+    "feature": "MAX_CONTROL_DURATION",
+    "value": 0.8,
+    "confidence": 0.8,
+    "derivation_method": "derived",
+    "evidence": "Maximum duration among detected hard control abilities"
+  },
+  {
+    "hero_id": 37,
+    "feature": "SUMMONER",
+    "value": 1.0,
+    "confidence": 0.85,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Chaotic Offering: Summons a Golem from the depths, stunning enemies for %stun_duration% seconds. The Golem lives %golem_duration% seconds, takes reduced damage from spells, has increased Slow Resistance, has Permanent Immolation and Flaming Fists on attack."
+  },
+  {
+    "hero_id": 38,
+    "feature": "ANTI_MOBILITY",
+    "value": 1.0,
+    "confidence": 0.8,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Summon Raptors: Beastmaster summons %hawk_count% hawks that circle around Beastmaster and dive-bombs at enemies with a base attack rate of every %hawk_base_attack_interval%s, damaging and rooting them. Attack rate increases with the Hawk's attack speed. Prioritizes heroes."
+  },
+  {
+    "hero_id": 38,
+    "feature": "AOE_DAMAGE",
+    "value": 1.0,
+    "confidence": 0.85,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Summon Raptors: Beastmaster summons %hawk_count% hawks that circle around Beastmaster and dive-bombs at enemies with a base attack rate of every %hawk_base_attack_interval%s, damaging and rooting them. Attack rate increases with the Hawk's attack speed. Prioritizes heroes.; radius = 500.0; damage code = 2"
+  },
+  {
+    "hero_id": 38,
+    "feature": "HARD_CONTROL",
+    "value": 1.0,
+    "confidence": 0.85,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Primal Roar: Beastmaster lets loose a deafening roar that stuns, and shoves open a path to its target. All units in the path of the roar are damaged, while units shoved aside by the roar have their movement and attack speed slowed. Additionally, Beastmaster and his units gain %movement_speed%%% movement speed for %movement_speed_duration% seconds."
+  },
+  {
+    "hero_id": 39,
+    "feature": "AOE_DAMAGE",
+    "value": 1.0,
+    "confidence": 0.85,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Scream Of Pain: The Queen of Pain lets loose a piercing scream around her, damaging nearby enemies. %damage_reflected_to_self%%% of the damage dealt to heroes is reflected back to her.; radius = textual multi-target; damage code = 2"
+  },
+  {
+    "hero_id": 40,
+    "feature": "AOE_DAMAGE",
+    "value": 1.0,
+    "confidence": 0.85,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Venomous Gale: Launches a ball of venom in a line, poisoning enemy units so that they take both initial damage and damage over time, as well as suffering slowed movement. Venomous Gale deals damage every 3 seconds over its duration.; radius = 125.0; damage code = 2"
+  },
+  {
+    "hero_id": 40,
+    "feature": "SUMMONER",
+    "value": 1.0,
+    "confidence": 0.85,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Plague Ward: Summons a plague ward to attack enemy units and structures. The ward is immune to magic. Wards gain the Poison Sting level from Venomancer, dealing 50% of the full damage."
+  },
+  {
+    "hero_id": 41,
+    "feature": "AOE_DAMAGE",
+    "value": 1.0,
+    "confidence": 0.85,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Time Dilation: Faceless Void envelops nearby enemies with time dilating fields to slow cooldown progression of their abilities. Each enveloped enemy gains one Time Dilation stack when applied, and one stack per ability they have on cooldown. Each stack deals damage per second and slows movement and attack speed. The duration is paused while affected by Chronosphere.; radius = 700.0; damage code = 2"
+  },
+  {
+    "hero_id": 41,
+    "feature": "HIGH_MOBILITY",
+    "value": 1.0,
+    "confidence": 0.8,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Time Walk: Rushes to a target location while backtracking any damage taken the last %backtrack_duration% seconds."
+  },
+  {
+    "hero_id": 42,
+    "feature": "HARD_CONTROL",
+    "value": 1.0,
+    "confidence": 0.85,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Wraithfire Blast: Wraith King sears an enemy unit with spectral fire, dealing damage and stunning, then dealing damage over time and slowing the target."
+  },
+  {
+    "hero_id": 42,
+    "feature": "MAX_CONTROL_DURATION",
+    "value": 1.6,
+    "confidence": 0.8,
+    "derivation_method": "derived",
+    "evidence": "Maximum duration among detected hard control abilities"
+  },
+  {
+    "hero_id": 44,
+    "feature": "HIGH_MOBILITY",
+    "value": 1.0,
+    "confidence": 0.8,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Phantom Strike: Teleports to a unit, friendly or enemy, and grants bonus attack speed while attacking if it's an enemy unit."
+  },
+  {
+    "hero_id": 45,
+    "feature": "AOE_DAMAGE",
+    "value": 1.0,
+    "confidence": 0.85,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Nether Blast: An exploding pulse deals damage to enemies and structures in the area. Deals %structure_damage_mod%%% damage to structures.; radius = 400.0; damage code = 2"
+  },
+  {
+    "hero_id": 45,
+    "feature": "HARD_CONTROL",
+    "value": 1.0,
+    "confidence": 0.85,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Decrepify: A powerful banishing spell that slows a unit and renders it unable to attack or be attacked. Healing on affected allies is increased, while afflicted enemies take extra magic damage instead."
+  },
+  {
+    "hero_id": 45,
+    "feature": "MAX_CONTROL_DURATION",
+    "value": 3.5,
+    "confidence": 0.8,
+    "derivation_method": "derived",
+    "evidence": "Maximum duration among detected hard control abilities"
+  },
+  {
+    "hero_id": 46,
+    "feature": "AOE_DAMAGE",
+    "value": 1.0,
+    "confidence": 0.85,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Meld: Templar Assassin conceals herself, becoming invisible as long as she remains still. If Meld's invisibility is broken by attacking an enemy, Lanaya's attack will deal bonus damage to the enemy and reduce their armor for %debuff_duration% seconds. Bonus damage and debuffs from Meld are applied to all enemies in the Psi Blades split range.; radius = textual multi-target; damage code = 1"
+  },
+  {
+    "hero_id": 46,
+    "feature": "HIGH_MOBILITY",
+    "value": 1.0,
+    "confidence": 0.8,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Psionic Projection: CHANNELED - Allows Templar Assassin to teleport to any Psionic Trap after channeling for %abilitychanneltime% seconds, detonating it upon arrival as if it was fully charged and instantly dealing %extra_damage% bonus damage. Channeling Psionic Projection does not break Meld."
+  },
+  {
+    "hero_id": 48,
+    "feature": "HARD_CONTROL",
+    "value": 1.0,
+    "confidence": 0.85,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Lucent Beam: Calls a beam of lunar energy down upon an enemy, damaging and briefly stunning them."
+  },
+  {
+    "hero_id": 48,
+    "feature": "MAX_CONTROL_DURATION",
+    "value": 0.6,
+    "confidence": 0.8,
+    "derivation_method": "derived",
+    "evidence": "Maximum duration among detected hard control abilities"
+  },
+  {
+    "hero_id": 49,
+    "feature": "AOE_DAMAGE",
+    "value": 1.0,
+    "confidence": 0.85,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Fireball: Ignites an area, dealing damage over time that lingers on enemies in it. Has reduced cast range when melee.; radius = 275.0; damage code = 2"
+  },
+  {
+    "hero_id": 49,
+    "feature": "HARD_CONTROL",
+    "value": 1.0,
+    "confidence": 0.85,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Dragon Tail: Dragon Knight smites an enemy unit with his shield, stunning and damaging it and units close to it."
+  },
+  {
+    "hero_id": 49,
+    "feature": "MAX_CONTROL_DURATION",
+    "value": 2.4,
+    "confidence": 0.8,
+    "derivation_method": "derived",
+    "evidence": "Maximum duration among detected hard control abilities"
+  },
+  {
+    "hero_id": 50,
+    "feature": "AOE_DAMAGE",
+    "value": 1.0,
+    "confidence": 0.85,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Poison Touch: Releases a cone of poison that strikes multiple enemy units. Deals damage over time and slows the targets. Anytime the targets get attacked by Dazzle, the debuff duration is refreshed and slow is increased.; radius = 300.0; damage code = 1"
+  },
+  {
+    "hero_id": 50,
+    "feature": "HARD_CONTROL",
+    "value": 1.0,
+    "confidence": 0.85,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Nothl Projection: Dazzle departs his body, traveling through the Nothl Realm as an invulnerable spirit that can cast spells, attack, and use items, leaving his body behind in the world with a visible tether. While active, Dazzle's basic abilities are empowered: Poison Touch hexes enemies, Shallow Grave heals upon expiration, and Shadow Wave has a shorter cooldown. The effect can be ended early, and Dazzle returns to the body at the end."
+  },
+  {
+    "hero_id": 51,
+    "feature": "AOE_DAMAGE",
+    "value": 1.0,
+    "confidence": 0.85,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Battery Assault: Discharges high-powered shrapnel at random nearby enemy units, dealing minor magical damage and ministun.; radius = 330.0; damage code = 2"
+  },
+  {
+    "hero_id": 51,
+    "feature": "HARD_CONTROL",
+    "value": 1.0,
+    "confidence": 0.85,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Hookshot: Fires a grappling device rapidly at the target location. If the hook hits a unit, Clockwerk launches himself into the target, stunning and dealing damage to everyone in a %stun_radius% radius around the hit target. Any enemies Clockwerk collides with along the way are damaged and stunned."
+  },
+  {
+    "hero_id": 52,
+    "feature": "AOE_DAMAGE",
+    "value": 1.0,
+    "confidence": 0.85,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Split Earth: Splits the earth under enemies. Deals damage and stuns for a short duration.; radius = 210.0; damage code = 2"
+  },
+  {
+    "hero_id": 52,
+    "feature": "HARD_CONTROL",
+    "value": 1.0,
+    "confidence": 0.85,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Split Earth: Splits the earth under enemies. Deals damage and stuns for a short duration."
+  },
+  {
+    "hero_id": 52,
+    "feature": "MAX_CONTROL_DURATION",
+    "value": 1.6,
+    "confidence": 0.8,
+    "derivation_method": "derived",
+    "evidence": "Maximum duration among detected hard control abilities"
+  },
+  {
+    "hero_id": 53,
+    "feature": "AOE_DAMAGE",
+    "value": 1.0,
+    "confidence": 0.85,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Sprout: Sprouts a ring of trees around a unit, damaging and trapping it in place and providing vision in a %vision_range% radius.; radius = 275.0; damage code = 2"
+  },
+  {
+    "hero_id": 53,
+    "feature": "HIGH_MOBILITY",
+    "value": 1.0,
+    "confidence": 0.8,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Teleportation: Teleports to any point on the map. Gains a barrier after arriving to its destination."
+  },
+  {
+    "hero_id": 54,
+    "feature": "AOE_DAMAGE",
+    "value": 1.0,
+    "confidence": 0.85,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Infest: Lifestealer infests the body of a target unit, becoming undetectable, and healing for a portion of his max hitpoints every second while inside. He can then explode from the host body, dealing damage to nearby enemies. If the infested unit is an enemy creep or a neutral creep, he can take control of the unit's ability to move and attack, and the creep loses a portion of their max hitpoints over time. Does not work on enemy heroes. DISPEL TYPE: Basic Dispel; radius = 700.0; d"
+  },
+  {
+    "hero_id": 55,
+    "feature": "AOE_DAMAGE",
+    "value": 1.0,
+    "confidence": 0.85,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Vacuum: Dark Seer creates a vacuum over the target area that sucks in enemy units, disrupting them and dealing damage.; radius = 550.0; damage code = 2"
+  },
+  {
+    "hero_id": 55,
+    "feature": "HARD_CONTROL",
+    "value": 1.0,
+    "confidence": 0.85,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Normal Punch: Passive ability. Causes Dark Seer's next attack on a hero to have True Strike, knock a replica out of the victim, damaging and stunning them based on how far Dark Seer has moved in the past %recent_duration% seconds. Max power is reached after %max_distance% distance moved."
+  },
+  {
+    "hero_id": 57,
+    "feature": "AOE_DAMAGE",
+    "value": 1.0,
+    "confidence": 0.85,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Purification: Instantly heals a friendly unit and damages all nearby enemy units.; radius = 260.0; damage code = 4"
+  },
+  {
+    "hero_id": 58,
+    "feature": "ANTI_MOBILITY",
+    "value": 1.0,
+    "confidence": 0.8,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Little Friends: Enchantress roots an enemy unit. All creeps, ally, enemy and neutral within a radius will gain bonus movement and attack speed and attack the chosen target for %duration% seconds."
+  },
+  {
+    "hero_id": 58,
+    "feature": "HIGH_MOBILITY",
+    "value": 1.0,
+    "confidence": 0.8,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Sproink: Leaps backward, dodges incoming projectiles, and launches an Impetus attack on the %attack_targets% furthest enemy units within Enchantress' attack range + %bonus_attack_range%."
+  },
+  {
+    "hero_id": 59,
+    "feature": "AOE_DAMAGE",
+    "value": 1.0,
+    "confidence": 0.85,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Inner Fire: In a fiery rage, knocks all nearby enemies away from you to a fixed distance, dealing damage and silencing them.; radius = 500.0; damage code = 2"
+  },
+  {
+    "hero_id": 59,
+    "feature": "HIGH_MOBILITY",
+    "value": 1.0,
+    "confidence": 0.8,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Life Break: Huskar draws upon his health to break an enemy's life, leaping at a target to shatter a percentage of that hero's current health and slow both their movement and attack speed. While leaping, Huskar is Debuff Immune with %immunity_resist%%% magic resistance. DISPEL TYPE: Basic Dispel"
+  },
+  {
+    "hero_id": 60,
+    "feature": "HARD_CONTROL",
+    "value": 1.0,
+    "confidence": 0.85,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Void: Creates a damaging void that slows an enemy unit and deals damage. At night, Void also mini-stuns, interrupting channeling abilities, and its effects lasts longer."
+  },
+  {
+    "hero_id": 61,
+    "feature": "ANTI_MOBILITY",
+    "value": 1.0,
+    "confidence": 0.8,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Spinner's Snare: Broodmother may create up to %count% invisible web lines touching any existing web. Enemy Heroes that cross the web line will spring the trap, becoming rooted, revealed in fog, and take damage over time. Multiple Heroes can trip on the same line until it's destroyed after being initially triggered. Broodmother's team is alerted via the minimap when an enemy has triggered the snare."
+  },
+  {
+    "hero_id": 63,
+    "feature": "HIGH_MOBILITY",
+    "value": 1.0,
+    "confidence": 0.8,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Shukuchi: Weaver shifts out of visibility, gaining max movement speed and doing harm to any enemies it passes through."
+  },
+  {
+    "hero_id": 64,
+    "feature": "AOE_DAMAGE",
+    "value": 1.0,
+    "confidence": 0.85,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Ice Path: Creates a path of ice that stuns and damages enemies that touch it.; radius = 150.0; damage code = 2"
+  },
+  {
+    "hero_id": 64,
+    "feature": "HARD_CONTROL",
+    "value": 1.0,
+    "confidence": 0.85,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Ice Path: Creates a path of ice that stuns and damages enemies that touch it."
+  },
+  {
+    "hero_id": 64,
+    "feature": "MAX_CONTROL_DURATION",
+    "value": 2.0,
+    "confidence": 0.8,
+    "derivation_method": "derived",
+    "evidence": "Maximum duration among detected hard control abilities"
+  },
+  {
+    "hero_id": 65,
+    "feature": "AOE_DAMAGE",
+    "value": 1.0,
+    "confidence": 0.85,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Flamebreak: Hurls an explosive cocktail that explodes when it reaches the target location, knocking back, slowing and dealing damage over time to enemies in the area.; radius = 400.0; damage code = 2"
+  },
+  {
+    "hero_id": 65,
+    "feature": "HIGH_MOBILITY",
+    "value": 1.0,
+    "confidence": 0.8,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Firefly: Batrider takes to the skies, moving increasingly fast and laying down a trail of flames from the air. The fire damages any enemies it touches and destroys trees below Batrider. Maximum movement speed bonus is reached at the end of Firefly's duration."
+  },
+  {
+    "hero_id": 66,
+    "feature": "HIGH_MOBILITY",
+    "value": 1.0,
+    "confidence": 0.8,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Zealot: Whenever Chen respawns, he is joined by a Zealot, a melee warrior creep with the ability to sacrifice itself to heal or deal damage to an enemy. The Zealot receives Holy Persuasion's benefits and scales up with other lane melee creeps as game time increases and gains extra base damage. The Zealot respawns next to Chen. Zealot may be activated to teleport a unit under your control to Chen after a %teleport_delay% second delay. If Chen is targeted, it will teleport all units "
+  },
+  {
+    "hero_id": 67,
+    "feature": "AOE_DAMAGE",
+    "value": 1.0,
+    "confidence": 0.85,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Spectral Dagger: Spectre flings a dagger to draw a Shadow Path, dealing damage and slowing the movement speed of any enemies along the trail. Units hit by the dagger also trail a Shadow Path. While treading the path, Spectre moves faster and phases through otherwise impassable terrain.; radius = 200.0; damage code = 2"
+  },
+  {
+    "hero_id": 67,
+    "feature": "HIGH_MOBILITY",
+    "value": 1.0,
+    "confidence": 0.8,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Shadow Step: Sends an uncontrollable illusion at a target that follows and attacks the target. The Reality sub-ability may be used to teleport to the illusion, destroying it."
+  },
+  {
+    "hero_id": 68,
+    "feature": "AOE_DAMAGE",
+    "value": 1.0,
+    "confidence": 0.85,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Ice Vortex: Creates a vortex of icy energy that slows, deals damage, and increases magic damage done to enemies in its range.; radius = 275.0; damage code = 2"
+  },
+  {
+    "hero_id": 68,
+    "feature": "HARD_CONTROL",
+    "value": 1.0,
+    "confidence": 0.85,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Cold Feet: Places a curse on an enemy, dealing damage over time. If the enemy unit doesn't move outside of the given range from the initial location, it will be stunned and frozen in place after %AbilityDuration% seconds."
+  },
+  {
+    "hero_id": 68,
+    "feature": "MAX_CONTROL_DURATION",
+    "value": 4.0,
+    "confidence": 0.8,
+    "derivation_method": "derived",
+    "evidence": "Maximum duration among detected hard control abilities"
+  },
+  {
+    "hero_id": 69,
+    "feature": "HARD_CONTROL",
+    "value": 1.0,
+    "confidence": 0.85,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Infernal Blade: Doom swings his burning sword, igniting the enemy. Stuns for %ministun_duration% seconds and applies a %burn_duration% second burn that deals a base damage plus a percentage of the target's Max HP as damage per second."
+  },
+  {
+    "hero_id": 69,
+    "feature": "MAX_CONTROL_DURATION",
+    "value": 0.66,
+    "confidence": 0.8,
+    "derivation_method": "derived",
+    "evidence": "Maximum duration among detected hard control abilities"
+  },
+  {
+    "hero_id": 70,
+    "feature": "AOE_DAMAGE",
+    "value": 1.0,
+    "confidence": 0.85,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Earthshock: Ursa leaps forward %hop_distance% units and slams the earth, causing a powerful shock to damage and slow all enemy units in a nearby area for %abilityduration% seconds.; radius = 385.0; damage code = 2"
+  },
+  {
+    "hero_id": 70,
+    "feature": "HIGH_MOBILITY",
+    "value": 1.0,
+    "confidence": 0.8,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Earthshock: Ursa leaps forward %hop_distance% units and slams the earth, causing a powerful shock to damage and slow all enemy units in a nearby area for %abilityduration% seconds."
+  },
+  {
+    "hero_id": 71,
+    "feature": "HARD_CONTROL",
+    "value": 1.0,
+    "confidence": 0.85,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Empowering Haste: Spirit Breaker gains bonus Movement Speed for a duration whenever he stuns an enemy. Effects from multiple stuns stack and have independent durations. Duration pauses during Charge of Darkness."
+  },
+  {
+    "hero_id": 72,
+    "feature": "HARD_CONTROL",
+    "value": 1.0,
+    "confidence": 0.85,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Homing Missile: Fires a homing missile to seek the targeted enemy unit. The missile gains speed over time, dealing damage and stunning when it impacts the target. Enemy units can destroy the missile before it reaches its target."
+  },
+  {
+    "hero_id": 72,
+    "feature": "MAX_CONTROL_DURATION",
+    "value": 2.5,
+    "confidence": 0.8,
+    "derivation_method": "derived",
+    "evidence": "Maximum duration among detected hard control abilities"
+  },
+  {
+    "hero_id": 73,
+    "feature": "ALLY_DISPEL",
+    "value": 1.0,
+    "confidence": 0.8,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Berserk Potion: Alchemist throws a potion at an ally, applying a basic dispel and giving them attack speed, movement speed and HP regen. DISPEL TYPE: Basic Dispel"
+  },
+  {
+    "hero_id": 73,
+    "feature": "AOE_DAMAGE",
+    "value": 1.0,
+    "confidence": 0.85,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Unstable Concoction: Alchemist brews up an unstable concoction that he can throw at an enemy hero, to stun and deal damage in an area around the explosion. The longer the concoction brews, the more damage it deals and the longer the stun. Alchemist is faster while charging the concoction. After %brew_time% seconds, the brew reaches its maximum damage and stun time. However, after %brew_explosion% seconds, the concoction will explode on Alchemist himself if not thrown.; radius = 250"
+  },
+  {
+    "hero_id": 74,
+    "feature": "AOE_DAMAGE",
+    "value": 1.0,
+    "confidence": 0.85,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Tornado: Unleashes a fast moving tornado that picks up enemy units in its path, suspending them helplessly in the air shortly before allowing them to plummet to their doom. Travels further based on the level of Wex . Holds enemies in the air for a duration based on the level of Quas . Deals base damage plus added damage based on levels in Wex . DISPEL TYPE: Basic Dispel; radius = 150.0; damage code = 2"
+  },
+  {
+    "hero_id": 75,
+    "feature": "AOE_DAMAGE",
+    "value": 1.0,
+    "confidence": 0.85,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Arcane Curse: Curses the target area, dealing damage and causing enemies to take damage over time and slowing their movement speed. Anytime affected enemies cast a spell, the duration is increased. The duration is paused as long as the target is silenced.; radius = 350.0; damage code = 2"
+  },
+  {
+    "hero_id": 76,
+    "feature": "AOE_DAMAGE",
+    "value": 1.0,
+    "confidence": 0.85,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Sanity's Eclipse: Unleashes a psychic blast that deals damage to enemies based on the difference between your max mana and the target's max mana. Sanity's Eclipse can hit units trapped by Astral Imprisonment.; radius = 550.0; damage code = 2"
+  },
+  {
+    "hero_id": 77,
+    "feature": "HARD_CONTROL",
+    "value": 1.0,
+    "confidence": 0.85,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Howl: Strikes fear into enemies, reducing armor and attack damage of all enemies within %radius% range of Lycan and his wolves. At night, Howl's armor and attack damage reductions are global."
+  },
+  {
+    "hero_id": 78,
+    "feature": "AOE_DAMAGE",
+    "value": 1.0,
+    "confidence": 0.85,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Thunder Clap: Slams the ground, dealing damage and slowing the movement speed and attack rate of nearby enemy units.; radius = 400.0; damage code = 2"
+  },
+  {
+    "hero_id": 79,
+    "feature": "ALLY_DISPEL",
+    "value": 1.0,
+    "confidence": 0.8,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Demonic Cleanse: Cleanses the target allied unit, removing negative buffs for the duration. At the end of the duration, the unit is healed. Units under the effect of Disruption can still be affected by Demonic Cleanse. DISPEL TYPE: Basic Dispel"
+  },
+  {
+    "hero_id": 79,
+    "feature": "AOE_DAMAGE",
+    "value": 1.0,
+    "confidence": 0.85,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Shadow Poison: Deals damage in a line, and afflicts enemy units with a poison effect. The poison deals 1/2/4/8/16 times the stack damage based on the number of stacks on the target, up to %max_multiply_stacks% stacks. Additional stacks cause %bonus_stack_damage% damage each. This deferred damage is dealt when Shadow Poison's duration is expired, or the Release sub-ability is used.; radius = 300.0; damage code = 2"
+  },
+  {
+    "hero_id": 79,
+    "feature": "HARD_CONTROL",
+    "value": 1.0,
+    "confidence": 0.85,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Disruption: Banishes the targeted unit from the battlefield for a short duration. Upon returning, two illusions of the banished unit with bonus base damage are created under Shadow Demon's control."
+  },
+  {
+    "hero_id": 79,
+    "feature": "MAX_CONTROL_DURATION",
+    "value": 2.75,
+    "confidence": 0.8,
+    "derivation_method": "derived",
+    "evidence": "Maximum duration among detected hard control abilities"
+  },
+  {
+    "hero_id": 80,
+    "feature": "ANTI_MOBILITY",
+    "value": 1.0,
+    "confidence": 0.8,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Entangle: Allows Lone Druid to Entangle enemies once they gain %hits_required% stacks. Entangled enemies are rooted and take damage over time. When cast, applies %hits_incremented_on_active% stacks to each enemy hero in the area and %hits_required% stacks to enemy creeps. Also empowers Lone Druid for %lone_druid_buff_duration%s, making him apply %lone_druid_counters_applied_tooltip% stack with each attack on enemy heroes. Enemies cannot gain stacks while Entangled. Leveling this ab"
+  },
+  {
+    "hero_id": 80,
+    "feature": "SUMMONER",
+    "value": 1.0,
+    "confidence": 0.85,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Summon Spirit Bear: Summons a powerful Spirit Bear companion that can equip items. If the bear moves %bear_attack_leash_range% distance away from the Lone Druid, it cannot attack. Lone Druid suffers %backlash_damage%%% of his max health as backlash damage if the Spirit Bear dies. Spirit Bear has Demolish, Return, Entangling Claws, Savage Roar, and Spirit Link abilities."
+  },
+  {
+    "hero_id": 81,
+    "feature": "DEPENDS_ON_ILLUSIONS",
+    "value": 1.0,
+    "confidence": 0.85,
+    "derivation_method": "manual",
+    "evidence": "Valve Phantasm summons several illusions; Reality Rift transports his illusions and Chaos Strike grants their attacks critical strike and lifesteal."
+  },
+  {
+    "hero_id": 81,
+    "feature": "HARD_CONTROL",
+    "value": 1.0,
+    "confidence": 0.85,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Chaos Bolt: Throws a mysterious bolt of energy at the target unit. It stuns for a random duration and deals random damage."
+  },
+  {
+    "hero_id": 81,
+    "feature": "HIGH_MOBILITY",
+    "value": 1.0,
+    "confidence": 0.8,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Reality Rift: Teleports Chaos Knight, any illusions he has, and the target unit to a point along the line between him and the target. The enemy unit has their armor reduced for %duration%s."
+  },
+  {
+    "hero_id": 82,
+    "feature": "ANTI_MOBILITY",
+    "value": 1.0,
+    "confidence": 0.8,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Earthbind: Tosses a net at the target point, rooting down all enemy units in an area around it."
+  },
+  {
+    "hero_id": 82,
+    "feature": "AOE_DAMAGE",
+    "value": 1.0,
+    "confidence": 0.85,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Poof: Drawing mystical energies from the earth, a Meepo can teleport to another Meepo or itself after channeling for %cast_duration% seconds, damaging the enemy in both the departure and arrival locations. If the ability is in alt-cast state, all Meepos will also cast Poof to the target. When cast on the ground, all Meepos except the selected one will Poof to the closest location.; radius = 400.0; damage code = 2"
+  },
+  {
+    "hero_id": 82,
+    "feature": "HIGH_MOBILITY",
+    "value": 1.0,
+    "confidence": 0.8,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Poof: Drawing mystical energies from the earth, a Meepo can teleport to another Meepo or itself after channeling for %cast_duration% seconds, damaging the enemy in both the departure and arrival locations. If the ability is in alt-cast state, all Meepos will also cast Poof to the target. When cast on the ground, all Meepos except the selected one will Poof to the closest location."
+  },
+  {
+    "hero_id": 83,
+    "feature": "ANTI_MOBILITY",
+    "value": 1.0,
+    "confidence": 0.8,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Leech Seed: Treant's attack plants a life-sapping seed in an enemy unit. That unit takes additional magic damage, is rooted and disarmed for a short duration, and emits %healing_pulse_count% healing pulses to up to %max_heal_units% nearby allies of Treant Protector based on the damage dealt by the attack."
+  },
+  {
+    "hero_id": 83,
+    "feature": "AOE_DAMAGE",
+    "value": 1.0,
+    "confidence": 0.85,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Overgrowth: Summons an overgrowth of vines and branches around Treant that deal damage to afflicted enemies and prevent them from moving, blinking, going invisible, or attacking.; radius = 800.0; damage code = 2"
+  },
+  {
+    "hero_id": 84,
+    "feature": "HARD_CONTROL",
+    "value": 1.0,
+    "confidence": 0.85,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Fireblast: Blasts an enemy unit with a wave of fire, dealing damage and stunning the target."
+  },
+  {
+    "hero_id": 84,
+    "feature": "MAX_CONTROL_DURATION",
+    "value": 1.2,
+    "confidence": 0.8,
+    "derivation_method": "derived",
+    "evidence": "Maximum duration among detected hard control abilities"
+  },
+  {
+    "hero_id": 85,
+    "feature": "AOE_DAMAGE",
+    "value": 1.0,
+    "confidence": 0.85,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Decay: Undying steals strength from all enemy heroes in an area, dealing base damage as he claims the enemy's strength for himself. Deals %creep_damage_multiplier%x damage to creeps.; radius = 325.0; damage code = 2"
+  },
+  {
+    "hero_id": 86,
+    "feature": "AOE_DAMAGE",
+    "value": 1.0,
+    "confidence": 0.85,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Fade Bolt: Rubick creates a powerful stream of arcane energy that travels between enemy units, dealing damage and reducing their attack and spell damage. Each jump deals less damage.; radius = 440.0; damage code = 2"
+  },
+  {
+    "hero_id": 86,
+    "feature": "HARD_CONTROL",
+    "value": 1.0,
+    "confidence": 0.85,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Telekinesis: Rubick uses his telekinetic powers to lift the enemy into the air briefly and then hurls them back at the ground. The unit lands on the ground with such force that it stuns nearby enemies."
+  },
+  {
+    "hero_id": 86,
+    "feature": "MAX_CONTROL_DURATION",
+    "value": 1.5,
+    "confidence": 0.8,
+    "derivation_method": "derived",
+    "evidence": "Maximum duration among detected hard control abilities"
+  },
+  {
+    "hero_id": 87,
+    "feature": "AOE_DAMAGE",
+    "value": 1.0,
+    "confidence": 0.85,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Thunder Strike: Repeatedly strikes the targeted unit with lightning. Each strike damages nearby enemy units in a small radius and slows enemy movement and attack speed by %slow_amount%%% for %slow_duration% seconds. Provides vision of its target.; radius = 260.0; damage code = 2"
+  },
+  {
+    "hero_id": 87,
+    "feature": "HIGH_MOBILITY",
+    "value": 1.0,
+    "confidence": 0.8,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Glimpse: Teleports the target hero back to where it was %backtrack_time% seconds ago. Instantly kills illusions. Deals damage equal to a percentage of the distance glimpsed, that cannot go over a damage maximum."
+  },
+  {
+    "hero_id": 88,
+    "feature": "HARD_CONTROL",
+    "value": 1.0,
+    "confidence": 0.85,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Impale: Rock spikes burst from the earth along a straight path. Enemy units take damage, then are hurled into the air and stunned."
+  },
+  {
+    "hero_id": 88,
+    "feature": "MAX_CONTROL_DURATION",
+    "value": 1.6,
+    "confidence": 0.8,
+    "derivation_method": "derived",
+    "evidence": "Maximum duration among detected hard control abilities"
+  },
+  {
+    "hero_id": 89,
+    "feature": "AOE_DAMAGE",
+    "value": 1.0,
+    "confidence": 0.85,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Rip Tide: Naga Siren and her illusions deal bonus damage to enemies and reduce their armor for %duration% seconds every %hits% attacks.; radius = 300.0; damage code = 2"
+  },
+  {
+    "hero_id": 89,
+    "feature": "DEPENDS_ON_ILLUSIONS",
+    "value": 1.0,
+    "confidence": 0.85,
+    "derivation_method": "manual",
+    "evidence": "Valve Mirror Image creates multiple controlled images, and Rip Tide explicitly lets Naga Siren's illusions apply bonus damage and armor reduction."
+  },
+  {
+    "hero_id": 90,
+    "feature": "AOE_DAMAGE",
+    "value": 1.0,
+    "confidence": 0.85,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Illuminate: CHANNELED - Channels light energy, building power the longer it's channeled. Once released, a wave is sent forth that deals damage and gives vision in its path. The longer it is channeled, the more damage is dealt.; radius = 800.0; damage code = 2"
+  },
+  {
+    "hero_id": 91,
+    "feature": "AOE_DAMAGE",
+    "value": 1.0,
+    "confidence": 0.85,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Spirits: Summon five particle spirits that dance in a circle around Io. If a particle collides with an enemy hero, it explodes, damaging all enemy units in an area around it. Creeps take minor damage from touching a particle spirit, but do not cause them to explode. When its duration ends, any remaining Spirits explode.; radius = 425.0; damage code = 2"
+  },
+  {
+    "hero_id": 91,
+    "feature": "HIGH_MOBILITY",
+    "value": 1.0,
+    "confidence": 0.8,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Relocate: Teleports Io and a tethered ally to any location. After the spell expires, Io and the tethered ally will return to their original location. Double-click to teleport to your team's base fountain."
+  },
+  {
+    "hero_id": 92,
+    "feature": "AOE_DAMAGE",
+    "value": 1.0,
+    "confidence": 0.85,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Soul Assumption: Visage gathers charges of soul essence each time nearby heroes take more than %damage_limit% damage. When the essence is released, it deals base damage as well as damage for each gathered soul charge.; radius = 1800.0; damage code = 2"
+  },
+  {
+    "hero_id": 92,
+    "feature": "HARD_CONTROL",
+    "value": 1.0,
+    "confidence": 0.85,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Summon Familiars: Conjures %familiar_count% blind Familiars to fight for Visage. Familiars possess the Stone Form ability, that allows them to turn into stone, stunning enemies upon landing. While in Stone Form, Familiars are invulnerable, and rapidly regenerate their health. Familiars grant high bounty when killed. The ability can be cast in the alt-cast state to recall Visages familiars after %recall_duration%s, during which they cannot attack or act."
+  },
+  {
+    "hero_id": 93,
+    "feature": "ANTI_MOBILITY",
+    "value": 1.0,
+    "confidence": 0.8,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Pounce: Slark leaps forward, leashing and applying Essence Shift stacks to the first hero he connects. That unit can only move a limited distance away from Slark's landing position."
+  },
+  {
+    "hero_id": 93,
+    "feature": "AOE_DAMAGE",
+    "value": 1.0,
+    "confidence": 0.85,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Dark Pact: After a short delay, Slark sacrifices some of his life blood, purging most negative debuffs and dealing damage to enemy units around him and to himself. Slark only takes %self_damage_pct%%% of the damage. DISPEL TYPE: Strong Dispel; radius = 325.0; damage code = 2"
+  },
+  {
+    "hero_id": 93,
+    "feature": "HIGH_MOBILITY",
+    "value": 1.0,
+    "confidence": 0.8,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Pounce: Slark leaps forward, leashing and applying Essence Shift stacks to the first hero he connects. That unit can only move a limited distance away from Slark's landing position."
+  },
+  {
+    "hero_id": 93,
+    "feature": "SELF_DISPEL",
+    "value": 1.0,
+    "confidence": 0.8,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Dark Pact: After a short delay, Slark sacrifices some of his life blood, purging most negative debuffs and dealing damage to enemy units around him and to himself. Slark only takes %self_damage_pct%%% of the damage. DISPEL TYPE: Strong Dispel"
+  },
+  {
+    "hero_id": 94,
+    "feature": "ANTI_MOBILITY",
+    "value": 1.0,
+    "confidence": 0.8,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Gorgon's Grasp: Medusa fires arrows in a line that land in %volley_count% groups, with each grouping larger than the previous. Enemies struck by a volley of arrows take an initial burst of damage and then are rooted, cannot turn, are revealed to the enemy, and take damage per second."
+  },
+  {
+    "hero_id": 94,
+    "feature": "AOE_DAMAGE",
+    "value": 1.0,
+    "confidence": 0.85,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Mystic Snake: A mystic snake made of energy jumps from target to target dealing damage. Damage and speed increases with each jump. After it reaches its last target, it returns to Medusa to replenish her with mana. The snake returns a percentage of the targets' total mana.; radius = 450.0; damage code = 2"
+  },
+  {
+    "hero_id": 94,
+    "feature": "HARD_CONTROL",
+    "value": 1.0,
+    "confidence": 0.85,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Stone Gaze: Any enemy units looking at Medusa will have their movement and attack speed slowed. If %face_duration% seconds of total time is accumulated looking at Medusa while Stone Gaze is active, that unit will turn to stone. Petrified units are stunned, and take bonus physical attack damage."
+  },
+  {
+    "hero_id": 95,
+    "feature": "AOE_DAMAGE",
+    "value": 1.0,
+    "confidence": 0.85,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Whirling Axes (Melee): Troll hurls two axes around him in a close range area of effect, damaging enemy units and causing them to miss some attacks.; radius = 100.0; damage code = 2"
+  },
+  {
+    "hero_id": 96,
+    "feature": "AOE_DAMAGE",
+    "value": 1.0,
+    "confidence": 0.85,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Hoof Stomp: After a brief windup, Centaur Warrunner slams the ground, stunning and damaging nearby enemy units. During the delay, he is disarmed but can move.; radius = 325.0; damage code = 2"
+  },
+  {
+    "hero_id": 96,
+    "feature": "HARD_CONTROL",
+    "value": 1.0,
+    "confidence": 0.85,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Hoof Stomp: After a brief windup, Centaur Warrunner slams the ground, stunning and damaging nearby enemy units. During the delay, he is disarmed but can move."
+  },
+  {
+    "hero_id": 96,
+    "feature": "MAX_CONTROL_DURATION",
+    "value": 2.2,
+    "confidence": 0.8,
+    "derivation_method": "derived",
+    "evidence": "Maximum duration among detected hard control abilities"
+  },
+  {
+    "hero_id": 97,
+    "feature": "AOE_DAMAGE",
+    "value": 1.0,
+    "confidence": 0.85,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Shockwave: Magnus sends out a wave of force, damaging enemy units in a line, pulling them towards him, and slowing them for a brief period.; radius = textual multi-target; damage code = 2"
+  },
+  {
+    "hero_id": 97,
+    "feature": "HARD_CONTROL",
+    "value": 1.0,
+    "confidence": 0.85,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Horn Toss: Magnus tosses any enemies in front of him, launching them to his rear. Enemies take damage, spend %air_duration% seconds in the air, and are stunned while in the air and an additional amount of time after landing."
+  },
+  {
+    "hero_id": 97,
+    "feature": "MAX_CONTROL_DURATION",
+    "value": 3.5,
+    "confidence": 0.8,
+    "derivation_method": "derived",
+    "evidence": "Maximum duration among detected hard control abilities"
+  },
+  {
+    "hero_id": 98,
+    "feature": "AOE_DAMAGE",
+    "value": 1.0,
+    "confidence": 0.85,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Whirling Death: Timbersaw whirls extremely sharp edges, damaging enemies and destroying trees around him in an area. If an enemy hero is affected, it loses some of its primary attribute for a short duration. Whirling Death will deal bonus damage per tree destroyed.; radius = 325.0; damage code = 4"
+  },
+  {
+    "hero_id": 99,
+    "feature": "AOE_DAMAGE",
+    "value": 1.0,
+    "confidence": 0.85,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Quill Spray: Sprays enemy units with quills dealing damage in an area of effect around Bristleback. Deals bonus damage for every time a unit was hit by Quill Spray in the last %quill_stack_duration% seconds.; radius = 700.0; damage code = 1"
+  },
+  {
+    "hero_id": 100,
+    "feature": "AOE_DAMAGE",
+    "value": 1.0,
+    "confidence": 0.85,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Ice Shards: Tusk compresses shards of ice into a ball of frozen energy that damages all enemies it comes in contact with. When the ball reaches its target destination the shards are released, creating a barrier that lasts for %shard_duration% seconds.; radius = textual multi-target; damage code = 2"
+  },
+  {
+    "hero_id": 100,
+    "feature": "HARD_CONTROL",
+    "value": 1.0,
+    "confidence": 0.85,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Snowball: Tusk begins rolling into a snowball. Allies within a %snowball_grab_radius% radius can also be added to the snowball by right-clicking on them, even while the snowball is moving. Once launched, any enemies caught in the snowball's path will be stunned and take damage. Each allied Hero in the snowball will add to its damage and stun duration."
+  },
+  {
+    "hero_id": 100,
+    "feature": "MAX_CONTROL_DURATION",
+    "value": 1.2,
+    "confidence": 0.8,
+    "derivation_method": "derived",
+    "evidence": "Maximum duration among detected hard control abilities"
+  },
+  {
+    "hero_id": 101,
+    "feature": "AOE_DAMAGE",
+    "value": 1.0,
+    "confidence": 0.85,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Arcane Bolt: Skywrath Mage launches a slow-moving bolt of arcane magic, dealing damage to an enemy unit based on Skywrath Mage's intelligence.; radius = 500.0; damage code = 2"
+  },
+  {
+    "hero_id": 102,
+    "feature": "ALLY_DISPEL",
+    "value": 1.0,
+    "confidence": 0.8,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Aphotic Shield: Summons dark energies around an ally unit, dispelling them and creating an all damage barrier that absorbs a set amount of damage before expiring. When the barrier is destroyed it will burst and deal damage equal to the amount it could absorb to an area around it. DISPEL TYPE: Strong Dispel"
+  },
+  {
+    "hero_id": 102,
+    "feature": "AOE_DAMAGE",
+    "value": 1.0,
+    "confidence": 0.85,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Aphotic Shield: Summons dark energies around an ally unit, dispelling them and creating an all damage barrier that absorbs a set amount of damage before expiring. When the barrier is destroyed it will burst and deal damage equal to the amount it could absorb to an area around it. DISPEL TYPE: Strong Dispel; radius = 675.0; damage code = 2"
+  },
+  {
+    "hero_id": 103,
+    "feature": "AOE_DAMAGE",
+    "value": 1.0,
+    "confidence": 0.85,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Echo Stomp: CHANNELED - Elder Titan and his Astral Spirit both stomp the ground, damaging and knocking nearby enemy units unconscious around their locations. The Elder Titan stomp deals physical damage, while the Spirit stomp deals magical damage.; radius = 475.0; damage code = 1"
+  },
+  {
+    "hero_id": 104,
+    "feature": "ALLY_DISPEL",
+    "value": 1.0,
+    "confidence": 0.8,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Press The Attack: Removes debuffs and disables from the target friendly unit, and grants bonus movement speed and health regen for a short time. DISPEL TYPE: Strong Dispel"
+  },
+  {
+    "hero_id": 105,
+    "feature": "ALLY_DISPEL",
+    "value": 1.0,
+    "confidence": 0.8,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Reactive Tazer: Techies trigger an electric charge on the target ally, giving them bonus movement speed for a short period of time. Enemies attacking the target take damage and are temporarily disarmed and get a Basic Dispel. At the end of the effect or if detonated early with the sub-ability, the charge explodes, disarming all enemies within the radius and dealing damage."
+  },
+  {
+    "hero_id": 105,
+    "feature": "AOE_DAMAGE",
+    "value": 1.0,
+    "confidence": 0.85,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Sticky Bomb: Lobs a Sticky Bomb towards the target area. If it lands next to an enemy hero, the bomb will stick to it, slowing its movement speed. After a few seconds the bomb will explode, dealing damage in an area around the detonation and applying a secondary slow for %secondary_slow_duration% seconds.; radius = 350.0; damage code = 2"
+  },
+  {
+    "hero_id": 106,
+    "feature": "AOE_DAMAGE",
+    "value": 1.0,
+    "confidence": 0.85,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Searing Chains: Ember Spirit unleashes fiery bolas that wrap around nearby enemies, anchoring them in place and dealing damage each second.; radius = 400.0; damage code = 2"
+  },
+  {
+    "hero_id": 106,
+    "feature": "HIGH_MOBILITY",
+    "value": 1.0,
+    "confidence": 0.8,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Sleight of Fist: Ember Spirit dashes around with blazing speed, attacking all enemies in the targeted area of effect, then returning to his start location. Deals bonus damage to heroes."
+  },
+  {
+    "hero_id": 107,
+    "feature": "AOE_DAMAGE",
+    "value": 1.0,
+    "confidence": 0.85,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Boulder Smash: Earth Spirit smashes the target enemy or ally, sending them in the direction he is facing. If Earth Spirit targets an area, he will smash the nearest unit in a %remnant_smash_radius_tooltip% radius, prioritizing Stone Remnants. The travelling unit or Remnant damages all enemy units it hits. If an enemy is hit by a Stone Remnant, they are also slowed. Stone Remnants travel further than other units.; radius = 200.0; damage code = 2"
+  },
+  {
+    "hero_id": 107,
+    "feature": "HARD_CONTROL",
+    "value": 1.0,
+    "confidence": 0.85,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Rolling Boulder: Earth Spirit gathers himself into a boulder and, after a %delay%s delay, rolls toward the target location, dealing %damage% + %damage_str%%% STR damage and stunning enemy units. He will stop if he collides with an enemy hero or is stunned. If he rolls over a Stone Remnant, he will travel further and faster, and stun enemies for longer."
+  },
+  {
+    "hero_id": 107,
+    "feature": "MAX_CONTROL_DURATION",
+    "value": 0.9,
+    "confidence": 0.8,
+    "derivation_method": "derived",
+    "evidence": "Maximum duration among detected hard control abilities"
+  },
+  {
+    "hero_id": 108,
+    "feature": "ANTI_MOBILITY",
+    "value": 1.0,
+    "confidence": 0.8,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Pit of Malice: A deadly pit is conjured at the target location; any unit that enters will be damaged and rooted. Each enemy unit within the pit are affected by the root only every %pit_interval% seconds."
+  },
+  {
+    "hero_id": 108,
+    "feature": "HIGH_MOBILITY",
+    "value": 1.0,
+    "confidence": 0.8,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Invading Force: After an allied hero Teleports, they temporarily gain Damage Reduction and Movement Speed. Allies receive %dark_portal_multiplier%x bonuses if teleporting via Fiend's Gate."
+  },
+  {
+    "hero_id": 109,
+    "feature": "AOE_DAMAGE",
+    "value": 1.0,
+    "confidence": 0.85,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Terror Wave: Causes a wave to travel outwards in all directions forcing enemy heroes to become Feared upon impact and dealing damage, and grants Terrorblade Metamorphosis for a short time.; radius = 1600.0; damage code = 2"
+  },
+  {
+    "hero_id": 109,
+    "feature": "DEPENDS_ON_ILLUSIONS",
+    "value": 1.0,
+    "confidence": 0.8,
+    "derivation_method": "manual",
+    "evidence": "Valve Conjure Image creates illusions; Metamorphosis, Demon Zeal, and Dark Unity explicitly modify nearby Terrorblade illusions."
+  },
+  {
+    "hero_id": 109,
+    "feature": "HARD_CONTROL",
+    "value": 1.0,
+    "confidence": 0.85,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Terror Wave: Causes a wave to travel outwards in all directions forcing enemy heroes to become Feared upon impact and dealing damage, and grants Terrorblade Metamorphosis for a short time."
+  },
+  {
+    "hero_id": 109,
+    "feature": "MAX_CONTROL_DURATION",
+    "value": 2.0,
+    "confidence": 0.8,
+    "derivation_method": "derived",
+    "evidence": "Maximum duration among detected hard control abilities"
+  },
+  {
+    "hero_id": 110,
+    "feature": "AOE_DAMAGE",
+    "value": 1.0,
+    "confidence": 0.85,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Icarus Dive: Phoenix dives forward in an arc with a fixed distance in the targeted direction, dealing damage over time and slowing the movement speed of any units it comes into contact with, and then orbiting back to its original position. If Phoenix casts Supernova, the dive ends.; radius = 200.0; damage code = 2"
+  },
+  {
+    "hero_id": 110,
+    "feature": "HARD_CONTROL",
+    "value": 1.0,
+    "confidence": 0.85,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Supernova: The Phoenix willingly ends its current life for the chance to be reborn. Transforms into a burning sun that scorches enemies in a huge area. The sun can be destroyed by attacks from enemy Heroes. After %abilityduration% seconds the sun explodes, stunning all nearby enemies while restoring Phoenix to full health and mana with refreshed abilities. DISPEL TYPE: Strong Dispel"
+  },
+  {
+    "hero_id": 110,
+    "feature": "MAX_CONTROL_DURATION",
+    "value": 6.0,
+    "confidence": 0.8,
+    "derivation_method": "derived",
+    "evidence": "Maximum duration among detected hard control abilities"
+  },
+  {
+    "hero_id": 111,
+    "feature": "ALLY_DISPEL",
+    "value": 1.0,
+    "confidence": 0.8,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Fortune's End: CHANNELED - Gathers Oracle's power into a bolt of scouring energy that, when released, damages, roots, and dispels enemies of buffs in an area around the target. If target is an ally it will only dispel debuffs. The root duration increases with channeling time. DISPEL TYPE: Basic Dispel"
+  },
+  {
+    "hero_id": 111,
+    "feature": "ANTI_MOBILITY",
+    "value": 1.0,
+    "confidence": 0.8,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Fortune's End: CHANNELED - Gathers Oracle's power into a bolt of scouring energy that, when released, damages, roots, and dispels enemies of buffs in an area around the target. If target is an ally it will only dispel debuffs. The root duration increases with channeling time. DISPEL TYPE: Basic Dispel"
+  },
+  {
+    "hero_id": 111,
+    "feature": "AOE_DAMAGE",
+    "value": 1.0,
+    "confidence": 0.85,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Fortune's End: CHANNELED - Gathers Oracle's power into a bolt of scouring energy that, when released, damages, roots, and dispels enemies of buffs in an area around the target. If target is an ally it will only dispel debuffs. The root duration increases with channeling time. DISPEL TYPE: Basic Dispel; radius = 350.0; damage code = 2"
+  },
+  {
+    "hero_id": 112,
+    "feature": "AOE_DAMAGE",
+    "value": 1.0,
+    "confidence": 0.85,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Splinter Blast: Launches a ball of brittle ice toward a unit. The ice shatters on impact, leaving the primary target completely unaffected, while hurling damaging splinters into nearby enemies in a %split_radius% base radius. Enemies struck by these splinters are slowed by %movespeed_slow_tooltip%%%.; radius = 500.0; damage code = 2"
+  },
+  {
+    "hero_id": 112,
+    "feature": "SAVE",
+    "value": 1.0,
+    "confidence": 0.85,
+    "derivation_method": "manual",
+    "evidence": "Valve Cold Embrace targets an ally, heals them, and blocks all physical damage during the cocoon."
+  },
+  {
+    "hero_id": 113,
+    "feature": "AOE_DAMAGE",
+    "value": 1.0,
+    "confidence": 0.85,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Flux: Infuses a lone enemy unit with swirling, volatile energy, dealing damage over time and slowing the target. The damage is not applied if another enemy unit is near the target.; radius = 225.0; damage code = 2"
+  },
+  {
+    "hero_id": 114,
+    "feature": "AOE_DAMAGE",
+    "value": 1.0,
+    "confidence": 0.85,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Boundless Strike: Monkey King enlarges his staff and slams it against the ground, stunning enemies in a line and damaging them with bonus damage and a critical hit based on his attack. Has True Strike.; radius = 150.0; damage code = 1"
+  },
+  {
+    "hero_id": 114,
+    "feature": "HARD_CONTROL",
+    "value": 1.0,
+    "confidence": 0.85,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Boundless Strike: Monkey King enlarges his staff and slams it against the ground, stunning enemies in a line and damaging them with bonus damage and a critical hit based on his attack. Has True Strike."
+  },
+  {
+    "hero_id": 114,
+    "feature": "HIGH_MOBILITY",
+    "value": 1.0,
+    "confidence": 0.8,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Tree Dance: Monkey King jumps to a tree and perches atop it. While perched, he gains the Primal Spring ability-a channeled leap attack. If Monkey King's tree is destroyed, he falls and is stunned for %unperched_stunned_duration%s. Taking damage while on the ground puts Tree Dance on cooldown."
+  },
+  {
+    "hero_id": 114,
+    "feature": "MAX_CONTROL_DURATION",
+    "value": 1.3,
+    "confidence": 0.8,
+    "derivation_method": "derived",
+    "evidence": "Maximum duration among detected hard control abilities"
+  },
+  {
+    "hero_id": 119,
+    "feature": "ANTI_MOBILITY",
+    "value": 1.0,
+    "confidence": 0.8,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Bramble Maze: Dark Willow creates a %placement_range% AoE maze of %placement_count% brambles that grow in the target area after %initial_creation_delay% seconds. Enemies that walk into a bramble are rooted and take damage over time. Lasts %placement_duration% seconds."
+  },
+  {
+    "hero_id": 119,
+    "feature": "HARD_CONTROL",
+    "value": 1.0,
+    "confidence": 0.85,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Cursed Crown: Dark Willow casts an ancient fae curse on the target. After a delay, the target and nearby enemies are stunned."
+  },
+  {
+    "hero_id": 119,
+    "feature": "MAX_CONTROL_DURATION",
+    "value": 2.4,
+    "confidence": 0.8,
+    "derivation_method": "derived",
+    "evidence": "Maximum duration among detected hard control abilities"
+  },
+  {
+    "hero_id": 120,
+    "feature": "AOE_DAMAGE",
+    "value": 1.0,
+    "confidence": 0.85,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Shield Crash: Pangolier jumps in the air and slams back to the ground in front of his current position damaging all enemies in a radius. Pangolier gains an all damage barrier for a short time if Shield Crash hits an enemy hero. Forward movement is maintained if Shield Crash is used while Rolling Thunder is active, and allows Rolling Thunder to clear walls or cliffs.; radius = 500.0; damage code = 1"
+  },
+  {
+    "hero_id": 120,
+    "feature": "HARD_CONTROL",
+    "value": 1.0,
+    "confidence": 0.85,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Rolling Thunder: Pangolier curls into a debuff immune ball with %magic_resistance%%% magic resistance and rolls out. When rolling, he moves at an increased speed and can move through trees, but has a decreased ability to turn. Striking enemies knocks them back, inflicting damage proportional to his attack damage and stunning them when they land. Colliding with walls or cliffs will cause a temporary pause while Pangolier reverses in direction. DISPEL TYPE: Basic Dispel"
+  },
+  {
+    "hero_id": 120,
+    "feature": "HIGH_MOBILITY",
+    "value": 1.0,
+    "confidence": 0.8,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Swashbuckle: Pangolier dashes along the target line, then slashes and briefly slows all enemies in the drawn direction with several quick swipes. Lucky Shot has a chance to activate from this damage."
+  },
+  {
+    "hero_id": 120,
+    "feature": "MAX_CONTROL_DURATION",
+    "value": 1.2,
+    "confidence": 0.8,
+    "derivation_method": "derived",
+    "evidence": "Maximum duration among detected hard control abilities"
+  },
+  {
+    "hero_id": 121,
+    "feature": "AOE_DAMAGE",
+    "value": 1.0,
+    "confidence": 0.85,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Stroke of Fate: Grimstroke paints a curved path of ink with his brush, damaging and slowing enemies. The damage is increased with each enemy the ink hits. Can be put on alt-cast to have the path be straight.; radius = 160.0; damage code = 2"
+  },
+  {
+    "hero_id": 121,
+    "feature": "HARD_CONTROL",
+    "value": 1.0,
+    "confidence": 0.85,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Ink Swell: Grimstroke shrouds an allied unit in ink, increasing its movement speed. Enemies in range of the allied unit are damaged with inky tendrils over time. After %buff_duration% seconds it applies damage and stun in an area around the unit in proportion to how long ink tendril was near any hero."
+  },
+  {
+    "hero_id": 123,
+    "feature": "AOE_DAMAGE",
+    "value": 1.0,
+    "confidence": 0.85,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Hunter's Boomerang: Tosses a boomerang in an arc. Upon contact, it returns to Hoodwink. The boomerang will deal damage as it passes through or hits enemies, and apply a debuff that causes affected enemies to be slowed and be more vulnerable to spell damage.; radius = 150.0; damage code = 2"
+  },
+  {
+    "hero_id": 123,
+    "feature": "HARD_CONTROL",
+    "value": 1.0,
+    "confidence": 0.85,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Bushwhack: Tosses a net trap that stuns enemies if they are near a tree in the area. Affected enemies take damage over time and are pulled towards the tree nearest to them within the target area, and have their vision reduced to 0 for the duration of the stun."
+  },
+  {
+    "hero_id": 126,
+    "feature": "AOE_DAMAGE",
+    "value": 1.0,
+    "confidence": 0.85,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Aether Remnant: Void Spirit dispatches a remnant to the target location. The remnant stands watch over the region, facing the direction of his vector. When a unit crosses its gaze, the remnant pulls it in and damages it.; radius = 300.0; damage code = 2"
+  },
+  {
+    "hero_id": 128,
+    "feature": "AOE_DAMAGE",
+    "value": 1.0,
+    "confidence": 0.85,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Firesnap Cookie: Snapfire feeds a potent cookie to Mortimer or an ally, causing them to hop a short distance. The hopping unit stuns and damages enemies in the landing zone.; radius = 300.0; damage code = 2"
+  },
+  {
+    "hero_id": 128,
+    "feature": "HARD_CONTROL",
+    "value": 1.0,
+    "confidence": 0.85,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Firesnap Cookie: Snapfire feeds a potent cookie to Mortimer or an ally, causing them to hop a short distance. The hopping unit stuns and damages enemies in the landing zone."
+  },
+  {
+    "hero_id": 128,
+    "feature": "MAX_CONTROL_DURATION",
+    "value": 2.2,
+    "confidence": 0.8,
+    "derivation_method": "derived",
+    "evidence": "Maximum duration among detected hard control abilities"
+  },
+  {
+    "hero_id": 129,
+    "feature": "AOE_DAMAGE",
+    "value": 1.0,
+    "confidence": 0.85,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Spear of Mars: Mars throws his legendary Spear with deadly precision, damaging each enemy unit it strikes. The first enemy hero it hits is skewered on the spear, pushing it back. If a skewered hero hits a tree, building, or cliff, they will be impaled to it and stunned.; radius = textual multi-target; damage code = 2"
+  },
+  {
+    "hero_id": 129,
+    "feature": "HARD_CONTROL",
+    "value": 1.0,
+    "confidence": 0.85,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Spear of Mars: Mars throws his legendary Spear with deadly precision, damaging each enemy unit it strikes. The first enemy hero it hits is skewered on the spear, pushing it back. If a skewered hero hits a tree, building, or cliff, they will be impaled to it and stunned."
+  },
+  {
+    "hero_id": 129,
+    "feature": "MAX_CONTROL_DURATION",
+    "value": 2.2,
+    "confidence": 0.8,
+    "derivation_method": "derived",
+    "evidence": "Maximum duration among detected hard control abilities"
+  },
+  {
+    "hero_id": 131,
+    "feature": "HARD_CONTROL",
+    "value": 1.0,
+    "confidence": 0.85,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Tame the Beasts: CHANNELED - Ringmaster twirls his whip for up to %abilitychanneltime% second then cracks it. Whipped enemies are damaged and flee in fear from Ringmaster. Channel time exponentially increases damage and extends the fear duration, but reduces the radius."
+  },
+  {
+    "hero_id": 131,
+    "feature": "MAX_CONTROL_DURATION",
+    "value": 1.2,
+    "confidence": 0.8,
+    "derivation_method": "derived",
+    "evidence": "Maximum duration among detected hard control abilities"
+  },
+  {
+    "hero_id": 135,
+    "feature": "AOE_DAMAGE",
+    "value": 1.0,
+    "confidence": 0.85,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Starbreaker: Dawnbreaker whirls her hammer around 3 times, damaging enemies with her attack plus bonus damage. On the final strike, she smashes her hammer down, stunning and damaging enemies in front of her.; radius = 300.0; damage code = 1"
+  },
+  {
+    "hero_id": 135,
+    "feature": "HARD_CONTROL",
+    "value": 1.0,
+    "confidence": 0.85,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Starbreaker: Dawnbreaker whirls her hammer around 3 times, damaging enemies with her attack plus bonus damage. On the final strike, she smashes her hammer down, stunning and damaging enemies in front of her."
+  },
+  {
+    "hero_id": 135,
+    "feature": "MAX_CONTROL_DURATION",
+    "value": 1.6,
+    "confidence": 0.8,
+    "derivation_method": "derived",
+    "evidence": "Maximum duration among detected hard control abilities"
+  },
+  {
+    "hero_id": 136,
+    "feature": "AOE_DAMAGE",
+    "value": 1.0,
+    "confidence": 0.85,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Dispose: Marci grabs an allied or enemy target and throws it effortlessly behind her, damaging and slowing the unit if it's an enemy. Any enemy units in the landing area will also be damaged and slowed.; radius = 300.0; damage code = 2"
+  },
+  {
+    "hero_id": 136,
+    "feature": "HARD_CONTROL",
+    "value": 1.0,
+    "confidence": 0.85,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Rebound: Marci bounds to the targeted allied unit, choosing a direction and distance she will spring away from it. Upon reaching the unit, Marci lunges to her final destination, damaging and stunning enemies where she lands. When Rebound is set to alt-cast, Marci brings the target ally with her to her final destination. The ally receives %ally_movespeed_pct%%% bonus movement speed for %ally_buff_duration%s."
+  },
+  {
+    "hero_id": 136,
+    "feature": "HIGH_MOBILITY",
+    "value": 1.0,
+    "confidence": 0.8,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Special Delivery: Marci whistles to instantly summon her courier to her. If the courier started in the fountain, it will take items from Marci's stash. After teleporting it will transfer these items to Marci and head back to the fountain. Passively grants all allied couriers %bonus_levels% bonus levels and %bonus_hp_tooltip% bonus health."
+  },
+  {
+    "hero_id": 137,
+    "feature": "AOE_DAMAGE",
+    "value": 1.0,
+    "confidence": 0.85,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Trample: Primal Beast stomps over everything. For every %step_distance% units traveled, all enemies around the Beast receive damage. Deals base damage plus a multiplier of Primal Beast's attack damage. Primal Beast is disarmed for the duration of the ability.; radius = 200.0; damage code = 2"
+  },
+  {
+    "hero_id": 137,
+    "feature": "HARD_CONTROL",
+    "value": 1.0,
+    "confidence": 0.85,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Onslaught: Primal Beast charges up and then runs in the chosen direction, knocking back enemies and allies alike. Enemy units are damaged and stunned on impact. The longer the charge duration, the farther Primal Beast's momentum will carry him. Can be cancelled at any time with the Stop command."
+  },
+  {
+    "hero_id": 137,
+    "feature": "MAX_CONTROL_DURATION",
+    "value": 1.6,
+    "confidence": 0.8,
+    "derivation_method": "derived",
+    "evidence": "Maximum duration among detected hard control abilities"
+  },
+  {
+    "hero_id": 138,
+    "feature": "AOE_DAMAGE",
+    "value": 1.0,
+    "confidence": 0.85,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Dead Shot: Muerta fires a ghostly trickshot at an enemy unit or tree. When the bullet strikes, it damages and briefly slows, then ricochets in the targeted direction. The ricochet damages all units that it passes through, stopping when it hits a hero. Heroes hit by the ricochet are feared away from the impact.; radius = 150.0; damage code = 2"
+  },
+  {
+    "hero_id": 138,
+    "feature": "HARD_CONTROL",
+    "value": 1.0,
+    "confidence": 0.85,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Dead Shot: Muerta fires a ghostly trickshot at an enemy unit or tree. When the bullet strikes, it damages and briefly slows, then ricochets in the targeted direction. The ricochet damages all units that it passes through, stopping when it hits a hero. Heroes hit by the ricochet are feared away from the impact."
+  },
+  {
+    "hero_id": 138,
+    "feature": "MAX_CONTROL_DURATION",
+    "value": 1.25,
+    "confidence": 0.8,
+    "derivation_method": "derived",
+    "evidence": "Maximum duration among detected hard control abilities"
+  },
+  {
+    "hero_id": 145,
+    "feature": "AOE_DAMAGE",
+    "value": 1.0,
+    "confidence": 0.85,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Raptor Dance: Kez enters into an uncontrollable state for %AbilityCastPoint% second, becoming invulnerable for %invuln_period%s and receiving a basic dispel. If the cast completes successfully, Kez performs a series of deadly radial slashes around him that deal damage based on the max health of the target and heal Kez for a percentage of all damage dealt.; radius = 450.0; damage code = 4"
+  },
+  {
+    "hero_id": 145,
+    "feature": "HARD_CONTROL",
+    "value": 1.0,
+    "confidence": 0.85,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Shodo Sai: Kez has a chance to critically strike the target when attacking with Sais. Kez may activate the ability to disarm himself, lock his facing, and parry attacks and attack effects from the targeted direction for %parry_duration% seconds. If an attack is parried from an enemy Hero in this way, that Hero is stunned for %parry_stun_duration%s and gains a Mark. When a Marked target is attacked by Kez, it will guarantee a critical strike and stun the target. The sub-ability may "
+  },
+  {
+    "hero_id": 145,
+    "feature": "MAX_CONTROL_DURATION",
+    "value": 0.8,
+    "confidence": 0.8,
+    "derivation_method": "derived",
+    "evidence": "Maximum duration among detected hard control abilities"
+  },
+  {
+    "hero_id": 155,
+    "feature": "AOE_DAMAGE",
+    "value": 1.0,
+    "confidence": 0.85,
+    "derivation_method": "derived",
+    "evidence": "Valve ability Frogstomp: Largo tosses froglings to an area. They stomp the ground every %stomp_interval% second, dealing damage and ministuns, and enemies in the area have reduced movement speed.; radius = 350.0; damage code = 2"
+  }
+]

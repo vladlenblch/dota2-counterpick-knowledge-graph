@@ -1,0 +1,66 @@
+[
+  {
+    "hero": "npc_dota_hero_phantom_lancer",
+    "feature": "DEPENDS_ON_ILLUSIONS",
+    "action": "ADD",
+    "value": 1,
+    "confidence": 0.85,
+    "reason": "Valve Juxtapose creates illusions on attack and allows illusions to create further illusions; Illusory Armaments strengthens those illusions. This is a core repeated mechanic, not a single utility illusion."
+  },
+  {
+    "hero": "npc_dota_hero_earthshaker",
+    "feature": "ANTI_ILLUSION",
+    "action": "ADD",
+    "value": 1,
+    "confidence": 0.85,
+    "reason": "Valve Echo Slam says each enemy hit causes another echo that damages nearby units. A larger illusion group increases echoes, making this an explicit multi-unit interaction beyond generic AoE damage."
+  },
+  {
+    "hero": "npc_dota_hero_axe",
+    "feature": "ANTI_ILLUSION",
+    "action": "ADD",
+    "value": 1,
+    "confidence": 0.8,
+    "reason": "Valve Counter Helix is repeated pure damage to all nearby enemies after attacks against Axe; illusion groups provide many attack triggers and are all hit."
+  },
+  {
+    "hero": "npc_dota_hero_winter_wyvern",
+    "feature": "SAVE",
+    "action": "ADD",
+    "value": 1,
+    "confidence": 0.85,
+    "reason": "Valve Cold Embrace targets an ally, heals them, and blocks all physical damage during the cocoon."
+  },
+  {
+    "hero": "npc_dota_hero_naga_siren",
+    "feature": "DEPENDS_ON_ILLUSIONS",
+    "action": "ADD",
+    "value": 1,
+    "confidence": 0.85,
+    "reason": "Valve Mirror Image creates multiple controlled images, and Rip Tide explicitly lets Naga Siren's illusions apply bonus damage and armor reduction."
+  },
+  {
+    "hero": "npc_dota_hero_chaos_knight",
+    "feature": "DEPENDS_ON_ILLUSIONS",
+    "action": "ADD",
+    "value": 1,
+    "confidence": 0.85,
+    "reason": "Valve Phantasm summons several illusions; Reality Rift transports his illusions and Chaos Strike grants their attacks critical strike and lifesteal."
+  },
+  {
+    "hero": "npc_dota_hero_terrorblade",
+    "feature": "DEPENDS_ON_ILLUSIONS",
+    "action": "ADD",
+    "value": 1,
+    "confidence": 0.8,
+    "reason": "Valve Conjure Image creates illusions; Metamorphosis, Demon Zeal, and Dark Unity explicitly modify nearby Terrorblade illusions."
+  },
+  {
+    "hero": "npc_dota_hero_vengefulspirit",
+    "feature": "SAVE",
+    "action": "ADD",
+    "value": 1,
+    "confidence": 0.8,
+    "reason": "Valve Nether Swap can reposition an allied hero and grants allied swapped units a protective barrier."
+  }
+]

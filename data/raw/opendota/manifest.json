@@ -1,0 +1,10 @@
+{
+  "retrieved_at": "2026-10-07T19:10:06+00:00",
+  "heroes": 127,
+  "errors": [
+    {
+      "endpoint": "constants/rank_tier",
+      "error": "HTTP Error 404: Not Found"
+    }
+  ]
+}
