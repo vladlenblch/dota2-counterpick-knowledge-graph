@@ -155,16 +155,6 @@ def build():
         {"hero_id": hero["hero_id"], "hero": hero["display_name"], "semantic_feature_count": semantic_counts[hero["hero_id"]]}
         for hero in heroes if semantic_counts[hero["hero_id"]] < 2
     ])
-    pl = next((hero for hero in heroes if hero["internal_name"] == "npc_dota_hero_phantom_lancer"), None)
-    pl_report = None
-    if pl:
-        pl_id = pl["hero_id"]
-        all_hero_ids = {hero["hero_id"] for hero in heroes}
-        pl_report = {"hero_id": pl_id, "abilities": [row["display_name"] for row in abilities if row["hero_id"] == pl_id],
-                     "features": sorted(row["feature"] for row in features if row["hero_id"] == pl_id),
-                     "matchup_opponents": len({row["opponent_hero_id"] for row in matchups if row["hero_id"] == pl_id}),
-                     "missing_opponent_ids": sorted(all_hero_ids - {pl_id} - {row["opponent_hero_id"] for row in matchups if row["hero_id"] == pl_id})}
-    write_json(REPORTS / "phantom_lancer_sanity.json", pl_report)
     source_status = {
         "valve": {"raw_snapshot": (RAW / "valve" / "manifest.json").exists(), "hero_rows": len(heroes), "ability_rows": len(abilities), "item_rows": len(items)},
         "opendota": {"raw_snapshot": (RAW / "opendota" / "manifest.json").exists(), "matchup_rows": sum(row["source"] == "opendota" for row in matchups)},

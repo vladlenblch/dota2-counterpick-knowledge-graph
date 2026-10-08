@@ -3,10 +3,10 @@
   "abilities": 734,
   "items": 507,
   "unique_features": 76,
-  "hero_feature_relations": 2696,
-  "mean_features_per_hero": 21.23,
-  "min_features_per_hero": 16,
-  "max_features_per_hero": 31,
+  "hero_feature_relations": 2103,
+  "mean_features_per_hero": 16.56,
+  "min_features_per_hero": 10,
+  "max_features_per_hero": 29,
   "matchups_by_source": {
     "opendota": 15968
   },

@@ -32,6 +32,15 @@ class PipelineTests(unittest.TestCase):
         self.assertIsNone(self.mapper.resolve("hero", numeric_id=999, source="test"))
         self.assertEqual(len(self.mapper.problems), 1)
 
+    def test_zero_counts_stay_in_matrix_without_creating_feature_relations(self):
+        abilities = [{"hero_id": 2, "ability_id": 9, "display_name": "Stun",
+                      "description": "Stuns the target.", "damage_type_code": 0,
+                      "special_values": [], "damage": [], "duration": []}]
+        rows, matrix = extract(self.heroes, abilities, overrides=[])
+        self.assertTrue(all(row["value"] > 0 for row in rows if row["feature"].endswith("_COUNT")))
+        self.assertEqual(next(row for row in rows if row["hero_id"] == 2 and row["feature"] == "STUN_COUNT")["value"], 1)
+        self.assertEqual(next(row for row in matrix if row["hero_id"] == 12)["STUN_COUNT"], 0)
+
     def test_preventing_blink_does_not_grant_blink(self):
         abilities = [{"hero_id": 2, "ability_id": 9, "display_name": "Trap",
                       "description": "Traps enemies in place, preventing movement or blinking.",

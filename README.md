@@ -1,22 +1,46 @@
-# Dota 2 Counterpick Knowledge Graph — data preparation
+# Данные Dota 2 для графа знаний о контрпиках
 
-This repository builds a **current snapshot** of Dota 2 entities, matchup observations, and evidence-backed hero mechanics. It does not build the knowledge graph or a counter score. A full rerun replaces the current raw snapshots and curated Parquet files; there is no patch history.
+Проект собирает снимок данных из [официального источника Valve](https://www.dota2.com/datafeed/herolist?language=english) и [OpenDota](https://api.opendota.com/api/heroes), сопоставляет сущности по ID Valve и извлекает признаки героев. Сейчас здесь подготовка датасета: готового графа знаний и расчёта контрпиков пока нет. Исходные ответы API сохранены в `data/raw/`, обработанные таблицы — в `data/final/`.
 
-## Setup
+## Что есть в датасете
+
+Снимок собран **7 октября 2026 года**. Все связи с героями используют ID Valve.
+
+| Сущность или связь | Количество | Где смотреть |
+| --- | ---: | --- |
+| Герои | 127 | [`heroes.parquet`](data/final/heroes.parquet) |
+| Способности героев | 734 | [`abilities.parquet`](data/final/abilities.parquet) |
+| Предметы | 507 | [`items.parquet`](data/final/items.parquet) |
+| Уникальные признаки героев | 76 | [`hero_features.parquet`](data/final/hero_features.parquet) |
+| Связи «герой — признак» | 2 103 | [`hero_features.parquet`](data/final/hero_features.parquet) |
+| Направленные связи «герой — противник» | 15 968 | [`matchups.parquet`](data/final/matchups.parquet) |
+| Связи «герой — предмет — стадия игры» | 11 691 | [`hero_items.parquet`](data/final/hero_items.parquet) |
+
+Дополнительно [`hero_feature_matrix.parquet`](data/final/hero_feature_matrix.parquet) содержит 127 строк и отдельный столбец для каждого из 76 признаков. [`hero_meta.parquet`](data/final/hero_meta.parquet) содержит 127 записей с агрегированной статистикой героев OpenDota, в том числе по ранговым группам и профессиональным матчам. Всего в `data/final/` восемь файлов Parquet.
+
+## Как понимать связи
+
+- **Герой → способность:** `abilities.hero_id` указывает на `heroes.hero_id`. Хранятся описание, параметры и исходный объект Valve.
+- **Герой → признак:** каждая строка `hero_features` означает найденное свойство героя. `value` хранит величину или счётчик, `confidence` — уверенность правила, `evidence` — основание. Нулевые счётчики не создают связей; в матрице их значения равны нулю. Ноль в матрице означает отсутствие найденного подтверждения, а не доказанное отсутствие свойства.
+- **Герой → противник:** строка `matchups` описывает результат героя `hero_id` против `opponent_hero_id` по OpenDota. Сохранены число матчей, победы и доля побед. `normalized_advantage` — разница между долей побед в этом противостоянии и общей долей побед героя по `heroStats`; положительное значение в пользу `hero_id`. Периоды этих агрегатов могут различаться, поэтому оценка приблизительная.
+- **Герой → предмет → стадия:** `hero_items` хранит число использований предмета на стадиях `start`, `early`, `mid`, `late`. Доля использования не вычисляется без общего числа подходящих матчей.
+
+Признаки извлекаются из характеристик и описаний способностей Valve. В [`config/manual_overrides.json`](config/manual_overrides.json) находятся восемь обоснованных ручных уточнений для механик, которые трудно надёжно определить правилом. Сырые ответы API и исходные объекты в таблицах сохранены для проверки и дальнейшего расширения данных.
+
+## Сбор и пересборка
 
 ```bash
 python3.12 -m venv .venv
 .venv/bin/python -m pip install -r requirements.txt
-```
-
-## Collect and build
-
-```bash
 .venv/bin/python -m dota_kg collect valve
 .venv/bin/python -m dota_kg collect opendota
 .venv/bin/python -m dota_kg build
 ```
 
-Valve and OpenDota collect independently under `data/raw/<source>/`. A failed collection preserves the previous complete snapshot of that source. `build` writes eight Parquet datasets under `data/final/` and validation reports under `data/reports/`.
+Каждый источник обновляется отдельно. Если сбор завершается ошибкой, предыдущий полный снимок источника сохраняется. Команда `build` пересоздаёт таблицы и отчёты из данных в `data/raw/`; она сама не обращается к API.
 
-Manual feature decisions belong in [`config/manual_overrides.json`](config/manual_overrides.json), each with `hero`, `feature`, `action` (`ADD` or `REMOVE`), and `reason`. The complete source and coverage limitations are in [`SOURCES.md`](SOURCES.md); dataset fields and semantics are in [`DATASET.md`](DATASET.md).
+## Качество и ограничения
+
+В снимке отсутствуют **34 направленные пары героев** из возможных 16 002: их нет в полученных ответах OpenDota. У OpenDota также нет нужных знаменателей для общей доли выбора/запрета героя и доли использования предметов. Признак пробития невосприимчивости к эффектам частично опирается на предварительную интерпретацию кода `immunity=3` Valve; исходный код сохранён рядом с данными способности.
+
+Итоги сборки находятся в [`summary.json`](data/reports/summary.json), пропущенные пары — в [`matchup_coverage.json`](data/reports/matchup_coverage.json), ошибки проверки — в [`validation.json`](data/reports/validation.json). В текущей сборке ошибок сопоставления ID и валидации нет. Снимок заменяется при пересборке; историю патчей проект не ведёт.

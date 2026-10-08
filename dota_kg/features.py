@@ -237,10 +237,13 @@ def extract(heroes, abilities, overrides=None):
         key = (row["hero_id"], row["feature"])
         if key not in best or row["confidence"] > best[key]["confidence"]:
             best[key] = row
-    rows = sorted(best.values(), key=lambda x: (x["hero_id"], x["feature"]))
+    all_features = sorted({row["feature"] for row in best.values()})
+    rows = sorted(
+        (row for row in best.values() if not (row["feature"].endswith("_COUNT") and row["value"] == 0)),
+        key=lambda x: (x["hero_id"], x["feature"]),
+    )
     features_by_hero = defaultdict(dict)
     for row in rows:
         features_by_hero[row["hero_id"]][row["feature"]] = row["value"]
-    all_features = sorted({row["feature"] for row in rows})
     matrix = [{"hero_id": hero["hero_id"], **{feature: features_by_hero[hero["hero_id"]].get(feature, 0.0) for feature in all_features}} for hero in heroes]
     return rows, matrix
