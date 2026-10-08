@@ -42,7 +42,7 @@ L 426.24 244.567636
 L 426.24 221.200364
 L 33.12 221.200364
 z
-" clip-path="url(#pbd012bd60d)" style="fill: #1d9c92"/>
+" clip-path="url(#pbd012bd60d)" style="fill: #3869ae"/>
    </g>
   </g>
   <g id="axes_2">
@@ -1975,7 +1975,7 @@ z
   </g>
   <g id="text_24">
    <!-- Все направленные пары героев -->
-   <g style="fill: #1d9c92" transform="translate(33.12 190.656) scale(0.11 -0.11)">
+   <g style="fill: #3869ae" transform="translate(33.12 190.656) scale(0.11 -0.11)">
     <defs>
      <path id="DejaVuSans-3a6" d="M 1259 2228
 L 1259 519

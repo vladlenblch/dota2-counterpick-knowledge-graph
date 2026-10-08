@@ -27,10 +27,7 @@ INK = "#17263C"
 MUTED = "#617187"
 GRID = "#DCE4ED"
 BLUE = "#3869AE"
-TEAL = "#1D9C92"
-SKY = "#71B9CE"
 AMBER = "#E8A846"
-RED = "#D96565"
 
 plt.rcParams.update({
     "font.family": "DejaVu Sans",
@@ -101,23 +98,22 @@ def clean_axis(ax, *, grid="x"):
 def overview(heroes, abilities, items, features, matchups, hero_items):
     fig = figure("Снимок данных Dota 2", f"Основной снимок API: {snapshot_date()}", (13, 5.6))
     cards = [
-        ("ГЕРОИ", len(heroes), BLUE),
-        ("СПОСОБНОСТИ", len(abilities), TEAL),
-        ("ПРЕДМЕТЫ", len(items), SKY),
-        ("ТИПЫ ПРИЗНАКОВ", len({row["feature"] for row in features}), AMBER),
+        ("ГЕРОИ", len(heroes)),
+        ("СПОСОБНОСТИ", len(abilities)),
+        ("ПРЕДМЕТЫ", len(items)),
+        ("ТИПЫ ПРИЗНАКОВ", len({row["feature"] for row in features})),
     ]
-    for index, (label, value, color) in enumerate(cards):
+    for index, (label, value) in enumerate(cards):
         x = .045 + index * .238
         fig.add_artist(FancyBboxPatch((x, .53), .218, .265, boxstyle="round,pad=0.008,rounding_size=0.025",
                                       transform=fig.transFigure, facecolor=WHITE, edgecolor=GRID, linewidth=.7))
         fig.text(x + .022, .735, label, fontsize=10, fontweight="bold", color=MUTED)
-        fig.text(x + .022, .605, fmt(value), fontsize=31, fontweight="bold", color=color)
+        fig.text(x + .022, .605, fmt(value), fontsize=31, fontweight="bold", color=BLUE)
     fig.text(.045, .465, "Связи и наблюдения", fontsize=13, fontweight="bold")
     ax = fig.add_axes([.29, .12, .65, .31])
-    names = ["Герой — противник", "Герой — предмет — стадия", "Герой — признак"]
+    names = ["Герой - противник", "Герой - предмет - стадия", "Герой - признак"]
     values = [len(matchups), len(hero_items), len(features)]
-    colors = [BLUE, TEAL, AMBER]
-    ax.barh([2, 1, 0], values, height=.53, color=colors, zorder=2)
+    ax.barh([2, 1, 0], values, height=.53, color=BLUE, zorder=2)
     ax.set_yticks([2, 1, 0], names)
     ax.set_xlim(0, max(values) * 1.17)
     ax.set_xticks([])
@@ -149,7 +145,7 @@ def gameplay_feature(name: str) -> bool:
 
 
 def feature_patterns(heroes, features):
-    fig = figure("Какие признаки извлечены", "По извлечённым связям «герой — признак»", (13, 5.8))
+    fig = figure("Какие признаки извлечены", "По извлеченным связям героя с признаками", (13, 5.8))
     counts = Counter(row["hero_id"] for row in features)
     per_hero = [counts[hero["hero_id"]] for hero in heroes]
     ax = fig.add_axes([.065, .18, .34, .56])
@@ -213,10 +209,10 @@ def matchup_coverage(heroes, matchups):
     fig = figure("Противостояния героев", "Покрытие пар и распределение доли побед в итоговой таблице", (13, 5.1))
     fig.text(.065, .67, f"{observed / total:.2%}".replace(".", ","), fontsize=43, color=BLUE, fontweight="bold")
     fig.text(.065, .55, f"{fmt(observed)} из {fmt(total)} возможных пар", fontsize=12, color=INK)
-    fig.text(.065, .46, "Все направленные пары героев", fontsize=11, color=TEAL)
+    fig.text(.065, .46, "Все направленные пары героев", fontsize=11, color=BLUE)
     ax = fig.add_axes([.065, .31, .42, .07])
     ax.barh([0], [total], color=GRID, height=.65)
-    ax.barh([0], [observed], color=TEAL, height=.65)
+    ax.barh([0], [observed], color=BLUE, height=.65)
     ax.set_xlim(0, total)
     ax.axis("off")
 
@@ -237,9 +233,9 @@ def item_phases(hero_items):
     counts = Counter(row["phase"] for row in hero_items)
     labels = [("start", "Старт"), ("early", "Ранняя"), ("mid", "Средняя"), ("late", "Поздняя")]
     values = [counts[key] for key, _ in labels]
-    fig = figure("Предметы по стадиям игры", "Число связей «герой — предмет» в каждой стадии", (11, 4.8))
+    fig = figure("Предметы по стадиям игры", "Число связей героев с предметами в каждой стадии", (11, 4.8))
     ax = fig.add_axes([.09, .19, .78, .59])
-    bars = ax.bar(range(4), values, color=[SKY, TEAL, BLUE, AMBER], width=.58, zorder=2)
+    bars = ax.bar(range(4), values, color=BLUE, width=.58, zorder=2)
     ax.set_xticks(range(4), [label for _, label in labels])
     ax.set_ylim(0, max(values) * 1.2)
     ax.set_ylabel("Число связей")
