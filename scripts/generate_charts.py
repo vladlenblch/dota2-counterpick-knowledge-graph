@@ -40,6 +40,7 @@ plt.rcParams.update({
     "ytick.color": INK,
     "axes.edgecolor": GRID,
     "savefig.facecolor": BG,
+    "svg.hashsalt": "dota-kg",
 })
 
 
@@ -76,7 +77,10 @@ def figure(title: str, subtitle: str, size: tuple[int, int] = (13, 5)):
 
 def save(fig, name: str):
     CHARTS.mkdir(parents=True, exist_ok=True)
-    fig.savefig(CHARTS / f"{name}.svg", bbox_inches="tight", pad_inches=.2)
+    path = CHARTS / f"{name}.svg"
+    fig.savefig(path, bbox_inches="tight", pad_inches=.2, metadata={"Date": None})
+    path.write_text("\n".join(line.rstrip() for line in path.read_text(encoding="utf-8").splitlines()) + "\n",
+                    encoding="utf-8")
     if PREVIEW:
         preview = Path(PREVIEW)
         preview.mkdir(parents=True, exist_ok=True)
@@ -94,7 +98,7 @@ def clean_axis(ax, *, grid="x"):
 
 
 def overview(heroes, abilities, items, features, matchups, hero_items):
-    fig = figure("Снимок данных Dota 2", f"Valve + OpenDota  ·  {snapshot_date()}", (13, 5.6))
+    fig = figure("Снимок данных Dota 2", f"Снимок API: {snapshot_date()}  ·  матчапы дополнены", (13, 5.6))
     cards = [
         ("ГЕРОИ", len(heroes), BLUE),
         ("СПОСОБНОСТИ", len(abilities), TEAL),
@@ -207,31 +211,36 @@ def provenance(features):
 def matchup_coverage(heroes, matchups):
     total = len(heroes) * (len(heroes) - 1)
     observed = len({(row["hero_id"], row["opponent_hero_id"]) for row in matchups})
-    found = Counter(row["hero_id"] for row in matchups)
-    missing = sorted(((len(heroes) - 1 - found[hero["hero_id"]], hero["display_name"])
-                      for hero in heroes), reverse=True)
-    top = [(name, count) for count, name in missing if count > 0][:8]
-    fig = figure("Покрытие противостояний", "Направленные пары героев в ответах OpenDota", (13, 5.1))
+    names = {hero["hero_id"]: hero["display_name"] for hero in heroes}
+    added = [row for row in matchups if row["source"] is None]
+    added_pairs = {}
+    for row in added:
+        key = tuple(sorted((row["hero_id"], row["opponent_hero_id"])))
+        added_pairs[key] = row["matches"]
+    top = sorted(added_pairs.items(), key=lambda item: item[1], reverse=True)[:7]
+    fig = figure("Покрытие противостояний", "Направленные пары героев в итоговой таблице", (13, 5.1))
     fig.text(.065, .67, f"{observed / total:.2%}".replace(".", ","), fontsize=43, color=BLUE, fontweight="bold")
     fig.text(.065, .55, f"{fmt(observed)} из {fmt(total)} возможных пар", fontsize=12, color=INK)
-    fig.text(.065, .475, f"{fmt(total - observed)} пары отсутствуют в источнике", fontsize=11, color=RED)
+    fig.text(.065, .475, f"{fmt(len(added))} направления дополнены", fontsize=11, color=TEAL)
     ax = fig.add_axes([.065, .31, .42, .07])
     ax.barh([0], [total], color=GRID, height=.65)
     ax.barh([0], [observed], color=TEAL, height=.65)
     ax.set_xlim(0, total)
     ax.axis("off")
 
-    ax = fig.add_axes([.66, .17, .28, .58])
-    top.reverse()
-    ax.barh(range(len(top)), [count for _, count in top], color=RED, height=.63, zorder=2)
-    ax.set_yticks(range(len(top)), [name for name, _ in top])
-    ax.set_xlim(0, max(count for _, count in top) * 1.25)
-    ax.set_xticks([])
-    ax.set_title("Герои с пропущенными парами", loc="left", fontsize=11, fontweight="bold", pad=14)
-    clean_axis(ax)
-    ax.grid(False)
-    for index, (_, count) in enumerate(top):
-        ax.text(count + .12, index, str(count), va="center", fontsize=10, fontweight="bold")
+    if top:
+        ax = fig.add_axes([.68, .17, .26, .58])
+        top.reverse()
+        ax.barh(range(len(top)), [count for _, count in top], color=BLUE, height=.63, zorder=2)
+        ax.set_yticks(range(len(top)), [f"{names[a]} — {names[b]}" for (a, b), _ in top])
+        ax.set_xlim(0, max(count for _, count in top) * 1.22)
+        ax.set_xticks([])
+        ax.set_title("Дополненные пары: число матчей", loc="left", fontsize=11, fontweight="bold", pad=14)
+        clean_axis(ax)
+        ax.grid(False)
+        for index, (_, count) in enumerate(top):
+            ax.text(count + max(value for _, value in top) * .016, index,
+                    fmt(count), va="center", fontsize=9, fontweight="bold")
     save(fig, "matchups")
 
 
@@ -258,7 +267,7 @@ def main():
     abilities = table("abilities", ["ability_id"])
     items = table("items", ["item_id"])
     features = table("hero_features", ["hero_id", "feature", "derivation_method"])
-    matchups = table("matchups", ["hero_id", "opponent_hero_id"])
+    matchups = table("matchups", ["hero_id", "opponent_hero_id", "source", "matches"])
     hero_items = table("hero_items", ["item_id", "phase"])
     overview(heroes, abilities, items, features, matchups, hero_items)
     feature_patterns(heroes, features)

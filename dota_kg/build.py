@@ -69,6 +69,19 @@ def _saved_manual_features():
     return [row for row in pq.read_table(path).to_pylist() if row["derivation_method"] == "manual"]
 
 
+def _saved_manual_matchups():
+    path = FINAL / "matchups.parquet"
+    if not path.exists():
+        return []
+    return [row for row in pq.read_table(path).to_pylist() if row["source"] is None]
+
+
+def _merge_matchups(collected, manual):
+    collected_keys = {(row["hero_id"], row["opponent_hero_id"]) for row in collected}
+    return collected + [row for row in manual
+                        if (row["hero_id"], row["opponent_hero_id"]) not in collected_keys]
+
+
 def _validate(heroes, abilities, items, features, matchups, hero_items):
     ids = {row["hero_id"] for row in heroes}
     item_ids = {row["item_id"] for row in items}
@@ -96,15 +109,12 @@ def _validate(heroes, abilities, items, features, matchups, hero_items):
     for row in features:
         per_hero[row["hero_id"]].append(row["feature"])
     coverage = {str(row["hero_id"]): {"hero": row["display_name"], "count": len(per_hero[row["hero_id"]]), "features": sorted(per_hero[row["hero_id"]])} for row in heroes}
-    matchup_coverage = {}
-    for source in sorted({row["source"] for row in matchups}):
-        by_hero = defaultdict(set)
-        for row in matchups:
-            if row["source"] == source:
-                by_hero[row["hero_id"]].add(row["opponent_hero_id"])
-        matchup_coverage[source] = {"pairs": sum(map(len, by_hero.values())),
-                                     "opponents_per_hero": {str(h): len(by_hero[h]) for h in ids},
-                                     "missing_opponent_ids": {str(h): sorted(ids - {h} - by_hero[h]) for h in ids if ids - {h} - by_hero[h]}}
+    by_hero = defaultdict(set)
+    for row in matchups:
+        by_hero[row["hero_id"]].add(row["opponent_hero_id"])
+    matchup_coverage = {"pairs": sum(map(len, by_hero.values())),
+                        "opponents_per_hero": {str(h): len(by_hero[h]) for h in ids},
+                        "missing_opponent_ids": {str(h): sorted(ids - {h} - by_hero[h]) for h in ids if ids - {h} - by_hero[h]}}
     return problems, coverage, matchup_coverage
 
 
@@ -123,6 +133,7 @@ def build():
         row["opponent_hero_id"] = mapper.resolve("hero", numeric_id=row["opponent_hero_id"], source="opendota")
         if row["hero_id"] and row["opponent_hero_id"]:
             matchups.append(row)
+    matchups = _merge_matchups(matchups, _saved_manual_matchups())
     hero_items = []
     opendota_item_constants = read_json(RAW / "opendota" / "constants" / "items.json", {})
     opendota_items_by_id = {value.get("id"): (key, value) for key, value in opendota_item_constants.items() if isinstance(value, dict) and value.get("id") is not None}
@@ -173,7 +184,7 @@ def build():
     if source_status["opendota"]["raw_snapshot"]:
         unavailable.append({"source": "opendota", "data": ["overall pick/ban rates", "item usage rates"],
                             "reason": "Public aggregate response lacks the required denominators"})
-        missing_pairs = sum(len(v) for v in matchup_coverage.get("opendota", {}).get("missing_opponent_ids", {}).values())
+        missing_pairs = sum(len(v) for v in matchup_coverage["missing_opponent_ids"].values())
         if missing_pairs:
             unavailable.append({"source": "opendota", "data": [f"{missing_pairs} directional matchup pairs"],
                                 "reason": "Not present in source responses; see matchup_coverage.json"})
@@ -184,7 +195,7 @@ def build():
         "unique_features": len({row["feature"] for row in features}),
         "hero_feature_relations": len(features), "mean_features_per_hero": round(len(features) / len(heroes), 2),
         "min_features_per_hero": min(counts.values(), default=0), "max_features_per_hero": max(counts.values(), default=0),
-        "matchups_by_source": dict(Counter(row["source"] for row in matchups)),
+        "matchups": len(matchups),
         "hero_items": len(hero_items),
         "mapping_problems": len(mapper.problems), "validation_errors": len(problems),
     }

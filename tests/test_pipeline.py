@@ -1,5 +1,6 @@
 import unittest
 
+from dota_kg.build import _merge_matchups
 from dota_kg.features import extract
 from dota_kg.mapping import Mapper
 
@@ -37,6 +38,12 @@ class PipelineTests(unittest.TestCase):
                   "derivation_method": "manual", "evidence": "Reviewed source description"}
         rows, _ = extract(self.heroes, abilities, manual_rows=[manual])
         self.assertEqual([row for row in rows if row["hero_id"] == 2 and row["feature"] == "SLOW"], [manual])
+
+    def test_collected_matchup_replaces_manual_fill_when_available(self):
+        collected = [{"hero_id": 12, "opponent_hero_id": 2, "source": "opendota", "wins": 5}]
+        manual = [{"hero_id": 12, "opponent_hero_id": 2, "source": None, "wins": None},
+                  {"hero_id": 2, "opponent_hero_id": 12, "source": None, "wins": None}]
+        self.assertEqual(_merge_matchups(collected, manual), [collected[0], manual[1]])
 
     def test_ambiguous_or_unknown_id_not_silently_mapped(self):
         self.assertIsNone(self.mapper.resolve("hero", numeric_id=999, source="test"))

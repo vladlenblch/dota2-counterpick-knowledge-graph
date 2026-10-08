@@ -7,9 +7,7 @@
   "mean_features_per_hero": 16.56,
   "min_features_per_hero": 10,
   "max_features_per_hero": 29,
-  "matchups_by_source": {
-    "opendota": 15968
-  },
+  "matchups": 16002,
   "hero_items": 11691,
   "mapping_problems": 0,
   "validation_errors": 0

@@ -6,12 +6,5 @@
       "item usage rates"
     ],
     "reason": "Public aggregate response lacks the required denominators"
-  },
-  {
-    "source": "opendota",
-    "data": [
-      "34 directional matchup pairs"
-    ],
-    "reason": "Not present in source responses; see matchup_coverage.json"
   }
 ]
