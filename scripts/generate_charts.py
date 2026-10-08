@@ -98,7 +98,7 @@ def clean_axis(ax, *, grid="x"):
 
 
 def overview(heroes, abilities, items, features, matchups, hero_items):
-    fig = figure("Снимок данных Dota 2", f"Снимок API: {snapshot_date()}  ·  матчапы дополнены", (13, 5.6))
+    fig = figure("Снимок данных Dota 2", f"Основной снимок API: {snapshot_date()}", (13, 5.6))
     cards = [
         ("ГЕРОИ", len(heroes), BLUE),
         ("СПОСОБНОСТИ", len(abilities), TEAL),
@@ -178,69 +178,50 @@ def feature_patterns(heroes, features):
     save(fig, "features")
 
 
-METHOD_NAMES = {
-    "structured": "Структурированные поля Valve",
-    "rule": "Правила по тексту",
-    "count": "Счётчики способностей",
-    "derived": "Производные правила",
-    "structured+rule": "Поля + текст",
-    "statistical": "Статистические пороги",
-    "manual": "Ручная проверка",
-}
-
-
-def provenance(features):
-    fig = figure("Откуда взялись признаки", "Способ получения каждой связи «герой — признак»", (12, 5.3))
-    counts = Counter(row["derivation_method"] for row in features)
-    entries = sorted(counts.items(), key=lambda item: item[1])
-    ax = fig.add_axes([.33, .17, .60, .62])
-    values = [value for _, value in entries]
-    labels = [METHOD_NAMES.get(key, key) for key, _ in entries]
-    colors = [AMBER if key == "manual" else TEAL if key in ("structured", "structured+rule") else BLUE for key, _ in entries]
-    ax.barh(range(len(entries)), values, color=colors, height=.63, zorder=2)
-    ax.set_yticks(range(len(entries)), labels)
-    ax.set_xlim(0, max(values) * 1.16)
+def feature_confidence(features):
+    fig = figure("Оценка признаков", "Уровень уверенности правила извлечения для каждой связи «герой — признак»", (12, 5.3))
+    counts = Counter(row["confidence"] for row in features)
+    levels = sorted(counts)
+    values = [counts[level] for level in levels]
+    ax = fig.add_axes([.19, .20, .73, .57])
+    ax.barh(range(len(levels)), values,
+            color=[BLUE if level < 0.9 else TEAL if level < 1 else AMBER for level in levels],
+            height=.62, zorder=2)
+    ax.set_yticks(range(len(levels)), [f"{level:.2f}".replace(".", ",") for level in levels])
+    ax.set_xlim(0, max(values) * 1.18)
     ax.set_xticks([])
+    ax.set_ylabel("Уверенность")
     clean_axis(ax)
     ax.grid(False)
     for index, value in enumerate(values):
-        ax.text(value + 6, index, fmt(value), va="center", fontsize=10, fontweight="bold")
-    save(fig, "provenance")
+        ax.text(value + max(values) * .018, index, fmt(value), va="center", fontsize=10, fontweight="bold")
+    save(fig, "confidence")
 
 
 def matchup_coverage(heroes, matchups):
     total = len(heroes) * (len(heroes) - 1)
     observed = len({(row["hero_id"], row["opponent_hero_id"]) for row in matchups})
-    names = {hero["hero_id"]: hero["display_name"] for hero in heroes}
-    added = [row for row in matchups if row["source"] is None]
-    added_pairs = {}
-    for row in added:
-        key = tuple(sorted((row["hero_id"], row["opponent_hero_id"])))
-        added_pairs[key] = row["matches"]
-    top = sorted(added_pairs.items(), key=lambda item: item[1], reverse=True)[:7]
-    fig = figure("Покрытие противостояний", "Направленные пары героев в итоговой таблице", (13, 5.1))
+    rates = [100 * row["win_rate"] for row in matchups if row["win_rate"] is not None]
+    fig = figure("Противостояния героев", "Покрытие пар и распределение доли побед в итоговой таблице", (13, 5.1))
     fig.text(.065, .67, f"{observed / total:.2%}".replace(".", ","), fontsize=43, color=BLUE, fontweight="bold")
     fig.text(.065, .55, f"{fmt(observed)} из {fmt(total)} возможных пар", fontsize=12, color=INK)
-    fig.text(.065, .475, f"{fmt(len(added))} направления дополнены", fontsize=11, color=TEAL)
+    fig.text(.065, .46, "Все направленные пары героев", fontsize=11, color=TEAL)
     ax = fig.add_axes([.065, .31, .42, .07])
     ax.barh([0], [total], color=GRID, height=.65)
     ax.barh([0], [observed], color=TEAL, height=.65)
     ax.set_xlim(0, total)
     ax.axis("off")
 
-    if top:
-        ax = fig.add_axes([.68, .17, .26, .58])
-        top.reverse()
-        ax.barh(range(len(top)), [count for _, count in top], color=BLUE, height=.63, zorder=2)
-        ax.set_yticks(range(len(top)), [f"{names[a]} — {names[b]}" for (a, b), _ in top])
-        ax.set_xlim(0, max(count for _, count in top) * 1.22)
-        ax.set_xticks([])
-        ax.set_title("Дополненные пары: число матчей", loc="left", fontsize=11, fontweight="bold", pad=14)
-        clean_axis(ax)
-        ax.grid(False)
-        for index, (_, count) in enumerate(top):
-            ax.text(count + max(value for _, value in top) * .016, index,
-                    fmt(count), va="center", fontsize=9, fontweight="bold")
+    ax = fig.add_axes([.60, .20, .35, .56])
+    ax.hist(rates, bins=range(0, 105, 5), color=BLUE, edgecolor=BG, linewidth=.8, zorder=2)
+    ax.axvline(median(rates), color=AMBER, linewidth=2, linestyle="--")
+    ax.text(.98, .94, f"медиана: {median(rates):.1f}%".replace(".", ","),
+            transform=ax.transAxes, ha="right", va="top", fontsize=10, fontweight="bold")
+    ax.set_title("Доля побед по направлениям", loc="left", fontsize=11, fontweight="bold", pad=14)
+    ax.set_xlabel("Доля побед, %")
+    ax.set_ylabel("Число пар")
+    ax.set_xticks(range(0, 101, 20))
+    clean_axis(ax, grid="y")
     save(fig, "matchups")
 
 
@@ -263,15 +244,15 @@ def item_phases(hero_items):
 
 
 def main():
-    heroes = table("heroes", ["hero_id", "display_name"])
+    heroes = table("heroes", ["hero_id"])
     abilities = table("abilities", ["ability_id"])
     items = table("items", ["item_id"])
-    features = table("hero_features", ["hero_id", "feature", "derivation_method"])
-    matchups = table("matchups", ["hero_id", "opponent_hero_id", "source", "matches"])
-    hero_items = table("hero_items", ["item_id", "phase"])
+    features = table("hero_features", ["hero_id", "feature", "confidence"])
+    matchups = table("matchups", ["hero_id", "opponent_hero_id", "win_rate"])
+    hero_items = table("hero_items", ["phase"])
     overview(heroes, abilities, items, features, matchups, hero_items)
     feature_patterns(heroes, features)
-    provenance(features)
+    feature_confidence(features)
     matchup_coverage(heroes, matchups)
     item_phases(hero_items)
 
