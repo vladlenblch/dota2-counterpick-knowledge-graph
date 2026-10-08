@@ -22,7 +22,7 @@ class PipelineTests(unittest.TestCase):
                       "damage_type_code": 0, "special_values": [], "damage": [], "duration": []}]
         rows, matrix = extract(self.heroes, abilities, manual_rows=[{
             "hero_id": 12, "feature": "DEPENDS_ON_ILLUSIONS", "value": 1.0,
-            "confidence": .85, "derivation_method": "manual",
+            "derivation_method": "manual",
             "evidence": "Repeated illusion generation reviewed manually",
         }])
         pl = {(row["feature"], row["derivation_method"]) for row in rows if row["hero_id"] == 12}
@@ -34,10 +34,22 @@ class PipelineTests(unittest.TestCase):
         abilities = [{"hero_id": 2, "ability_id": 10, "display_name": "Slow",
                       "description": "Slows the target.", "damage_type_code": 0,
                       "special_values": [], "damage": [], "duration": []}]
-        manual = {"hero_id": 2, "feature": "SLOW", "value": 1.0, "confidence": .8,
+        manual = {"hero_id": 2, "feature": "SLOW", "value": 1.0,
                   "derivation_method": "manual", "evidence": "Reviewed source description"}
         rows, _ = extract(self.heroes, abilities, manual_rows=[manual])
         self.assertEqual([row for row in rows if row["hero_id"] == 2 and row["feature"] == "SLOW"], [manual])
+
+    def test_duplicate_feature_keeps_first_source_evidence(self):
+        abilities = [
+            {"hero_id": 2, "ability_id": ability_id, "display_name": name,
+             "description": "Slows the target.", "damage_type_code": 0,
+             "special_values": [], "damage": [], "duration": []}
+            for ability_id, name in [(10, "First slow"), (11, "Second slow")]
+        ]
+        rows, _ = extract(self.heroes, abilities)
+        slow = [row for row in rows if row["hero_id"] == 2 and row["feature"] == "SLOW"]
+        self.assertEqual(len(slow), 1)
+        self.assertIn("First slow", slow[0]["evidence"])
 
     def test_collected_matchup_replaces_manual_fill_when_available(self):
         collected = [{"hero_id": 12, "opponent_hero_id": 2, "source": "opendota", "wins": 5}]

@@ -76,9 +76,9 @@ def extract(heroes, abilities, manual_rows=()):
     resistances = sorted(x for hero in heroes if (x := numeric(hero.get("magic_resistance"))) is not None)
     features = []
 
-    def emit(hid, feature, value, confidence, method, evidence):
+    def emit(hid, feature, value, method, evidence):
         features.append({"hero_id": hid, "feature": feature, "value": float(value),
-                         "confidence": confidence, "derivation_method": method, "evidence": evidence[:500]})
+                         "derivation_method": method, "evidence": evidence[:500]})
 
     for hero in heroes:
         hid = hero["hero_id"]
@@ -88,24 +88,24 @@ def extract(heroes, abilities, manual_rows=()):
         for feature, field in numeric_base.items():
             value = numeric(hero.get(field))
             if value is not None:
-                emit(hid, feature, value, 1.0, "structured", f"Valve hero.{field} = {value}")
+                emit(hid, feature, value, "structured", f"Valve hero.{field} = {value}")
         armor = numeric(hero.get("armor"))
         if armor is not None:
             percentile = _percentile(armor, armors)
-            emit(hid, "ARMOR_PERCENTILE", percentile, 1.0, "statistical", f"Valve armor = {armor}; percentile among {len(armors)} heroes")
+            emit(hid, "ARMOR_PERCENTILE", percentile, "statistical", f"Valve armor = {armor}; percentile among {len(armors)} heroes")
             if percentile >= 0.75:
-                emit(hid, "HIGH_ARMOR", 1, 1.0, "statistical", f"armor percentile = {percentile:.3f}")
+                emit(hid, "HIGH_ARMOR", 1, "statistical", f"armor percentile = {percentile:.3f}")
             if percentile <= 0.25:
-                emit(hid, "LOW_ARMOR", 1, 1.0, "statistical", f"armor percentile = {percentile:.3f}")
+                emit(hid, "LOW_ARMOR", 1, "statistical", f"armor percentile = {percentile:.3f}")
         resistance = numeric(hero.get("magic_resistance"))
         if resistance is not None and resistances:
             percentile = _percentile(resistance, resistances)
             if percentile >= .75 and resistance > resistances[len(resistances) // 2]:
-                emit(hid, "HIGH_MAGIC_RESISTANCE", 1, 1.0, "statistical", f"magic resistance = {resistance}; percentile = {percentile:.3f}")
+                emit(hid, "HIGH_MAGIC_RESISTANCE", 1, "statistical", f"magic resistance = {resistance}; percentile = {percentile:.3f}")
         if hero.get("attack_type") == "Melee":
-            emit(hid, "MELEE", 1, 1.0, "structured", "Valve attack_type = Melee")
+            emit(hid, "MELEE", 1, "structured", "Valve attack_type = Melee")
         if (attack_range := numeric(hero.get("attack_range"))) is not None and attack_range >= 600:
-            emit(hid, "LONG_RANGE", 1, .95, "rule", f"Valve attack_range = {attack_range} >= 600")
+            emit(hid, "LONG_RANGE", 1, "rule", f"Valve attack_range = {attack_range} >= 600")
 
         counts = defaultdict(int)
         max_radius = 0.0
@@ -126,102 +126,101 @@ def extract(heroes, abilities, manual_rows=()):
                         continue
                     found.add(feature)
                     counts[feature] += 1
-                    emit(hid, feature, 1, .9, "rule", evidence)
+                    emit(hid, feature, 1, "rule", evidence)
             if re.search(r"\bsilence\b", name.casefold()) and re.search(r"\b(?:cast(?:ing)? spells?|abilities)\b", full_text) and "SILENCE" not in found:
                 found.add("SILENCE")
                 counts["SILENCE"] += 1
-                emit(hid, "SILENCE", 1, .95, "rule", evidence)
+                emit(hid, "SILENCE", 1, "rule", evidence)
             if re.search(r"\bhex\b", name.casefold()) and "HEX" not in found:
                 found.add("HEX")
                 counts["HEX"] += 1
-                emit(hid, "HEX", 1, .95, "rule", evidence)
+                emit(hid, "HEX", 1, "rule", evidence)
             if re.search(r"\b(?:preventing|prevents?|prevented) [^.]{0,100}casting spells\b", full_text) and "SILENCE" not in found:
                 found.add("SILENCE")
                 counts["SILENCE"] += 1
-                emit(hid, "SILENCE", 1, .9, "rule", evidence)
+                emit(hid, "SILENCE", 1, "rule", evidence)
             if (re.search(r"\bmirror image\b", name.casefold()) and re.search(r"\bcreates? (?:\w+ ){0,3}images?\b", full_text)) or re.search(r"\b(?:copies|phantasms) [^.]{0,45}\billusions?\b", full_text):
                 found.add("CREATES_ILLUSIONS")
-                emit(hid, "CREATES_ILLUSIONS", 1, .95, "rule", evidence)
+                emit(hid, "CREATES_ILLUSIONS", 1, "rule", evidence)
             # BREAK must describe the Dota mechanic, not the ordinary verb.
             if re.search(r"\b(?:applies? break|break status|breaks? passives?|passives? (?:are|is) disabled)\b", full_text):
                 found.add("BREAK")
-                emit(hid, "BREAK", 1, .95, "rule", evidence)
+                emit(hid, "BREAK", 1, "rule", evidence)
             if re.search(r"\b(?:destroys? illusions?|illusions? (?:are|is) instantly destroyed|bonus damage (?:to|against) illusions?)\b", full_text):
-                emit(hid, "ANTI_ILLUSION", 1, .9, "rule", evidence)
+                emit(hid, "ANTI_ILLUSION", 1, "rule", evidence)
             if re.search(r"\b(?:prevents? blink|cannot blink|blink disabled|movement abilities? (?:are|is) disabled)\b", full_text) or found & {"ROOT", "LEASH"}:
-                emit(hid, "ANTI_MOBILITY", 1, .8, "derived", evidence)
+                emit(hid, "ANTI_MOBILITY", 1, "derived", evidence)
             if found & HARD:
                 counts["HARD_CONTROL"] += 1
-                emit(hid, "HARD_CONTROL", 1, .85, "derived", evidence)
+                emit(hid, "HARD_CONTROL", 1, "derived", evidence)
                 duration_values = [x for x in ability.get("duration") or [] if isinstance(x, (int, float))]
                 for control in found & HARD:
                     duration_values += _special_numbers(ability, f"{control.casefold()}_duration")
                 max_duration = max(max_duration, *duration_values, 0)
             if found & {"BLINK", "DASH", "LEAP", "TELEPORT"}:
                 counts["MOBILITY_ABILITY_COUNT"] += 1
-                emit(hid, "HIGH_MOBILITY", 1, .8, "derived", evidence)
+                emit(hid, "HIGH_MOBILITY", 1, "derived", evidence)
             elif re.search(r"\b(?:gaining max movement speed|moves? at maximum speed|moving increasingly fast|warps? backward)\b", full_text):
                 counts["MOBILITY_ABILITY_COUNT"] += 1
-                emit(hid, "HIGH_MOBILITY", 1, .8, "derived", evidence)
+                emit(hid, "HIGH_MOBILITY", 1, "derived", evidence)
             if found & {"SUMMONS_UNITS"}:
-                emit(hid, "SUMMONER", 1, .85, "derived", evidence)
+                emit(hid, "SUMMONER", 1, "derived", evidence)
             direct_hard_control = bool(re.search(r"\bcannot move,? attack,? or cast spells\b|\bdisabling their attacks and abilities\b|\btrapping all units caught\b|\bhero(?:es)? (?:are|is) forced to attack each other\b|\bhidden unit is invulnerable and disabled\b", full_text))
             if direct_hard_control:
                 counts["HARD_CONTROL"] += 1
-                emit(hid, "HARD_CONTROL", 1, .9, "rule", evidence)
+                emit(hid, "HARD_CONTROL", 1, "rule", evidence)
             if re.search(r"\bastral prison\b", full_text) and re.search(r"\bdisabled\b", full_text):
-                emit(hid, "BANISH", 1, .9, "rule", evidence)
+                emit(hid, "BANISH", 1, "rule", evidence)
             if re.search(r"\b(?:strong dispel|basic dispel)\b", full_text):
                 if re.search(r"\b(?:self|himself|herself|itself)\b", full_text):
-                    emit(hid, "SELF_DISPEL", 1, .8, "derived", evidence)
+                    emit(hid, "SELF_DISPEL", 1, "derived", evidence)
                 if re.search(r"\b(?:ally|allied|friendly)\b", full_text):
-                    emit(hid, "ALLY_DISPEL", 1, .8, "derived", evidence)
+                    emit(hid, "ALLY_DISPEL", 1, "derived", evidence)
             if re.search(r"\bstrong dispel\b", full_text):
                 counts["DISPEL_COUNT"] += 1
-                emit(hid, "STRONG_DISPEL", 1, .95, "rule", evidence)
+                emit(hid, "STRONG_DISPEL", 1, "rule", evidence)
             elif re.search(r"\bbasic dispel\b", full_text):
                 counts["DISPEL_COUNT"] += 1
-                emit(hid, "BASIC_DISPEL", 1, .95, "rule", evidence)
+                emit(hid, "BASIC_DISPEL", 1, "rule", evidence)
             if "ANTI_HEAL" in found:
-                emit(hid, "HEAL_REDUCTION", 1, .9, "rule", evidence)
+                emit(hid, "HEAL_REDUCTION", 1, "rule", evidence)
             if re.search(r"\b(?:allied?|friendly) (?:\w+ ){0,5}(?:invulnerable|invulnerability|physical damage|death|lethal damage)\b|\b(?:prevents? (?:an? )?ally .*? from dying|protects? an? ally from dying)\b", full_text):
-                emit(hid, "SAVE", 1, .8, "derived", evidence)
+                emit(hid, "SAVE", 1, "derived", evidence)
             damage_type = ability.get("damage_type_code")
             damage_feature = {1: "PHYSICAL_DAMAGE", 2: "MAGICAL_DAMAGE", 4: "PURE_DAMAGE"}.get(damage_type)
             has_damage = bool(damage_feature) and (any(numeric(x) and numeric(x) > 0 for x in ability.get("damage") or []) or re.search(r"\b(?:deals? (?:\w+ ){0,5}damage|dealing (?:\w+ ){0,5}damage|damages|damaging|inflicts? (?:\w+ ){0,5}damage|causes? (?:\w+ ){0,5}damage)\b", full_text))
             if damage_feature and has_damage:
-                emit(hid, damage_feature, 1, 1.0, "structured+rule", f"Valve ability {name} damage code = {damage_type}; {desc}")
+                emit(hid, damage_feature, 1, "structured+rule", f"Valve ability {name} damage code = {damage_type}; {desc}")
             radius_values = [x for x in _special_numbers(ability, "radius") if x > 0]
             aoe_text = bool(re.search(r"\b(?:all nearby|nearby enem(?:y|ies)|multiple enemy units|all enem(?:y|ies)|each enemy|enemy units (?:along|in|within)|enemies (?:around|within|in an? area)|area around|area in front|target area|in a radius|in the aoe)\b", full_text))
             if (radius_values or aoe_text) and has_damage:
                 if radius_values:
                     max_radius = max(max_radius, *radius_values)
                 counts["AOE_ABILITY_COUNT"] += 1
-                emit(hid, "AOE_DAMAGE", 1, .85, "derived", f"{evidence}; radius = {max(radius_values) if radius_values else 'textual multi-target'}; damage code = {damage_type}")
+                emit(hid, "AOE_DAMAGE", 1, "derived", f"{evidence}; radius = {max(radius_values) if radius_values else 'textual multi-target'}; damage code = {damage_type}")
             pierces = ability.get("immunity_code") == 3 or bool(re.search(r"\bpierces? debuff immunity\b|\bignores? debuff immunity\b", full_text))
             if pierces:
                 if found & HARD or direct_hard_control:
-                    emit(hid, "BKB_PIERCING_CONTROL", 1, .9, "structured+rule", f"Valve ability {name} immunity code = {ability.get('immunity_code')}; {desc}")
+                    emit(hid, "BKB_PIERCING_CONTROL", 1, "structured+rule", f"Valve ability {name} immunity code = {ability.get('immunity_code')}; {desc}")
                 if has_damage:
-                    emit(hid, "BKB_PIERCING_DAMAGE", 1, .9, "structured+rule", f"Valve ability {name} immunity code = {ability.get('immunity_code')}; {desc}")
+                    emit(hid, "BKB_PIERCING_DAMAGE", 1, "structured+rule", f"Valve ability {name} immunity code = {ability.get('immunity_code')}; {desc}")
         for feature, count in {
             "AOE_ABILITY_COUNT": counts["AOE_ABILITY_COUNT"], "HARD_CONTROL_COUNT": counts["HARD_CONTROL"],
             "MOBILITY_ABILITY_COUNT": counts["MOBILITY_ABILITY_COUNT"], "STUN_COUNT": counts["STUN"],
             "ROOT_COUNT": counts["ROOT"], "SILENCE_COUNT": counts["SILENCE"],
             "DISPEL_COUNT": counts["DISPEL_COUNT"],
         }.items():
-            emit(hid, feature, count, 1.0, "count", f"Counted from {len(hero_abilities)} Valve abilities")
+            emit(hid, feature, count, "count", f"Counted from {len(hero_abilities)} Valve abilities")
         if max_radius:
-            emit(hid, "MAX_AOE_RADIUS", max_radius, .9, "structured", "Maximum ability special_values radius")
+            emit(hid, "MAX_AOE_RADIUS", max_radius, "structured", "Maximum ability special_values radius")
         if max_duration:
-            emit(hid, "MAX_CONTROL_DURATION", max_duration, .8, "derived", "Maximum duration among detected hard control abilities")
+            emit(hid, "MAX_CONTROL_DURATION", max_duration, "derived", "Maximum duration among detected hard control abilities")
 
-    # Multiple abilities may support the same relation. Keep the strongest evidence.
+    # Multiple abilities may support the same relation. Keep the first evidence in source order.
     best = {}
     for row in features:
         key = (row["hero_id"], row["feature"])
-        if key not in best or row["confidence"] > best[key]["confidence"]:
-            best[key] = row
+        best.setdefault(key, row)
     hero_ids = {hero["hero_id"] for hero in heroes}
     for row in manual_rows:
         if row["derivation_method"] != "manual" or row["hero_id"] not in hero_ids:

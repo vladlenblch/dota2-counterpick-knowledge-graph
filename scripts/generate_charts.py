@@ -3,8 +3,9 @@ from __future__ import annotations
 
 import json
 import os
-from collections import Counter
+from collections import Counter, defaultdict
 from datetime import datetime
+from itertools import combinations
 from pathlib import Path
 from statistics import median
 
@@ -141,6 +142,12 @@ FEATURE_NAMES = {
 }
 
 
+def gameplay_feature(name: str) -> bool:
+    return (not name.startswith(("BASE_", "MAX_", "ARMOR_PERCENTILE"))
+            and not name.endswith("_COUNT")
+            and name not in ("MOVEMENT_SPEED", "ATTACK_RANGE"))
+
+
 def feature_patterns(heroes, features):
     fig = figure("Какие признаки извлечены", "По извлечённым связям «герой — признак»", (13, 5.8))
     counts = Counter(row["hero_id"] for row in features)
@@ -157,16 +164,12 @@ def feature_patterns(heroes, features):
     ax.set_xticks(range(10, 31, 4))
     clean_axis(ax, grid="y")
 
-    excluded = ("BASE_", "MAX_", "ARMOR_PERCENTILE")
-    common = Counter(row["feature"] for row in features
-                     if not row["feature"].startswith(excluded)
-                     and not row["feature"].endswith("_COUNT")
-                     and row["feature"] not in ("MOVEMENT_SPEED", "ATTACK_RANGE"))
+    common = Counter(row["feature"] for row in features if gameplay_feature(row["feature"]))
     top = common.most_common(10)
     labels = [FEATURE_NAMES.get(name, name.replace("_", " ").title()) for name, _ in top][::-1]
     values = [value for _, value in top][::-1]
     ax = fig.add_axes([.66, .17, .28, .57])
-    ax.barh(range(len(top)), values, color=[TEAL if n in ("AOE_DAMAGE", "HARD_CONTROL") else BLUE for n, _ in top][::-1], height=.65, zorder=2)
+    ax.barh(range(len(top)), values, color=BLUE, height=.65, zorder=2)
     ax.set_yticks(range(len(top)), labels)
     ax.set_xlim(0, max(values) * 1.19)
     ax.set_xticks([])
@@ -178,24 +181,29 @@ def feature_patterns(heroes, features):
     save(fig, "features")
 
 
-def feature_confidence(features):
-    fig = figure("Оценка признаков", "Уровень уверенности правила извлечения для каждой связи «герой — признак»", (12, 5.3))
-    counts = Counter(row["confidence"] for row in features)
-    levels = sorted(counts)
-    values = [counts[level] for level in levels]
-    ax = fig.add_axes([.19, .20, .73, .57])
-    ax.barh(range(len(levels)), values,
-            color=[BLUE if level < 0.9 else TEAL if level < 1 else AMBER for level in levels],
-            height=.62, zorder=2)
-    ax.set_yticks(range(len(levels)), [f"{level:.2f}".replace(".", ",") for level in levels])
-    ax.set_xlim(0, max(values) * 1.18)
+def feature_pairs(features):
+    fig = figure("Сочетания игровых признаков", "Сколько героев обладают обоими свойствами", (13, 6.4))
+    common = Counter(row["feature"] for row in features if gameplay_feature(row["feature"]))
+    selected = {name for name, _ in common.most_common(10)}
+    by_hero = defaultdict(set)
+    for row in features:
+        if row["feature"] in selected:
+            by_hero[row["hero_id"]].add(row["feature"])
+    counts = Counter(pair for names in by_hero.values() for pair in combinations(sorted(names), 2))
+    top = counts.most_common(10)[::-1]
+    labels = [" + ".join(FEATURE_NAMES.get(name, name.replace("_", " ").title()) for name in pair)
+              for pair, _ in top]
+    values = [count for _, count in top]
+    ax = fig.add_axes([.53, .12, .40, .65])
+    ax.barh(range(len(top)), values, color=BLUE, height=.66, zorder=2)
+    ax.set_yticks(range(len(top)), labels)
+    ax.set_xlim(0, max(values) * 1.16)
     ax.set_xticks([])
-    ax.set_ylabel("Уверенность")
     clean_axis(ax)
     ax.grid(False)
     for index, value in enumerate(values):
-        ax.text(value + max(values) * .018, index, fmt(value), va="center", fontsize=10, fontweight="bold")
-    save(fig, "confidence")
+        ax.text(value + max(values) * .015, index, fmt(value), va="center", fontsize=10, fontweight="bold")
+    save(fig, "feature_pairs")
 
 
 def matchup_coverage(heroes, matchups):
@@ -247,12 +255,12 @@ def main():
     heroes = table("heroes", ["hero_id"])
     abilities = table("abilities", ["ability_id"])
     items = table("items", ["item_id"])
-    features = table("hero_features", ["hero_id", "feature", "confidence"])
+    features = table("hero_features", ["hero_id", "feature"])
     matchups = table("matchups", ["hero_id", "opponent_hero_id", "win_rate"])
     hero_items = table("hero_items", ["phase"])
     overview(heroes, abilities, items, features, matchups, hero_items)
     feature_patterns(heroes, features)
-    feature_confidence(features)
+    feature_pairs(features)
     matchup_coverage(heroes, matchups)
     item_phases(hero_items)
 

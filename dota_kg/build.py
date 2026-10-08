@@ -34,7 +34,7 @@ SCHEMAS = {
               "damage_type": S, "damage_type_code": I, "dispel_type": S,
               "dispellable_code": I, "special_values": S, "neutral_tier": I,
               "is_neutral": B, "is_purchasable": B, "raw": S},
-    "hero_features": {"hero_id": I, "feature": S, "value": F, "confidence": F, "derivation_method": S, "evidence": S},
+    "hero_features": {"hero_id": I, "feature": S, "value": F, "derivation_method": S, "evidence": S},
     "matchups": {"source": S, "hero_id": I, "opponent_hero_id": I, "matches": I, "wins": I,
                  "win_rate": F, "normalized_advantage": F, "retrieved_at": S},
     "hero_items": {"source": S, "hero_id": I, "item_id": I, "phase": S,
@@ -66,7 +66,9 @@ def _saved_manual_features():
     path = FINAL / "hero_features.parquet"
     if not path.exists():
         return []
-    return [row for row in pq.read_table(path).to_pylist() if row["derivation_method"] == "manual"]
+    columns = ["hero_id", "feature", "value", "derivation_method", "evidence"]
+    return [row for row in pq.read_table(path, columns=columns).to_pylist()
+            if row["derivation_method"] == "manual"]
 
 
 def _saved_manual_matchups():
@@ -158,7 +160,6 @@ def build():
     write_json(REPORTS / "ambiguous_mappings.json", mapper.problems)
     write_json(REPORTS / "feature_coverage.json", feature_coverage)
     write_json(REPORTS / "matchup_coverage.json", matchup_coverage)
-    write_json(REPORTS / "low_confidence_features.json", [row for row in features if row["confidence"] < .9])
     baseline_prefixes = ("BASE_", "MAX_", "ARMOR_PERCENTILE")
     baseline_suffixes = ("_COUNT",)
     semantic_counts = Counter(row["hero_id"] for row in features if not row["feature"].startswith(baseline_prefixes) and not row["feature"].endswith(baseline_suffixes) and row["feature"] not in ("MOVEMENT_SPEED", "ATTACK_RANGE", "MELEE"))
