@@ -19,14 +19,24 @@ class PipelineTests(unittest.TestCase):
         abilities = [{"hero_id": 12, "ability_id": 1, "display_name": "Juxtapose",
                       "description": "Creating an illusion of himself. Illusions also have a chance to fracture further.",
                       "damage_type_code": 0, "special_values": [], "damage": [], "duration": []}]
-        rows, matrix = extract(self.heroes, abilities, overrides=[{
-            "hero": "npc_dota_hero_phantom_lancer", "feature": "DEPENDS_ON_ILLUSIONS",
-            "action": "ADD", "reason": "Repeated illusion generation reviewed manually",
+        rows, matrix = extract(self.heroes, abilities, manual_rows=[{
+            "hero_id": 12, "feature": "DEPENDS_ON_ILLUSIONS", "value": 1.0,
+            "confidence": .85, "derivation_method": "manual",
+            "evidence": "Repeated illusion generation reviewed manually",
         }])
         pl = {(row["feature"], row["derivation_method"]) for row in rows if row["hero_id"] == 12}
         self.assertIn(("CREATES_ILLUSIONS", "rule"), pl)
         self.assertIn(("DEPENDS_ON_ILLUSIONS", "manual"), pl)
         self.assertEqual(next(row for row in matrix if row["hero_id"] == 12)["CREATES_ILLUSIONS"], 1)
+
+    def test_manual_feature_takes_precedence_over_automatic_rule(self):
+        abilities = [{"hero_id": 2, "ability_id": 10, "display_name": "Slow",
+                      "description": "Slows the target.", "damage_type_code": 0,
+                      "special_values": [], "damage": [], "duration": []}]
+        manual = {"hero_id": 2, "feature": "SLOW", "value": 1.0, "confidence": .8,
+                  "derivation_method": "manual", "evidence": "Reviewed source description"}
+        rows, _ = extract(self.heroes, abilities, manual_rows=[manual])
+        self.assertEqual([row for row in rows if row["hero_id"] == 2 and row["feature"] == "SLOW"], [manual])
 
     def test_ambiguous_or_unknown_id_not_silently_mapped(self):
         self.assertIsNone(self.mapper.resolve("hero", numeric_id=999, source="test"))
@@ -36,7 +46,7 @@ class PipelineTests(unittest.TestCase):
         abilities = [{"hero_id": 2, "ability_id": 9, "display_name": "Stun",
                       "description": "Stuns the target.", "damage_type_code": 0,
                       "special_values": [], "damage": [], "duration": []}]
-        rows, matrix = extract(self.heroes, abilities, overrides=[])
+        rows, matrix = extract(self.heroes, abilities)
         self.assertTrue(all(row["value"] > 0 for row in rows if row["feature"].endswith("_COUNT")))
         self.assertEqual(next(row for row in rows if row["hero_id"] == 2 and row["feature"] == "STUN_COUNT")["value"], 1)
         self.assertEqual(next(row for row in matrix if row["hero_id"] == 12)["STUN_COUNT"], 0)
@@ -45,7 +55,7 @@ class PipelineTests(unittest.TestCase):
         abilities = [{"hero_id": 2, "ability_id": 9, "display_name": "Trap",
                       "description": "Traps enemies in place, preventing movement or blinking.",
                       "damage_type_code": 0, "special_values": [], "damage": [], "duration": []}]
-        rows, _ = extract(self.heroes, abilities, overrides=[])
+        rows, _ = extract(self.heroes, abilities)
         axe_features = {row["feature"] for row in rows if row["hero_id"] == 2}
         self.assertNotIn("BLINK", axe_features)
         self.assertNotIn("HIGH_MOBILITY", axe_features)

@@ -4,7 +4,7 @@ from __future__ import annotations
 import re
 from collections import defaultdict
 
-from .common import ROOT, numeric, read_json
+from .common import numeric
 
 CONTROL_PATTERNS = {
     "STUN": r"\b(?:stuns|stunned|stunning|applies? (?:\w+ ){0,2}stun|causes? (?:\w+ ){0,2}stun|stun (?:to|on) (?:\w+ ){0,3}(?:enemy|target))\b",
@@ -68,7 +68,7 @@ def _special_numbers(ability, token):
     return out
 
 
-def extract(heroes, abilities, overrides=None):
+def extract(heroes, abilities, manual_rows=()):
     by_hero = defaultdict(list)
     for ability in abilities:
         by_hero[ability["hero_id"]].append(ability)
@@ -216,27 +216,17 @@ def extract(heroes, abilities, overrides=None):
         if max_duration:
             emit(hid, "MAX_CONTROL_DURATION", max_duration, .8, "derived", "Maximum duration among detected hard control abilities")
 
-    if overrides is None:
-        overrides = read_json(ROOT / "config" / "manual_overrides.json", [])
-    name_to_id = {hero["internal_name"]: hero["hero_id"] for hero in heroes}
-    name_to_id |= {hero["display_name"]: hero["hero_id"] for hero in heroes}
-    for override in overrides:
-        hid = override.get("hero_id") or name_to_id.get(override.get("hero"))
-        if not hid:
-            raise ValueError(f"Unknown override hero: {override}")
-        feature = override["feature"]
-        action = override["action"].upper()
-        features = [row for row in features if not (row["hero_id"] == hid and row["feature"] == feature)]
-        if action == "ADD":
-            emit(hid, feature, override.get("value", 1), override.get("confidence", .8), "manual", override["reason"])
-        elif action != "REMOVE":
-            raise ValueError(f"Invalid override action: {action}")
     # Multiple abilities may support the same relation. Keep the strongest evidence.
     best = {}
     for row in features:
         key = (row["hero_id"], row["feature"])
         if key not in best or row["confidence"] > best[key]["confidence"]:
             best[key] = row
+    hero_ids = {hero["hero_id"] for hero in heroes}
+    for row in manual_rows:
+        if row["derivation_method"] != "manual" or row["hero_id"] not in hero_ids:
+            raise ValueError(f"Invalid manual feature row: {row}")
+        best[(row["hero_id"], row["feature"])] = row
     all_features = sorted({row["feature"] for row in best.values()})
     rows = sorted(
         (row for row in best.values() if not (row["feature"].endswith("_COUNT") and row["value"] == 0)),

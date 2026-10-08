@@ -62,6 +62,13 @@ def _write(name, rows, schema_map):
     pq.write_table(table, FINAL / f"{name}.parquet", compression="zstd")
 
 
+def _saved_manual_features():
+    path = FINAL / "hero_features.parquet"
+    if not path.exists():
+        return []
+    return [row for row in pq.read_table(path).to_pylist() if row["derivation_method"] == "manual"]
+
+
 def _validate(heroes, abilities, items, features, matchups, hero_items):
     ids = {row["hero_id"] for row in heroes}
     item_ids = {row["item_id"] for row in items}
@@ -69,6 +76,7 @@ def _validate(heroes, abilities, items, features, matchups, hero_items):
     if len(ids) != len(heroes): problems.append("Duplicate hero_id")
     if len(item_ids) != len(items): problems.append("Duplicate item_id")
     if any(row["hero_id"] not in ids for row in abilities): problems.append("Ability references missing hero")
+    if any(row["hero_id"] not in ids for row in features): problems.append("Feature references missing hero")
     if any(row["hero_id"] not in ids or row["opponent_hero_id"] not in ids for row in matchups): problems.append("Matchup references missing hero")
     if any(row["hero_id"] not in ids for row in hero_items): problems.append("Hero item references missing hero")
     if any(row["hero_id"] == row["opponent_hero_id"] for row in matchups): problems.append("Self matchup")
@@ -126,7 +134,7 @@ def build():
                                         display_name=constant_value.get("dname"), source="opendota")
         if row["hero_id"] and row["item_id"]:
             hero_items.append(row)
-    features, matrix = extract(heroes, abilities)
+    features, matrix = extract(heroes, abilities, manual_rows=_saved_manual_features())
     for name, rows in [
         ("heroes", heroes), ("abilities", abilities), ("items", items),
         ("hero_features", features), ("matchups", matchups),
