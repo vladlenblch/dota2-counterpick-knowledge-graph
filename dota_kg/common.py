@@ -39,18 +39,13 @@ def read_json(path: Path, default=None):
         return json.load(source)
 
 
-def fetch(url: str, *, method="GET", payload=None, token=None, timeout=30):
+def fetch_json(url: str, *, timeout=30):
     headers = {"User-Agent": USER_AGENT, "Accept": "application/json"}
-    if payload is not None:
-        headers["Content-Type"] = "application/json"
-        payload = json.dumps(payload).encode()
-    if token:
-        headers["Authorization"] = f"Bearer {token}"
-    request = urllib.request.Request(url, data=payload, headers=headers, method=method)
+    request = urllib.request.Request(url, headers=headers)
     for attempt in range(5):
         try:
             with urllib.request.urlopen(request, timeout=timeout) as response:
-                return response.read(), response.headers.get("Content-Type", "")
+                return json.load(response)
         except urllib.error.HTTPError as error:
             if error.code not in (429, 500, 502, 503, 504) or attempt == 4:
                 raise
@@ -61,12 +56,6 @@ def fetch(url: str, *, method="GET", payload=None, token=None, timeout=30):
             if attempt == 4:
                 raise
             time.sleep(min(30, 2 ** (attempt + 1)))
-    raise RuntimeError("unreachable")
-
-
-def fetch_json(url: str, **kwargs):
-    body, _ = fetch(url, **kwargs)
-    return json.loads(body)
 
 
 @contextmanager
@@ -111,16 +100,3 @@ def numeric(value):
         return float(str(value).replace(",", ""))
     except ValueError:
         return None
-
-
-def as_int(value):
-    n = numeric(value)
-    return int(n) if n is not None else None
-
-
-def as_rate(value):
-    if value is None:
-        return None
-    s = str(value).strip()
-    n = numeric(s.rstrip("%"))
-    return n / 100 if n is not None and "%" in s else n

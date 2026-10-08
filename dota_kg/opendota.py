@@ -6,7 +6,6 @@ import time
 from .common import RAW, fetch_json, now, ratio, read_json, snapshot, write_json
 
 BASE = "https://api.opendota.com/api"
-CONSTANTS = ("heroes", "abilities", "items", "game_mode")
 PHASES = {
     "start_game_items": "start", "early_game_items": "early",
     "mid_game_items": "mid", "late_game_items": "late",
@@ -20,12 +19,11 @@ def collect(delay=1.0):
         write_json(out / "heroes.json", heroes)
         write_json(out / "heroStats.json", stats)
         errors = []
-        for name in CONSTANTS:
-            try:
-                write_json(out / "constants" / f"{name}.json", fetch_json(f"{BASE}/constants/{name}"))
-            except Exception as error:
-                errors.append({"endpoint": f"constants/{name}", "error": str(error)})
-            time.sleep(delay)
+        try:
+            write_json(out / "constants" / "items.json", fetch_json(f"{BASE}/constants/items"))
+        except Exception as error:
+            errors.append({"endpoint": "constants/items", "error": str(error)})
+        time.sleep(delay)
         for index, hero in enumerate(heroes, 1):
             hid = hero["id"]
             for endpoint in ("matchups", "itemPopularity"):
@@ -59,8 +57,7 @@ def normalize():
         baselines[hid] = ratio(wins, matches)
         meta.append({
             "source": "opendota", "hero_id": hid, "matches": matches, "wins": wins,
-            "win_rate": baselines[hid], "pick_count": matches,
-            "pick_rate": None, "ban_count": None, "ban_rate": None,
+            "win_rate": baselines[hid],
             "professional_matches": row.get("pro_pick"), "professional_wins": row.get("pro_win"),
             "professional_bans": row.get("pro_ban"), "rank_brackets": bracket_rows,
             "retrieved_at": retrieved_at, "raw": row,
@@ -78,9 +75,7 @@ def normalize():
             matchups.append({
                 "source": "opendota", "hero_id": hid, "opponent_hero_id": opponent,
                 "matches": matches, "wins": wins, "win_rate": rate,
-                "source_advantage": None,
                 "normalized_advantage": rate - base if rate is not None and base is not None else None,
-                "hero_position": None, "opponent_position": None, "rank_bracket": None,
                 "retrieved_at": retrieved_at,
             })
         popularity = read_json(RAW / "opendota" / "itemPopularity" / f"{hid}.json", {})
@@ -89,9 +84,7 @@ def normalize():
             for item_id, count in counts.items():
                 hero_items.append({
                     "source": "opendota", "hero_id": hid, "item_id": int(item_id),
-                    "position": None, "phase": phase, "matches": None, "wins": None,
-                    "win_rate": None, "usage_count": count, "usage_rate": None,
-                    "average_purchase_time": None, "rank_bracket": None,
+                    "phase": phase, "usage_count": count,
                     "retrieved_at": retrieved_at,
                 })
     return meta, matchups, hero_items

@@ -11,8 +11,8 @@ def _display_key(value):
 
 
 class Mapper:
-    def __init__(self, heroes, items, abilities):
-        self.entities = {"hero": heroes, "item": items, "ability": abilities}
+    def __init__(self, heroes, items):
+        self.entities = {"hero": heroes, "item": items}
         self.problems = []
         self._reported = set()
         self.indexes = {}

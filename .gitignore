@@ -3,7 +3,6 @@
 __pycache__/
 .pytest_cache/
 data/raw/.*-*/
-data/raw/dotabuff/html/
 .env
 
 .env

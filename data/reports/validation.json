@@ -1,6 +1,5 @@
 {
   "errors": [],
-  "dotabuff_parse_errors": [],
   "source_status": {
     "valve": {
       "raw_snapshot": true,
@@ -11,18 +10,6 @@
     "opendota": {
       "raw_snapshot": true,
       "matchup_rows": 15968
-    },
-    "stratz": {
-      "raw_snapshot": false,
-      "position_rows": 0,
-      "matchup_rows": 0,
-      "synergy_rows": 0
-    },
-    "dotabuff": {
-      "saved_html_pages": 0,
-      "matchup_rows": 0,
-      "item_rows": 0,
-      "parse_errors": 0
     }
   },
   "source_manifests": {
@@ -41,7 +28,6 @@
           "error": "HTTP Error 404: Not Found"
         }
       ]
-    },
-    "stratz": {}
+    }
   }
 }

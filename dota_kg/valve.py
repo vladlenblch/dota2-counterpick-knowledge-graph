@@ -2,7 +2,6 @@
 from __future__ import annotations
 
 import time
-from pathlib import Path
 
 from .common import RAW, clean_text, fetch_json, now, read_json, snapshot, write_json
 
@@ -18,8 +17,7 @@ def collect(delay=0.25):
     with snapshot("valve") as out:
         heroes, heroes_payload = _list("herolist", "heroes")
         items, items_payload = _list("itemlist", "itemabilities")
-        abilities, abilities_payload = _list("abilitylist", "itemabilities")
-        for name, payload in [("herolist", heroes_payload), ("itemlist", items_payload), ("abilitylist", abilities_payload)]:
+        for name, payload in [("herolist", heroes_payload), ("itemlist", items_payload)]:
             write_json(out / f"{name}.json", payload)
         errors = []
         for kind, entries, endpoint, parameter, folder in [
@@ -97,10 +95,9 @@ def normalize():
                 "is_ultimate": ability.get("type") == 1,
                 "damage_type": {1: "Physical", 2: "Magical", 4: "Pure"}.get(ability.get("damage")),
                 "damage_type_code": ability.get("damage"),
-                "behavior": ability.get("behavior"), "behavior_code": ability.get("behavior"),
+                "behavior": ability.get("behavior"),
                 "target_type": ability.get("target_type"), "target_team": ability.get("target_team"),
-                "target_type_code": ability.get("target_type"),
-                "target_team_code": ability.get("target_team"), "immunity_code": ability.get("immunity"),
+                "immunity_code": ability.get("immunity"),
                 "dispellable_code": ability.get("dispellable"),
                 "pierces_debuff_immunity": True if ability.get("immunity") == 3 or "pierces debuff immunity" in (ability.get("desc_loc") or "").casefold() else None,
                 "dispel_type": "Strong" if "strong dispel" in (ability.get("desc_loc") or "").casefold() else "Basic" if "basic dispel" in (ability.get("desc_loc") or "").casefold() else None,
@@ -125,7 +122,7 @@ def normalize():
             "bonuses": [special for special in item.get("special_values") or [] if (special.get("name") or "").startswith("bonus_")],
             "active_effect": active_effect, "passive_effect": passive_effect,
             "cooldown": item.get("cooldowns") or [], "mana_cost": item.get("mana_costs") or [],
-            "target_type": item.get("target_type"), "target_type_code": item.get("target_type"),
+            "target_type": item.get("target_type"),
             "damage_type": {1: "Physical", 2: "Magical", 4: "Pure"}.get(item.get("damage")),
             "damage_type_code": item.get("damage"),
             "dispel_type": "Strong" if "strong dispel" in (item.get("desc_loc") or "").casefold() else "Basic" if "basic dispel" in (item.get("desc_loc") or "").casefold() else None,

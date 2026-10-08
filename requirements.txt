@@ -1,2 +1,2 @@
-pyarrow>=20,<24
+pyarrow>=20,<26
 beautifulsoup4>=4.13,<5

@@ -4,7 +4,7 @@ from __future__ import annotations
 import re
 from collections import defaultdict
 
-from .common import ROOT, as_int, numeric, read_json
+from .common import ROOT, numeric, read_json
 
 CONTROL_PATTERNS = {
     "STUN": r"\b(?:stuns|stunned|stunning|applies? (?:\w+ ){0,2}stun|causes? (?:\w+ ){0,2}stun|stun (?:to|on) (?:\w+ ){0,3}(?:enemy|target))\b",
@@ -186,9 +186,6 @@ def extract(heroes, abilities, overrides=None):
                 emit(hid, "HEAL_REDUCTION", 1, .9, "rule", evidence)
             if re.search(r"\b(?:allied?|friendly) (?:\w+ ){0,5}(?:invulnerable|invulnerability|physical damage|death|lethal damage)\b|\b(?:prevents? (?:an? )?ally .*? from dying|protects? an? ally from dying)\b", full_text):
                 emit(hid, "SAVE", 1, .8, "derived", evidence)
-            if "CREATES_ILLUSIONS" in found and re.search(r"\billusions?\b", full_text):
-                # Dependency is only assigned by transparent manual review.
-                pass
             damage_type = ability.get("damage_type_code")
             damage_feature = {1: "PHYSICAL_DAMAGE", 2: "MAGICAL_DAMAGE", 4: "PURE_DAMAGE"}.get(damage_type)
             has_damage = bool(damage_feature) and (any(numeric(x) and numeric(x) > 0 for x in ability.get("damage") or []) or re.search(r"\b(?:deals? (?:\w+ ){0,5}damage|dealing (?:\w+ ){0,5}damage|damages|damaging|inflicts? (?:\w+ ){0,5}damage|causes? (?:\w+ ){0,5}damage)\b", full_text))
