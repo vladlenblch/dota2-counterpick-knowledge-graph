@@ -11,7 +11,7 @@
 | [`heroes.parquet`](data/final/heroes.parquet) | **127** | Герои и их характеристики |
 | [`abilities.parquet`](data/final/abilities.parquet) | **734** | Способности с привязкой к героям |
 | [`items.parquet`](data/final/items.parquet) | **507** | Предметы и их свойства |
-| [`hero_features.parquet`](data/final/hero_features.parquet) | **2 103** | Связи "герой - признак", **76** уникальных признаков |
+| [`hero_features.parquet`](data/final/hero_features.parquet) | **2 104** | Связи "герой - признак", **76** уникальных признаков |
 | [`hero_feature_matrix.parquet`](data/final/hero_feature_matrix.parquet) | **127 x 76** | Значения признаков для каждого героя |
 | [`matchups.parquet`](data/final/matchups.parquet) | **16 002** | Направленные противостояния героев |
 | [`hero_items.parquet`](data/final/hero_items.parquet) | **11 691** | Связи "герой - предмет - стадия игры" |

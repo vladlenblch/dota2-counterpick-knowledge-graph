@@ -2532,7 +2532,7 @@
   },
   "86": {
     "hero": "Rubick",
-    "count": 15,
+    "count": 16,
     "features": [
       "AOE_ABILITY_COUNT",
       "AOE_DAMAGE",
@@ -2540,6 +2540,7 @@
       "ATTACK_RANGE",
       "BASE_ARMOR",
       "BASE_MAGIC_RESISTANCE",
+      "FORCED_MOVEMENT",
       "HARD_CONTROL",
       "HARD_CONTROL_COUNT",
       "HIGH_ARMOR",

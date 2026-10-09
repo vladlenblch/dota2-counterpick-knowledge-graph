@@ -79,6 +79,19 @@ class PipelineTests(unittest.TestCase):
         self.assertNotIn("BLINK", axe_features)
         self.assertNotIn("HIGH_MOBILITY", axe_features)
 
+    def test_lifting_enemy_grants_forced_movement_but_lifting_object_does_not(self):
+        abilities = [
+            {"hero_id": 2, "ability_id": 10, "display_name": "Telekinesis",
+             "description": "Lifts the enemy into the air and hurls them back at the ground.",
+             "damage_type_code": 0, "special_values": [], "damage": [], "duration": []},
+            {"hero_id": 12, "ability_id": 11, "display_name": "Weapon Lift",
+             "description": "Lifts a weapon into the air.",
+             "damage_type_code": 0, "special_values": [], "damage": [], "duration": []},
+        ]
+        rows, _ = extract(self.heroes, abilities)
+        forced = {row["hero_id"] for row in rows if row["feature"] == "FORCED_MOVEMENT"}
+        self.assertEqual(forced, {2})
+
 
 if __name__ == "__main__":
     unittest.main()

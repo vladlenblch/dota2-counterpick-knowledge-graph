@@ -45,7 +45,7 @@ OTHER_PATTERNS = {
     "DEBUFF_IMMUNITY": r"\b(?:debuff immunity|immune to debuffs)\b",
     "INVULNERABILITY": r"\b(?:invulnerab(?:ility|le)|cannot be damaged)\b",
     "REFLECTS_DAMAGE": r"\b(?:reflects? damage|damage reflection)\b",
-    "FORCED_MOVEMENT": r"\b(?:pushes? .*? away|pulls? .*? (?:towards?|into|to)|drags? .*? (?:towards?|into|to))\b",
+    "FORCED_MOVEMENT": r"\b(?:pushes? .*? away|pulls? .*? (?:towards?|into|to)|drags? .*? (?:towards?|into|to)|(?:lifts?|lifted|lifting) (?:\w+ ){0,5}(?:enemy|enemies|target|targets|unit|units) (?:into|in|off|up))\b",
     "PERCENT_HP_DAMAGE": r"\b(?:percentage|percent|%) of (?:\w+ ){0,4}(?:current|maximum|max) (?:health|hp)\b",
     "RESET_MECHANIC": r"\b(?:resets? (?:the )?cooldown|cooldown (?:is )?reset)\b",
     "COOLDOWN_REDUCTION": r"\bcooldown reduction\b|\breduces? (?:\w+ ){0,3}cooldowns?\b",
