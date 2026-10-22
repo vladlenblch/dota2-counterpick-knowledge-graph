@@ -1,0 +1,11 @@
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+<https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/graph/8358d947fb0ca7984578ae77d0a9a40077ef16bc91a5ec06954e1b7010acb713> a owl:Ontology ;
+    rdfs:label "Dota 2: все данные и полный архив"@ru ;
+    rdfs:comment "Полная онтология с исходными файлами и их структурой. Для просмотра игровой модели используйте game.ttl. Все локальные импорты разрешаются через catalog-v001.xml."@ru ;
+    owl:imports <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/graph/8358d947fb0ca7984578ae77d0a9a40077ef16bc91a5ec06954e1b7010acb713/archive-other>,
+        <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/graph/8358d947fb0ca7984578ae77d0a9a40077ef16bc91a5ec06954e1b7010acb713/archive-valve>,
+        <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/graph/8358d947fb0ca7984578ae77d0a9a40077ef16bc91a5ec06954e1b7010acb713/game>,
+        <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/schema/archive> .
+

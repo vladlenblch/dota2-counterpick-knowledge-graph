@@ -1,0 +1,52 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "SPARQL: текущий файл",
+      "type": "process",
+      "command": "${workspaceFolder}/.venv/bin/python",
+      "args": [
+        "-m",
+        "dota_kg",
+        "query",
+        "${file}"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated",
+        "clear": true
+      },
+      "windows": {
+        "command": "${workspaceFolder}/.venv/Scripts/python.exe"
+      }
+    },
+    {
+      "label": "SPARQL: текущий файл (полные данные)",
+      "type": "process",
+      "command": "${workspaceFolder}/.venv/bin/python",
+      "args": [
+        "-m",
+        "dota_kg",
+        "query",
+        "${file}",
+        "--full"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated",
+        "clear": true
+      },
+      "windows": {
+        "command": "${workspaceFolder}/.venv/Scripts/python.exe"
+      }
+    }
+  ]
+}

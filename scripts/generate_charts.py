@@ -1,8 +1,10 @@
-"""Build README figures from the committed Parquet snapshot."""
+"""Build README figures from the Parquet snapshot and its RDF ontology."""
 from __future__ import annotations
 
+import hashlib
 import json
 import os
+import sys
 from collections import Counter, defaultdict
 from datetime import datetime
 from itertools import combinations
@@ -15,8 +17,13 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 from matplotlib.patches import FancyBboxPatch
 import pyarrow.parquet as pq
+from rdflib import OWL, RDF, RDFS, URIRef
 
 ROOT = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(ROOT))
+from dota_kg.ontology import load_ontology
+from dota_kg.ontology_schema import KG, RES, schema_graph
+
 FINAL = ROOT / "data" / "final"
 CHARTS = ROOT / "assets" / "charts"
 PREVIEW = os.environ.get("DOTA_KG_CHART_PREVIEW_DIR")
@@ -247,6 +254,154 @@ def item_phases(hero_items):
     save(fig, "item_phases")
 
 
+def ontology_overview(graph):
+    schema = schema_graph(ROOT)
+    vocabulary = [len({node for node in schema.subjects(RDF.type, kind) if isinstance(node, URIRef)})
+                  for kind in (OWL.Class, OWL.ObjectProperty, OWL.DatatypeProperty)]
+    fig = figure("Онтология в числах", "Структура OWL и факты игровой модели Dota 2", (13, 6.4))
+    cards = [("RDF-ТРОЕК", len(graph)),
+             ("ГЕРОЕВ", len(set(graph.subjects(RDF.type, KG.Hero)))),
+             ("НАБЛЮДЕНИЙ ПРИЗНАКОВ", len(set(graph.subjects(RDF.type, KG.FeatureObservation)))),
+             ("ПАРАМЕТРОВ", len(set(graph.subjects(RDF.type, KG.Parameter))))]
+    for index, (label, value) in enumerate(cards):
+        x = .045 + index * .238
+        fig.add_artist(FancyBboxPatch((x, .59), .218, .205,
+                                      boxstyle="round,pad=0.008,rounding_size=0.025",
+                                      transform=fig.transFigure, facecolor=WHITE, edgecolor=GRID, linewidth=.7))
+        fig.text(x + .015, .75, label, fontsize=8.7, fontweight="bold", color=MUTED)
+        fig.text(x + .015, .635, fmt(value), fontsize=27, fontweight="bold", color=BLUE)
+    ax = fig.add_axes([.29, .12, .56, .36])
+    y = [2, 1, 0]
+    ax.barh(y, vocabulary, height=.54, color=BLUE)
+    ax.set_yticks(y, ["Классы", "Объектные свойства\n(типы связей)", "Свойства данных\n(атрибуты)"])
+    ax.set_xticks([])
+    ax.set_xlim(0, max(vocabulary) * 1.15)
+    clean_axis(ax)
+    ax.grid(False)
+    for position, value in zip(y, vocabulary):
+        ax.text(value + max(vocabulary) * .025, position, fmt(value), va="center",
+                fontsize=11, fontweight="bold")
+    save(fig, "ontology_overview")
+
+
+def ontology_relations(graph):
+    selected = [
+        ("snapshot", "Привязка к снимку данных"),
+        ("hero", "Привязка к герою"),
+        ("baselineStatistics", "Базовая статистика матчапа"),
+        ("hasParameter", "Параметры способностей и предметов"),
+        ("feature", "Назначение игрового признака"),
+        ("supportedByAbility", "Способность как основание признака"),
+        ("hasAbilitySnapshot", "Способности в снимке героя"),
+    ]
+    values = [sum(1 for _ in graph.triples((None, KG[predicate], None))) for predicate, _ in selected]
+    labels = [f"{label}\n{predicate}" for predicate, label in selected]
+    fig = figure("Какие отношения хранит граф", "Число RDF-утверждений по выбранным объектным свойствам игровой модели", (13, 6.5))
+    ax = fig.add_axes([.44, .12, .48, .65])
+    y = list(range(len(selected) - 1, -1, -1))
+    ax.barh(y, values, height=.52, color=BLUE, zorder=2)
+    ax.set_yticks(y, labels, fontsize=10)
+    ax.set_xticks([])
+    ax.set_xlim(0, max(values) * 1.16)
+    clean_axis(ax)
+    ax.grid(False)
+    for position, value in zip(y, values):
+        ax.text(value + max(values) * .015, position, fmt(value), va="center",
+                fontsize=11, fontweight="bold")
+    save(fig, "ontology_relations")
+
+
+def ontology_example(graph):
+    """Draw an actual feature observation with its value and supporting ability."""
+    import textwrap
+    from matplotlib.patches import FancyArrowPatch
+
+    hero = RES["hero/86"]
+    feature = RES["feature/FORCED_MOVEMENT"]
+    observations = [node for node in graph.subjects(KG.hero, hero)
+                    if (node, RDF.type, KG.FeatureObservation) in graph
+                    and (node, KG.feature, feature) in graph]
+    if len(observations) != 1:
+        raise ValueError("Expected one FORCED_MOVEMENT observation for Rubick")
+    observation = observations[0]
+    ability = graph.value(observation, KG.supportedByAbility)
+    value = graph.value(observation, KG.value)
+    evidence = graph.value(observation, KG.evidence)
+    if ability is None or value is None or evidence is None:
+        raise ValueError("Incomplete Rubick observation in the ontology")
+    if (hero, KG.hasFeatureObservation, observation) not in graph:
+        raise ValueError("Missing Rubick-to-observation link")
+    name = str(graph.value(hero, RDFS.label))
+    ability_name = str(graph.value(ability, RDFS.label))
+    code = str(graph.value(feature, KG.identifier))
+
+    fig = figure("Признак и его обоснование в графе",
+                 "Реальный фрагмент RDF: герой, наблюдение, значение и подтверждающая способность", (13, 7.3))
+    ax = fig.add_axes([.035, .03, .93, .88])
+    ax.set_xlim(0, 1)
+    ax.set_ylim(0, 1)
+    ax.axis("off")
+
+    def card(x, y, width, height, kind, title, *, subtitle=None, accent=BLUE, title_size=13):
+        ax.add_patch(FancyBboxPatch((x, y), width, height,
+                     boxstyle="round,pad=0.008,rounding_size=0.018",
+                     facecolor=WHITE, edgecolor=GRID, linewidth=.8, zorder=3))
+        ax.text(x + .016, y + height - .033, kind, color=MUTED,
+                fontsize=8.5, va="top", fontweight="bold", zorder=4)
+        ax.text(x + .016, y + height * (.45 if subtitle else .38), title,
+                color=accent, fontsize=title_size, fontweight="bold", va="center", zorder=4)
+        if subtitle:
+            ax.text(x + .016, y + .026, subtitle, color=MUTED,
+                    fontsize=8.7, va="bottom", zorder=4)
+
+    def arrow(start, end, label, text_position, *, curved=0):
+        ax.add_patch(FancyArrowPatch(start, end, arrowstyle="-|>", mutation_scale=13,
+                     color=BLUE, linewidth=1.5,
+                     connectionstyle=f"arc3,rad={curved}", zorder=2))
+        ax.text(*text_position, label, color=MUTED, fontsize=8.4, ha="center", va="center",
+                bbox={"facecolor": BG, "edgecolor": "none", "pad": 2}, zorder=5)
+
+    card(.015, .57, .18, .19, "Hero", name)
+    card(.375, .57, .225, .19, "FeatureObservation", "Наблюдение признака", title_size=11.5)
+    card(.79, .67, .195, .18, "Feature", "\n".join(textwrap.wrap(str(graph.value(feature, RDFS.label)), width=19)),
+         subtitle=code, title_size=11.3)
+    card(.79, .36, .195, .18, "Ability", ability_name)
+    card(.39, .30, .195, .15, "xsd:double", f"{float(value):g}",
+         subtitle="Бинарный признак", title_size=19)
+    arrow((.202, .665), (.367, .665), "hasFeatureObservation", (.284, .705))
+    arrow((.608, .715), (.782, .75), "feature", (.696, .765))
+    arrow((.608, .61), (.782, .465), "supportedByAbility", (.704, .567))
+    arrow((.4875, .562), (.4875, .458), "value", (.522, .51))
+
+    # Keep the literal English evidence, distinguishing it from Russian diagram labels.
+    evidence_lines = "\n".join(textwrap.wrap(str(evidence), width=116))
+    evidence_bottom = .015
+    evidence_height = .20
+    ax.add_patch(FancyBboxPatch((.055, evidence_bottom), .89, evidence_height,
+                 boxstyle="round,pad=0.008,rounding_size=0.018", facecolor=WHITE,
+                 edgecolor=GRID, linewidth=.8, zorder=3))
+    ax.text(.075, evidence_bottom + evidence_height - .032, "evidence: исходное описание способности",
+            fontsize=8.5, fontweight="bold", color=MUTED, va="top", zorder=4)
+    ax.text(.075, evidence_bottom + evidence_height - .077, evidence_lines,
+            fontsize=9.2, color=INK, va="top", linespacing=1.5, zorder=4)
+    arrow((.377, .595), (.18, evidence_bottom + evidence_height + .008), "evidence", (.255, .39), curved=.13)
+    save(fig, "ontology_example")
+
+
+def ontology_figures():
+    directory = ROOT / "ontology"
+    report = json.loads((directory / "validation.json").read_text(encoding="utf-8"))
+    if not report["conforms"]:
+        raise RuntimeError("Для графиков нужен успешный отчет проверки онтологии")
+    for name, details in report["package_files"].items():
+        if hashlib.sha256((directory / name).read_bytes()).hexdigest() != details["sha256"]:
+            raise RuntimeError(f"Отчет проверки не соответствует файлу {name}")
+    graph = load_ontology(directory, include_archive=False)
+    ontology_overview(graph)
+    ontology_relations(graph)
+    ontology_example(graph)
+
+
 def main():
     heroes = table("heroes", ["hero_id"])
     abilities = table("abilities", ["ability_id"])
@@ -259,6 +414,7 @@ def main():
     feature_pairs(features)
     matchup_coverage(heroes, matchups)
     item_phases(hero_items)
+    ontology_figures()
 
 
 if __name__ == "__main__":

@@ -1,0 +1,12 @@
+<?xml version='1.0' encoding='utf-8'?>
+<catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog" prefer="public">
+  <uri name="https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/graph/8358d947fb0ca7984578ae77d0a9a40077ef16bc91a5ec06954e1b7010acb713/archive-other" uri="archive-other.ttl" />
+  <uri name="https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/schema/archive" uri="archive-schema.ttl" />
+  <uri name="https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/graph/8358d947fb0ca7984578ae77d0a9a40077ef16bc91a5ec06954e1b7010acb713/archive-valve" uri="archive-valve.ttl" />
+  <uri name="https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/graph/8358d947fb0ca7984578ae77d0a9a40077ef16bc91a5ec06954e1b7010acb713/data-entities" uri="data-entities.ttl" />
+  <uri name="https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/graph/8358d947fb0ca7984578ae77d0a9a40077ef16bc91a5ec06954e1b7010acb713/data-features" uri="data-features.ttl" />
+  <uri name="https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/graph/8358d947fb0ca7984578ae77d0a9a40077ef16bc91a5ec06954e1b7010acb713/data-statistics" uri="data-statistics.ttl" />
+  <uri name="https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/graph/8358d947fb0ca7984578ae77d0a9a40077ef16bc91a5ec06954e1b7010acb713" uri="dota2.ttl" />
+  <uri name="https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/graph/8358d947fb0ca7984578ae77d0a9a40077ef16bc91a5ec06954e1b7010acb713/game" uri="game.ttl" />
+  <uri name="https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/ontology#" uri="schema.ttl" />
+</catalog>

@@ -1,0 +1,292 @@
+@prefix kg: <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/ontology#> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+kg:AbilityShape a sh:NodeShape ;
+    sh:property [ sh:datatype xsd:integer ;
+            sh:maxCount 1 ;
+            sh:minCount 1 ;
+            sh:path kg:identifier ] ;
+    sh:targetClass kg:Ability .
+
+kg:AbilitySnapshotShape a sh:NodeShape ;
+    sh:property [ sh:class kg:DatasetSnapshot ;
+            sh:maxCount 1 ;
+            sh:minCount 1 ;
+            sh:path kg:snapshot ],
+        [ sh:class kg:SourceArtifact ;
+            sh:minCount 1 ;
+            sh:path prov:wasDerivedFrom ],
+        [ sh:class kg:Hero ;
+            sh:maxCount 1 ;
+            sh:minCount 1 ;
+            sh:path kg:hero ],
+        [ sh:class kg:Ability ;
+            sh:maxCount 1 ;
+            sh:minCount 1 ;
+            sh:path kg:ability ] ;
+    sh:targetClass kg:AbilitySnapshot .
+
+kg:FeatureObservationShape a sh:NodeShape ;
+    sh:property [ sh:class kg:DatasetSnapshot ;
+            sh:maxCount 1 ;
+            sh:minCount 1 ;
+            sh:path kg:snapshot ],
+        [ sh:class kg:SourceArtifact ;
+            sh:minCount 1 ;
+            sh:path prov:wasDerivedFrom ],
+        [ sh:class kg:Hero ;
+            sh:maxCount 1 ;
+            sh:minCount 1 ;
+            sh:path kg:hero ],
+        [ sh:class kg:Feature ;
+            sh:maxCount 1 ;
+            sh:minCount 1 ;
+            sh:path kg:feature ],
+        [ sh:datatype xsd:double ;
+            sh:maxCount 1 ;
+            sh:minCount 1 ;
+            sh:path kg:value ],
+        [ sh:datatype xsd:string ;
+            sh:maxCount 1 ;
+            sh:minCount 1 ;
+            sh:path kg:evidence ],
+        [ sh:datatype xsd:string ;
+            sh:maxCount 1 ;
+            sh:minCount 1 ;
+            sh:path kg:method ] ;
+    sh:targetClass kg:FeatureObservation .
+
+kg:FeatureShape a sh:NodeShape ;
+    sh:property [ sh:datatype xsd:string ;
+            sh:maxCount 1 ;
+            sh:minCount 1 ;
+            sh:path kg:identifier ],
+        [ sh:datatype xsd:string ;
+            sh:maxCount 1 ;
+            sh:minCount 1 ;
+            sh:path kg:valueKind ],
+        [ sh:datatype xsd:string ;
+            sh:maxCount 1 ;
+            sh:minCount 1 ;
+            sh:path kg:unit ] ;
+    sh:targetClass kg:Feature .
+
+kg:FeatureVectorShape a sh:NodeShape ;
+    sh:property [ sh:class kg:DatasetSnapshot ;
+            sh:maxCount 1 ;
+            sh:minCount 1 ;
+            sh:path kg:snapshot ],
+        [ sh:class kg:SourceArtifact ;
+            sh:minCount 1 ;
+            sh:path prov:wasDerivedFrom ],
+        [ sh:class kg:Hero ;
+            sh:maxCount 1 ;
+            sh:minCount 1 ;
+            sh:path kg:hero ],
+        [ sh:class kg:JsonValue ;
+            sh:maxCount 1 ;
+            sh:minCount 1 ;
+            sh:path kg:matrixValues ] ;
+    sh:targetClass kg:FeatureVector .
+
+kg:HeroShape a sh:NodeShape ;
+    sh:property [ sh:datatype xsd:integer ;
+            sh:maxCount 1 ;
+            sh:minCount 1 ;
+            sh:path kg:identifier ] ;
+    sh:targetClass kg:Hero .
+
+kg:HeroSnapshotShape a sh:NodeShape ;
+    sh:property [ sh:class kg:DatasetSnapshot ;
+            sh:maxCount 1 ;
+            sh:minCount 1 ;
+            sh:path kg:snapshot ],
+        [ sh:class kg:SourceArtifact ;
+            sh:minCount 1 ;
+            sh:path prov:wasDerivedFrom ],
+        [ sh:class kg:Hero ;
+            sh:maxCount 1 ;
+            sh:minCount 1 ;
+            sh:path kg:hero ] ;
+    sh:targetClass kg:HeroSnapshot .
+
+kg:HeroStatisticsObservationShape a sh:NodeShape ;
+    sh:property [ sh:class kg:DatasetSnapshot ;
+            sh:maxCount 1 ;
+            sh:minCount 1 ;
+            sh:path kg:snapshot ],
+        [ sh:class kg:SourceArtifact ;
+            sh:minCount 1 ;
+            sh:path prov:wasDerivedFrom ],
+        [ sh:class kg:Hero ;
+            sh:maxCount 1 ;
+            sh:minCount 1 ;
+            sh:path kg:hero ],
+        [ sh:datatype xsd:integer ;
+            sh:maxCount 1 ;
+            sh:minCount 1 ;
+            sh:minInclusive 0 ;
+            sh:path kg:matches ],
+        [ sh:datatype xsd:integer ;
+            sh:maxCount 1 ;
+            sh:minCount 1 ;
+            sh:minInclusive 0 ;
+            sh:path kg:wins ],
+        [ sh:datatype xsd:double ;
+            sh:maxCount 1 ;
+            sh:maxInclusive 1 ;
+            sh:minCount 0 ;
+            sh:minInclusive 0 ;
+            sh:path kg:winRate ] ;
+    sh:targetClass kg:HeroStatisticsObservation .
+
+kg:ItemShape a sh:NodeShape ;
+    sh:property [ sh:datatype xsd:integer ;
+            sh:maxCount 1 ;
+            sh:minCount 1 ;
+            sh:path kg:identifier ] ;
+    sh:targetClass kg:Item .
+
+kg:ItemSnapshotShape a sh:NodeShape ;
+    sh:property [ sh:class kg:DatasetSnapshot ;
+            sh:maxCount 1 ;
+            sh:minCount 1 ;
+            sh:path kg:snapshot ],
+        [ sh:class kg:SourceArtifact ;
+            sh:minCount 1 ;
+            sh:path prov:wasDerivedFrom ],
+        [ sh:class kg:Item ;
+            sh:maxCount 1 ;
+            sh:minCount 1 ;
+            sh:path kg:item ] ;
+    sh:targetClass kg:ItemSnapshot .
+
+kg:ItemUsageObservationShape a sh:NodeShape ;
+    sh:property [ sh:class kg:DatasetSnapshot ;
+            sh:maxCount 1 ;
+            sh:minCount 1 ;
+            sh:path kg:snapshot ],
+        [ sh:class kg:SourceArtifact ;
+            sh:minCount 1 ;
+            sh:path prov:wasDerivedFrom ],
+        [ sh:class kg:Hero ;
+            sh:maxCount 1 ;
+            sh:minCount 1 ;
+            sh:path kg:hero ],
+        [ sh:class kg:Item ;
+            sh:maxCount 1 ;
+            sh:minCount 1 ;
+            sh:path kg:item ],
+        [ sh:datatype xsd:string ;
+            sh:maxCount 1 ;
+            sh:minCount 1 ;
+            sh:path kg:phase ],
+        [ sh:datatype xsd:integer ;
+            sh:maxCount 1 ;
+            sh:minCount 1 ;
+            sh:minInclusive 0 ;
+            sh:path kg:usageCount ] ;
+    sh:targetClass kg:ItemUsageObservation .
+
+kg:MatchupObservationShape a sh:NodeShape ;
+    sh:property [ sh:class kg:DatasetSnapshot ;
+            sh:maxCount 1 ;
+            sh:minCount 1 ;
+            sh:path kg:snapshot ],
+        [ sh:class kg:SourceArtifact ;
+            sh:minCount 1 ;
+            sh:path prov:wasDerivedFrom ],
+        [ sh:class kg:Hero ;
+            sh:maxCount 1 ;
+            sh:minCount 1 ;
+            sh:path kg:hero ],
+        [ sh:class kg:Hero ;
+            sh:maxCount 1 ;
+            sh:minCount 1 ;
+            sh:path kg:opponent ],
+        [ sh:datatype xsd:integer ;
+            sh:maxCount 1 ;
+            sh:minCount 1 ;
+            sh:minInclusive 1 ;
+            sh:path kg:matches ],
+        [ sh:datatype xsd:integer ;
+            sh:maxCount 1 ;
+            sh:minCount 0 ;
+            sh:minInclusive 0 ;
+            sh:path kg:wins ],
+        [ sh:datatype xsd:double ;
+            sh:maxCount 1 ;
+            sh:maxInclusive 1 ;
+            sh:minCount 1 ;
+            sh:minInclusive 0 ;
+            sh:path kg:winRate ],
+        [ sh:datatype xsd:double ;
+            sh:maxCount 1 ;
+            sh:maxInclusive 1 ;
+            sh:minCount 0 ;
+            sh:minInclusive -1 ;
+            sh:path kg:normalizedAdvantage ],
+        [ sh:class kg:DataSource ;
+            sh:maxCount 1 ;
+            sh:minCount 0 ;
+            sh:path kg:source ],
+        [ sh:datatype xsd:dateTime ;
+            sh:maxCount 1 ;
+            sh:minCount 0 ;
+            sh:path kg:collectedAt ] ;
+    sh:targetClass kg:MatchupObservation .
+
+kg:ParameterShape a sh:NodeShape ;
+    sh:property [ sh:datatype xsd:string ;
+            sh:maxCount 1 ;
+            sh:minCount 1 ;
+            sh:path kg:parameterName ],
+        [ sh:datatype xsd:integer ;
+            sh:maxCount 1 ;
+            sh:minCount 1 ;
+            sh:minInclusive 0 ;
+            sh:path kg:sourceIndex ],
+        [ sh:class kg:JsonValue ;
+            sh:maxCount 1 ;
+            sh:minCount 1 ;
+            sh:path kg:parameterData ] ;
+    sh:targetClass kg:Parameter .
+
+kg:RankBracketObservationShape a sh:NodeShape ;
+    sh:property [ sh:class kg:Hero ;
+            sh:maxCount 1 ;
+            sh:minCount 1 ;
+            sh:path kg:hero ],
+        [ sh:class kg:DatasetSnapshot ;
+            sh:maxCount 1 ;
+            sh:minCount 1 ;
+            sh:path kg:snapshot ],
+        [ sh:datatype xsd:string ;
+            sh:maxCount 1 ;
+            sh:minCount 1 ;
+            sh:path kg:rankBracket ],
+        [ sh:datatype xsd:integer ;
+            sh:maxCount 1 ;
+            sh:minCount 1 ;
+            sh:minInclusive 0 ;
+            sh:path kg:sourceIndex ],
+        [ sh:datatype xsd:integer ;
+            sh:maxCount 1 ;
+            sh:minCount 1 ;
+            sh:minInclusive 0 ;
+            sh:path kg:matches ],
+        [ sh:datatype xsd:integer ;
+            sh:maxCount 1 ;
+            sh:minCount 1 ;
+            sh:minInclusive 0 ;
+            sh:path kg:wins ],
+        [ sh:datatype xsd:double ;
+            sh:maxCount 1 ;
+            sh:maxInclusive 1 ;
+            sh:minCount 0 ;
+            sh:minInclusive 0 ;
+            sh:path kg:winRate ] ;
+    sh:targetClass kg:RankBracketObservation .
+

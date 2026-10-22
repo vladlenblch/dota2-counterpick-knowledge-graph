@@ -1,0 +1,11 @@
+PREFIX kg: <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/ontology#>
+PREFIX feature: <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/feature/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+SELECT ?id ?name ?evidence
+WHERE {
+  ?observation a kg:FeatureObservation ;
+    kg:feature feature:FORCED_MOVEMENT ; kg:hero ?hero ; kg:value ?value ; kg:evidence ?evidence .
+  FILTER (?value = 1.0e0)
+  ?hero kg:identifier ?id ; rdfs:label ?name .
+}
+ORDER BY ?id

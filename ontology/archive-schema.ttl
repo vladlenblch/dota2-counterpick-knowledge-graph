@@ -1,0 +1,150 @@
+@prefix kg: <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/ontology#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+kg:arrowType a owl:DatatypeProperty ;
+    rdfs:label "Тип Arrow"@ru ;
+    rdfs:range xsd:string .
+
+kg:binaryContent a owl:DatatypeProperty ;
+    rdfs:label "Исходные бинарные байты base64"@ru ;
+    rdfs:range xsd:string .
+
+kg:bonusesText a owl:DatatypeProperty ;
+    rdfs:label "bonuses"@ru ;
+    rdfs:range xsd:string .
+
+kg:castPointText a owl:DatatypeProperty ;
+    rdfs:label "cast_point"@ru ;
+    rdfs:range xsd:string .
+
+kg:castRangeText a owl:DatatypeProperty ;
+    rdfs:label "cast_range"@ru ;
+    rdfs:range xsd:string .
+
+kg:columnCount a owl:DatatypeProperty ;
+    rdfs:label "Число колонок"@ru ;
+    rdfs:range xsd:integer .
+
+kg:columnIndex a owl:DatatypeProperty ;
+    rdfs:label "Индекс колонки с 0"@ru ;
+    rdfs:range xsd:integer .
+
+kg:columnName a owl:DatatypeProperty ;
+    rdfs:label "Имя исходной колонки"@ru ;
+    rdfs:range xsd:string .
+
+kg:columnPredicate a owl:AnnotationProperty .
+
+kg:contentEncoding a owl:DatatypeProperty ;
+    rdfs:label "Кодировка бинарного содержимого"@ru ;
+    rdfs:range xsd:string .
+
+kg:cooldownText a owl:DatatypeProperty ;
+    rdfs:label "cooldown"@ru ;
+    rdfs:range xsd:string .
+
+kg:damageText a owl:DatatypeProperty ;
+    rdfs:label "damage"@ru ;
+    rdfs:range xsd:string .
+
+kg:durationText a owl:DatatypeProperty ;
+    rdfs:label "duration"@ru ;
+    rdfs:range xsd:string .
+
+kg:facetsText a owl:DatatypeProperty ;
+    rdfs:label "facets"@ru ;
+    rdfs:range xsd:string .
+
+kg:hasColumn a owl:ObjectProperty ;
+    rdfs:label "Колонка таблицы"@ru ;
+    rdfs:domain kg:DatasetTable ;
+    rdfs:range kg:SourceColumn .
+
+kg:hasRow a owl:ObjectProperty ;
+    rdfs:label "Исходная строка"@ru ;
+    rdfs:domain kg:DatasetTable ;
+    rdfs:range kg:Observation .
+
+kg:hasTable a owl:ObjectProperty ;
+    rdfs:label "Таблица снимка"@ru ;
+    rdfs:domain kg:DatasetSnapshot ;
+    rdfs:range kg:DatasetTable .
+
+kg:healthCostText a owl:DatatypeProperty ;
+    rdfs:label "health_cost"@ru ;
+    rdfs:range xsd:string .
+
+kg:manaCostText a owl:DatatypeProperty ;
+    rdfs:label "mana_cost"@ru ;
+    rdfs:range xsd:string .
+
+kg:missingColumn a owl:ObjectProperty ;
+    rdfs:label "Колонка с null"@ru ;
+    rdfs:domain kg:Observation ;
+    rdfs:range kg:SourceColumn .
+
+kg:notesText a owl:DatatypeProperty ;
+    rdfs:label "notes"@ru ;
+    rdfs:range xsd:string .
+
+kg:nullable a owl:DatatypeProperty ;
+    rdfs:label "Колонка допускает null"@ru ;
+    rdfs:range xsd:boolean .
+
+kg:radiusText a owl:DatatypeProperty ;
+    rdfs:label "radius"@ru ;
+    rdfs:range xsd:string .
+
+kg:rankBracketsText a owl:DatatypeProperty ;
+    rdfs:label "rank_brackets"@ru ;
+    rdfs:range xsd:string .
+
+kg:rawRecord a owl:DatatypeProperty ;
+    rdfs:label "Исходная запись JSON"@ru ;
+    rdfs:range xsd:string .
+
+kg:rawText a owl:DatatypeProperty ;
+    rdfs:label "Точный текст исходного файла"@ru ;
+    rdfs:range xsd:string .
+
+kg:roleLevelsText a owl:DatatypeProperty ;
+    rdfs:label "role_levels"@ru ;
+    rdfs:range xsd:string .
+
+kg:rowCount a owl:DatatypeProperty ;
+    rdfs:label "Число строк"@ru ;
+    rdfs:range xsd:integer .
+
+kg:rowIndex a owl:DatatypeProperty ;
+    rdfs:label "Индекс строки с 0"@ru ;
+    rdfs:range xsd:integer .
+
+kg:specialValuesText a owl:DatatypeProperty ;
+    rdfs:label "special_values"@ru ;
+    rdfs:range xsd:string .
+
+kg:table a owl:ObjectProperty ;
+    rdfs:label "Исходная таблица строки"@ru ;
+    rdfs:domain kg:Observation ;
+    rdfs:range kg:DatasetTable .
+
+kg:valueIndex a owl:DatatypeProperty ;
+    rdfs:label "Позиция значения в матрице с 0"@ru ;
+    rdfs:domain kg:SourceColumn ;
+    rdfs:range xsd:integer .
+
+<https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/schema/archive> a owl:Ontology ;
+    rdfs:label "Архивная схема данных Dota 2"@ru ;
+    rdfs:comment "Техническое описание исходных таблиц, точных JSON-строк и байтов файлов. Позволяет восстановить и проверить все исходные данные."@ru ;
+    owl:imports kg: .
+
+kg:SourceColumn a owl:Class ;
+    rdfs:label "Исходная колонка"@ru ;
+    rdfs:comment "Название, позиция, тип Arrow и соответствующее RDF-свойство."@ru .
+
+kg:DatasetTable a owl:Class ;
+    rdfs:label "Исходная таблица"@ru ;
+    rdfs:comment "Строки и схема одного Parquet-файла."@ru .
+

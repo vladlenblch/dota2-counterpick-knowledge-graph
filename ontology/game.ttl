@@ -1,0 +1,12 @@
+@prefix kg: <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/ontology#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+<https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/graph/8358d947fb0ca7984578ae77d0a9a40077ef16bc91a5ec06954e1b7010acb713/game> a owl:Ontology ;
+    rdfs:label "Dota 2: предметная онтология и игровые данные"@ru ;
+    rdfs:comment "Предметная онтология для просмотра героев, признаков, параметров и статистики. Полный исходный архив подключается через dota2.ttl."@ru ;
+    owl:imports kg:,
+        <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/graph/8358d947fb0ca7984578ae77d0a9a40077ef16bc91a5ec06954e1b7010acb713/data-entities>,
+        <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/graph/8358d947fb0ca7984578ae77d0a9a40077ef16bc91a5ec06954e1b7010acb713/data-features>,
+        <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/graph/8358d947fb0ca7984578ae77d0a9a40077ef16bc91a5ec06954e1b7010acb713/data-statistics> .
+
