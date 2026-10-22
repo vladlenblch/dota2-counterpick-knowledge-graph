@@ -1,29 +1,12 @@
 @prefix kg: <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/ontology#> .
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
-@prefix prov: <http://www.w3.org/ns/prov#> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-prov:wasDerivedFrom a owl:ObjectProperty .
-
 kg: a owl:Ontology ;
     rdfs:label "Основная онтология Dota 2"@ru ;
-    rdfs:comment "Предметная схема героев, способностей, предметов и наблюдений исходного снимка. Полный архив исходников подключается через dota2.ttl."@ru .
-
-kg:ItemSnapshot a owl:Class ;
-    rdfs:label "Снимок предмета"@ru ;
-    rdfs:comment "Характеристики предмета в исходном снимке Valve."@ru ;
-    rdfs:subClassOf kg:Observation .
-
-kg:ability a owl:ObjectProperty ;
-    rdfs:label "Способность"@ru ;
-    rdfs:domain kg:AbilitySnapshot ;
-    rdfs:range kg:Ability .
-
-kg:abilityId a owl:DatatypeProperty ;
-    rdfs:label "Идентификатор способности"@ru ;
-    rdfs:range xsd:integer .
+    rdfs:comment "Предметная схема героев, способностей, предметов, игровых характеристик и статистики."@ru .
 
 kg:activeEffect a owl:DatatypeProperty ;
     rdfs:label "Активный эффект"@ru ;
@@ -53,11 +36,6 @@ kg:attackType a owl:DatatypeProperty ;
     rdfs:label "Тип атаки"@ru ;
     rdfs:range xsd:string .
 
-kg:baseValues a owl:ObjectProperty ;
-    rdfs:label "Исходный массив значений"@ru ;
-    rdfs:domain kg:Parameter ;
-    rdfs:range kg:JsonValue .
-
 kg:baselineStatistics a owl:ObjectProperty ;
     rdfs:label "Агрегат для базовой доли побед"@ru ;
     rdfs:domain kg:MatchupObservation ;
@@ -67,38 +45,13 @@ kg:behavior a owl:DatatypeProperty ;
     rdfs:label "Код поведения"@ru ;
     rdfs:range xsd:string .
 
-kg:bonusesValues a owl:ObjectProperty ;
-    rdfs:label "Бонусы предмета"@ru ;
-    rdfs:comment "Упорядоченное структурное значение исходной JSON-колонки; точная исходная строка хранится в архиве."@ru ;
-    rdfs:range kg:JsonValue .
-
-kg:byteLength a owl:DatatypeProperty ;
-    rdfs:label "Число исходных байтов"@ru ;
-    rdfs:range xsd:integer .
-
-kg:castPointValues a owl:ObjectProperty ;
-    rdfs:label "Задержка применения по уровням"@ru ;
-    rdfs:comment "Упорядоченное структурное значение исходной JSON-колонки; точная исходная строка хранится в архиве."@ru ;
-    rdfs:range kg:JsonValue .
-
-kg:castRangeValues a owl:ObjectProperty ;
-    rdfs:label "Дальность применения по уровням"@ru ;
-    rdfs:comment "Упорядоченное структурное значение исходной JSON-колонки; точная исходная строка хранится в архиве."@ru ;
-    rdfs:range kg:JsonValue .
-
-kg:collectedAt a owl:DatatypeProperty ;
-    rdfs:label "Время получения API"@ru ;
-    rdfs:comment "Время сбора ответа API. Не является датой матчей или идентификатором патча."@ru ;
-    rdfs:range xsd:dateTime .
-
 kg:complexity a owl:DatatypeProperty ;
     rdfs:label "Сложность"@ru ;
     rdfs:range xsd:integer .
 
-kg:cooldownValues a owl:ObjectProperty ;
-    rdfs:label "Перезарядка по уровням"@ru ;
-    rdfs:comment "Упорядоченное структурное значение исходной JSON-колонки; точная исходная строка хранится в архиве."@ru ;
-    rdfs:range kg:JsonValue .
+kg:conditionName a owl:DatatypeProperty ;
+    rdfs:label "Название условия модификации"@ru ;
+    rdfs:range xsd:string .
 
 kg:cost a owl:DatatypeProperty ;
     rdfs:label "Стоимость"@ru ;
@@ -120,11 +73,6 @@ kg:damageTypeCode a owl:DatatypeProperty ;
     rdfs:label "Код типа урона"@ru ;
     rdfs:range xsd:integer .
 
-kg:damageValues a owl:ObjectProperty ;
-    rdfs:label "Урон по уровням"@ru ;
-    rdfs:comment "Упорядоченное структурное значение исходной JSON-колонки; точная исходная строка хранится в архиве."@ru ;
-    rdfs:range kg:JsonValue .
-
 kg:description a owl:DatatypeProperty ;
     rdfs:label "Описание"@ru ;
     rdfs:range xsd:string .
@@ -137,66 +85,96 @@ kg:dispellableCode a owl:DatatypeProperty ;
     rdfs:label "Код снимаемости эффектов"@ru ;
     rdfs:range xsd:integer .
 
-kg:displayName a owl:DatatypeProperty ;
-    rdfs:label "Название"@ru ;
-    rdfs:range xsd:string .
-
-kg:durationValues a owl:ObjectProperty ;
-    rdfs:label "Длительность по уровням"@ru ;
-    rdfs:comment "Упорядоченное структурное значение исходной JSON-колонки; точная исходная строка хранится в архиве."@ru ;
-    rdfs:range kg:JsonValue .
-
-kg:entryCount a owl:DatatypeProperty ;
-    rdfs:label "Число элементов JSON"@ru ;
-    rdfs:range xsd:integer .
-
-kg:entryIndex a owl:DatatypeProperty ;
-    rdfs:label "Индекс массива с 0"@ru ;
-    rdfs:range xsd:integer .
-
-kg:entryKey a owl:DatatypeProperty ;
-    rdfs:label "Ключ объекта JSON"@ru ;
-    rdfs:range xsd:string .
-
 kg:evidence a owl:DatatypeProperty ;
-    rdfs:label "Исходное доказательство"@ru ;
+    rdfs:label "Объяснение игрового признака"@ru ;
     rdfs:range xsd:string .
-
-kg:facetsValues a owl:ObjectProperty ;
-    rdfs:label "Аспекты героя"@ru ;
-    rdfs:comment "Упорядоченное структурное значение исходной JSON-колонки; точная исходная строка хранится в архиве."@ru ;
-    rdfs:range kg:JsonValue .
 
 kg:feature a owl:ObjectProperty ;
     rdfs:label "Тип признака"@ru ;
     rdfs:range kg:Feature .
 
-kg:featureCode a owl:DatatypeProperty ;
-    rdfs:label "Код признака"@ru ;
-    rdfs:range xsd:string .
+kg:hasAbility a owl:ObjectProperty ;
+    rdfs:label "Способность героя"@ru ;
+    rdfs:domain kg:Hero ;
+    rdfs:range kg:Ability .
 
-kg:hasAbilitySnapshot a owl:ObjectProperty ;
-    rdfs:label "Снимок способности героя"@ru ;
-    rdfs:domain kg:HeroSnapshot ;
-    rdfs:range kg:AbilitySnapshot .
+kg:hasBaseValue a owl:ObjectProperty ;
+    rdfs:label "Базовое значение"@ru ;
+    rdfs:range kg:ParameterValue .
 
-kg:hasArtifact a owl:ObjectProperty ;
-    rdfs:label "Исходный файл снимка"@ru ;
-    rdfs:domain kg:DatasetSnapshot ;
-    rdfs:range kg:SourceArtifact .
+kg:hasBonusParameter a owl:ObjectProperty ;
+    rdfs:label "Параметр бонуса предмета"@ru ;
+    rdfs:domain kg:Item ;
+    rdfs:range kg:Parameter .
 
-kg:hasEntry a owl:ObjectProperty ;
-    rdfs:label "Элемент JSON"@ru ;
-    rdfs:domain kg:JsonValue ;
-    rdfs:range kg:JsonEntry .
+kg:hasCastPoint a owl:ObjectProperty ;
+    rdfs:label "Параметр задержки применения"@ru ;
+    rdfs:range kg:Parameter .
+
+kg:hasCastRange a owl:ObjectProperty ;
+    rdfs:label "Параметр дальности применения"@ru ;
+    rdfs:range kg:Parameter .
+
+kg:hasChannelTime a owl:ObjectProperty ;
+    rdfs:label "Параметр времени поддержания"@ru ;
+    rdfs:range kg:Parameter .
+
+kg:hasCooldown a owl:ObjectProperty ;
+    rdfs:label "Параметр перезарядки"@ru ;
+    rdfs:range kg:Parameter .
+
+kg:hasDamage a owl:ObjectProperty ;
+    rdfs:label "Параметр урона"@ru ;
+    rdfs:range kg:Parameter .
+
+kg:hasDuration a owl:ObjectProperty ;
+    rdfs:label "Параметр длительности"@ru ;
+    rdfs:range kg:Parameter .
 
 kg:hasFeatureObservation a owl:ObjectProperty ;
     rdfs:label "Наблюдение признака"@ru ;
     rdfs:domain kg:Hero ;
     rdfs:range kg:FeatureObservation .
 
+kg:hasFeatureValue a owl:ObjectProperty ;
+    rdfs:label "Значение признака героя"@ru ;
+    rdfs:domain kg:Hero ;
+    rdfs:range kg:FeatureValue .
+
+kg:hasHealthCost a owl:ObjectProperty ;
+    rdfs:label "Параметр расхода здоровья"@ru ;
+    rdfs:range kg:Parameter .
+
+kg:hasItemUsage a owl:ObjectProperty ;
+    rdfs:label "Использование предмета героем"@ru ;
+    rdfs:domain kg:Hero ;
+    rdfs:range kg:ItemUsageObservation .
+
+kg:hasManaCost a owl:ObjectProperty ;
+    rdfs:label "Параметр расхода маны"@ru ;
+    rdfs:range kg:Parameter .
+
+kg:hasMatchup a owl:ObjectProperty ;
+    rdfs:label "Матчап героя"@ru ;
+    rdfs:domain kg:Hero ;
+    rdfs:range kg:MatchupObservation .
+
+kg:hasModifier a owl:ObjectProperty ;
+    rdfs:label "Модификатор"@ru ;
+    rdfs:domain kg:Parameter ;
+    rdfs:range kg:ParameterModifier .
+
+kg:hasNote a owl:ObjectProperty ;
+    rdfs:label "Игровое примечание"@ru ;
+    rdfs:range kg:GameNote .
+
 kg:hasParameter a owl:ObjectProperty ;
     rdfs:label "Именованный параметр"@ru ;
+    rdfs:range kg:Parameter .
+
+kg:hasRadiusParameter a owl:ObjectProperty ;
+    rdfs:label "Параметр радиуса"@ru ;
+    rdfs:domain kg:Ability ;
     rdfs:range kg:Parameter .
 
 kg:hasRankObservation a owl:ObjectProperty ;
@@ -204,34 +182,45 @@ kg:hasRankObservation a owl:ObjectProperty ;
     rdfs:domain kg:HeroStatisticsObservation ;
     rdfs:range kg:RankBracketObservation .
 
-kg:hasRecord a owl:ObjectProperty ;
-    rdfs:label "Запись об игровой сущности"@ru ;
-    rdfs:domain kg:Entity ;
-    rdfs:range kg:Observation .
+kg:hasRoleRating a owl:ObjectProperty ;
+    rdfs:label "Оценка роли"@ru ;
+    rdfs:domain kg:Hero ;
+    rdfs:range kg:RoleRating .
+
+kg:hasScepterValue a owl:ObjectProperty ;
+    rdfs:label "Изменение Scepter"@ru ;
+    rdfs:domain kg:Parameter ;
+    rdfs:range kg:ParameterValue .
+
+kg:hasShardValue a owl:ObjectProperty ;
+    rdfs:label "Изменение Shard"@ru ;
+    rdfs:domain kg:Parameter ;
+    rdfs:range kg:ParameterValue .
+
+kg:hasStatistics a owl:ObjectProperty ;
+    rdfs:label "Статистика героя"@ru ;
+    rdfs:domain kg:Hero ;
+    rdfs:range kg:HeroStatisticsObservation .
+
+kg:hasTalent a owl:ObjectProperty ;
+    rdfs:label "Талант героя"@ru ;
+    rdfs:domain kg:Hero ;
+    rdfs:range kg:Talent .
 
 kg:health a owl:DatatypeProperty ;
     rdfs:label "Здоровье"@ru ;
     rdfs:range xsd:double .
-
-kg:healthCostValues a owl:ObjectProperty ;
-    rdfs:label "Затраты здоровья по уровням"@ru ;
-    rdfs:comment "Упорядоченное структурное значение исходной JSON-колонки; точная исходная строка хранится в архиве."@ru ;
-    rdfs:range kg:JsonValue .
 
 kg:healthRegen a owl:DatatypeProperty ;
     rdfs:label "Восстановление здоровья"@ru ;
     rdfs:range xsd:double .
 
 kg:hero a owl:ObjectProperty ;
-    rdfs:label "Герой наблюдения"@ru ;
+    rdfs:label "Герой"@ru ;
     rdfs:range kg:Hero .
 
-kg:heroId a owl:DatatypeProperty ;
-    rdfs:label "Идентификатор героя"@ru ;
-    rdfs:range xsd:integer .
-
 kg:identifier a owl:DatatypeProperty ;
-    rdfs:label "Исходный идентификатор"@ru .
+    rdfs:label "Игровой идентификатор"@ru .
 
 kg:immunityCode a owl:DatatypeProperty ;
     rdfs:label "Код взаимодействия с невосприимчивостью"@ru ;
@@ -257,6 +246,10 @@ kg:isNeutral a owl:DatatypeProperty ;
     rdfs:label "Нейтральный предмет"@ru ;
     rdfs:range xsd:boolean .
 
+kg:isPercentage a owl:DatatypeProperty ;
+    rdfs:label "Значение в процентах"@ru ;
+    rdfs:range xsd:boolean .
+
 kg:isPurchasable a owl:DatatypeProperty ;
     rdfs:label "Можно купить"@ru ;
     rdfs:range xsd:boolean .
@@ -269,28 +262,6 @@ kg:item a owl:ObjectProperty ;
     rdfs:label "Предмет"@ru ;
     rdfs:range kg:Item .
 
-kg:itemId a owl:DatatypeProperty ;
-    rdfs:label "Идентификатор предмета"@ru ;
-    rdfs:range xsd:integer .
-
-kg:jsonChild a owl:ObjectProperty ;
-    rdfs:label "Вложенное значение JSON"@ru ;
-    rdfs:domain kg:JsonEntry ;
-    rdfs:range kg:JsonValue .
-
-kg:jsonKind a owl:DatatypeProperty ;
-    rdfs:label "Тип значения JSON"@ru ;
-    rdfs:comment "object, array, scalar или null. Тип различает пустые контейнеры, null и скалярные значения."@ru ;
-    rdfs:domain kg:JsonValue ;
-    rdfs:range xsd:string .
-
-kg:jsonRoot a owl:ObjectProperty ;
-    rdfs:label "Корень структуры JSON"@ru ;
-    rdfs:range kg:JsonValue .
-
-kg:jsonScalar a owl:DatatypeProperty ;
-    rdfs:label "Скалярное значение JSON"@ru .
-
 kg:magicResistance a owl:DatatypeProperty ;
     rdfs:label "Сопротивление магии"@ru ;
     rdfs:range xsd:double .
@@ -298,11 +269,6 @@ kg:magicResistance a owl:DatatypeProperty ;
 kg:mana a owl:DatatypeProperty ;
     rdfs:label "Мана"@ru ;
     rdfs:range xsd:double .
-
-kg:manaCostValues a owl:ObjectProperty ;
-    rdfs:label "Затраты маны по уровням"@ru ;
-    rdfs:comment "Упорядоченное структурное значение исходной JSON-колонки; точная исходная строка хранится в архиве."@ru ;
-    rdfs:range kg:JsonValue .
 
 kg:manaRegen a owl:DatatypeProperty ;
     rdfs:label "Восстановление маны"@ru ;
@@ -312,25 +278,8 @@ kg:matches a owl:DatatypeProperty ;
     rdfs:label "Число матчей"@ru ;
     rdfs:range xsd:integer .
 
-kg:matrixFeatureOrder a owl:ObjectProperty ;
-    rdfs:label "Порядок признаков матрицы"@ru ;
-    rdfs:comment "Упорядоченный массив исходных имён колонок признаков; индексы совпадают с matrixValues."@ru ;
-    rdfs:domain kg:DatasetSnapshot ;
-    rdfs:range kg:JsonValue .
-
-kg:matrixValues a owl:ObjectProperty ;
-    rdfs:label "Значения вектора признаков"@ru ;
-    rdfs:comment "Упорядоченный массив всех числовых значений, включая нули. Порядок признаков задан matrixFeatureOrder снимка."@ru ;
-    rdfs:domain kg:FeatureVector ;
-    rdfs:range kg:JsonValue .
-
-kg:mediaType a owl:DatatypeProperty ;
-    rdfs:label "MIME-тип"@ru ;
-    rdfs:range xsd:string .
-
-kg:method a owl:DatatypeProperty ;
-    rdfs:label "Метод извлечения признака"@ru ;
-    rdfs:domain kg:FeatureObservation ;
+kg:modifierKind a owl:DatatypeProperty ;
+    rdfs:label "Тип модификатора"@ru ;
     rdfs:range xsd:string .
 
 kg:movementSpeed a owl:DatatypeProperty ;
@@ -346,27 +295,32 @@ kg:normalizedAdvantage a owl:DatatypeProperty ;
     rdfs:comment "winRate этого матчапа минус winRate общей статистики ТОГО ЖЕ героя. Это описательная оценка по агрегатам, не причинная сила контрпика."@ru ;
     rdfs:range xsd:double .
 
-kg:notesValues a owl:ObjectProperty ;
-    rdfs:label "Примечания"@ru ;
-    rdfs:comment "Упорядоченное структурное значение исходной JSON-колонки; точная исходная строка хранится в архиве."@ru ;
-    rdfs:range kg:JsonValue .
+kg:noteText a owl:DatatypeProperty ;
+    rdfs:label "Текст примечания"@ru ;
+    rdfs:range xsd:string .
+
+kg:noteKind a owl:DatatypeProperty ;
+    rdfs:label "Вид игрового примечания"@ru ;
+    rdfs:range xsd:string .
+
+kg:numericValue a owl:DatatypeProperty ;
+    rdfs:label "Числовое значение параметра"@ru .
+
+kg:operation a owl:DatatypeProperty ;
+    rdfs:label "Код операции изменения параметра"@ru ;
+    rdfs:range xsd:integer .
 
 kg:opponent a owl:ObjectProperty ;
     rdfs:label "Противник"@ru ;
     rdfs:domain kg:MatchupObservation ;
     rdfs:range kg:Hero .
 
-kg:opponentHeroId a owl:DatatypeProperty ;
-    rdfs:label "Идентификатор противника"@ru ;
-    rdfs:range xsd:integer .
-
-kg:parameterData a owl:ObjectProperty ;
-    rdfs:label "Все исходные поля параметра"@ru ;
-    rdfs:domain kg:Parameter ;
-    rdfs:range kg:JsonValue .
+kg:parameterHeading a owl:DatatypeProperty ;
+    rdfs:label "Заголовок параметра"@ru ;
+    rdfs:range xsd:string .
 
 kg:parameterName a owl:DatatypeProperty ;
-    rdfs:label "Имя special_values"@ru ;
+    rdfs:label "Название игрового параметра"@ru ;
     rdfs:range xsd:string .
 
 kg:passiveEffect a owl:DatatypeProperty ;
@@ -381,6 +335,10 @@ kg:phase a owl:DatatypeProperty ;
 kg:piercesDebuffImmunity a owl:DatatypeProperty ;
     rdfs:label "Проходит сквозь невосприимчивость к эффектам"@ru ;
     rdfs:range xsd:boolean .
+
+kg:position a owl:DatatypeProperty ;
+    rdfs:label "Позиция в последовательности с 0"@ru ;
+    rdfs:range xsd:integer .
 
 kg:primaryAttribute a owl:DatatypeProperty ;
     rdfs:label "Основная характеристика"@ru ;
@@ -398,76 +356,30 @@ kg:professionalWins a owl:DatatypeProperty ;
     rdfs:label "Победы в профессиональных матчах"@ru ;
     rdfs:range xsd:integer .
 
-kg:radiusValues a owl:ObjectProperty ;
-    rdfs:label "Радиус по уровням"@ru ;
-    rdfs:comment "Упорядоченное структурное значение исходной JSON-колонки; точная исходная строка хранится в архиве."@ru ;
-    rdfs:range kg:JsonValue .
-
 kg:rankBracket a owl:DatatypeProperty ;
     rdfs:label "Код рейтингового интервала"@ru ;
     rdfs:domain kg:RankBracketObservation ;
     rdfs:range xsd:string .
 
-kg:rankBracketsValues a owl:ObjectProperty ;
-    rdfs:label "Исходная статистика рейтинговых интервалов"@ru ;
-    rdfs:comment "Упорядоченное структурное значение исходной JSON-колонки; точная исходная строка хранится в архиве."@ru ;
-    rdfs:range kg:JsonValue .
-
-kg:relativePath a owl:DatatypeProperty ;
-    rdfs:label "Путь в репозитории"@ru ;
+kg:requiredFacet a owl:DatatypeProperty ;
+    rdfs:label "Необходимый аспект"@ru ;
     rdfs:range xsd:string .
 
-kg:retrievedAtText a owl:DatatypeProperty ;
-    rdfs:label "Исходная строка времени получения"@ru ;
-    rdfs:range xsd:string .
+kg:roleCode a owl:DatatypeProperty ;
+    rdfs:label "Код игровой роли"@ru ;
+    rdfs:range xsd:integer .
 
-kg:roleLevelsValues a owl:ObjectProperty ;
-    rdfs:label "Уровни ролей"@ru ;
-    rdfs:comment "Упорядоченное структурное значение исходной JSON-колонки; точная исходная строка хранится в архиве."@ru ;
-    rdfs:range kg:JsonValue .
+kg:roleLevel a owl:DatatypeProperty ;
+    rdfs:label "Выраженность роли"@ru ;
+    rdfs:range xsd:integer .
 
 kg:scepterDescription a owl:DatatypeProperty ;
     rdfs:label "Описание улучшения Scepter"@ru ;
     rdfs:range xsd:string .
 
-kg:scepterValues a owl:ObjectProperty ;
-    rdfs:label "Исходный массив Scepter"@ru ;
-    rdfs:domain kg:Parameter ;
-    rdfs:range kg:JsonValue .
-
-kg:sha256 a owl:DatatypeProperty ;
-    rdfs:label "SHA256 исходных байтов"@ru ;
-    rdfs:range xsd:string .
-
 kg:shardDescription a owl:DatatypeProperty ;
     rdfs:label "Описание улучшения Shard"@ru ;
     rdfs:range xsd:string .
-
-kg:shardValues a owl:ObjectProperty ;
-    rdfs:label "Исходный массив Shard"@ru ;
-    rdfs:domain kg:Parameter ;
-    rdfs:range kg:JsonValue .
-
-kg:snapshot a owl:ObjectProperty ;
-    rdfs:label "Снимок"@ru ;
-    rdfs:range kg:DatasetSnapshot .
-
-kg:source a owl:ObjectProperty ;
-    rdfs:label "Источник"@ru ;
-    rdfs:range kg:DataSource .
-
-kg:sourceCode a owl:DatatypeProperty ;
-    rdfs:label "Исходный код источника"@ru ;
-    rdfs:range xsd:string .
-
-kg:sourceIndex a owl:DatatypeProperty ;
-    rdfs:label "Исходная позиция"@ru ;
-    rdfs:range xsd:integer .
-
-kg:specialValues a owl:ObjectProperty ;
-    rdfs:label "Специальные параметры"@ru ;
-    rdfs:comment "Упорядоченное структурное значение исходной JSON-колонки; точная исходная строка хранится в архиве."@ru ;
-    rdfs:range kg:JsonValue .
 
 kg:strength a owl:DatatypeProperty ;
     rdfs:label "Сила"@ru ;
@@ -478,9 +390,14 @@ kg:strengthGain a owl:DatatypeProperty ;
     rdfs:range xsd:double .
 
 kg:supportedByAbility a owl:ObjectProperty ;
-    rdfs:label "Способность в доказательстве"@ru ;
+    rdfs:label "Способность, объясняющая признак"@ru ;
     rdfs:domain kg:FeatureObservation ;
     rdfs:range kg:Ability .
+
+kg:supportedByObservation a owl:ObjectProperty ;
+    rdfs:label "Основание значения признака"@ru ;
+    rdfs:domain kg:FeatureValue ;
+    rdfs:range kg:FeatureObservation .
 
 kg:targetTeam a owl:DatatypeProperty ;
     rdfs:label "Код команды цели"@ru ;
@@ -497,6 +414,11 @@ kg:unit a owl:DatatypeProperty ;
 kg:usageCount a owl:DatatypeProperty ;
     rdfs:label "Число использований"@ru ;
     rdfs:range xsd:integer .
+
+kg:usedIn a owl:ObjectProperty ;
+    rdfs:label "Используется в наблюдении"@ru ;
+    rdfs:domain kg:Item ;
+    rdfs:range kg:ItemUsageObservation .
 
 kg:value a owl:DatatypeProperty ;
     rdfs:label "Числовое значение"@ru ;
@@ -516,102 +438,250 @@ kg:wins a owl:DatatypeProperty ;
     rdfs:label "Точное число побед"@ru ;
     rdfs:range xsd:integer .
 
-kg:DataSource a owl:Class ;
-    rdfs:label "Источник данных"@ru ;
-    rdfs:comment "Только реально указанный источник. Неизвестный источник остаётся пропуском."@ru .
-
-kg:FeatureVector a owl:Class ;
-    rdfs:label "Строка матрицы признаков"@ru ;
-    rdfs:comment "Все 76 значений, включая нули. Ноль не является OWL-отрицанием."@ru ;
-    rdfs:subClassOf kg:Observation .
-
-kg:HeroSnapshot a owl:Class ;
-    rdfs:label "Снимок характеристик героя"@ru ;
-    rdfs:comment "Характеристики Valve на момент исходного снимка."@ru ;
-    rdfs:subClassOf kg:Observation .
-
-kg:ItemUsageObservation a owl:Class ;
-    rdfs:label "Популярность предмета"@ru ;
-    rdfs:comment "Число использований на стадии игры; знаменателя и вероятности выбора нет."@ru ;
-    rdfs:subClassOf kg:Observation .
-
-kg:SourceArtifact a owl:Class ;
-    rdfs:label "Исходный файл"@ru ;
-    rdfs:comment "Полное содержимое, относительный путь, формат и SHA256. JSON/CSV сохраняются текстом, Parquet в base64."@ru ;
-    rdfs:subClassOf prov:Entity .
-
-kg:AbilitySnapshot a owl:Class ;
-    rdfs:label "Снимок способности"@ru ;
-    rdfs:comment "Описание, коды механик и массивы параметров способности."@ru ;
-    rdfs:subClassOf kg:Observation .
-
-kg:Feature a owl:Class ;
-    rdfs:label "Признак"@ru ;
-    rdfs:comment "Тип извлекаемого свойства. Не OWL-класс героя."@ru .
-
-kg:HeroStatisticsObservation a owl:Class ;
-    rdfs:label "Общая статистика героя"@ru ;
-    rdfs:comment "Агрегаты OpenDota. Суммы рейтинговых интервалов не равны автоматически raw pub_pick."@ru ;
-    rdfs:subClassOf kg:Observation .
-
-kg:Item a owl:Class ;
-    rdfs:label "Предмет"@ru ;
-    rdfs:comment "Нормализованный предмет; дополнительные исходные записи сохранены в архиве."@ru ;
-    rdfs:subClassOf kg:Entity .
-
-kg:JsonEntry a owl:Class ;
-    rdfs:label "Элемент структуры"@ru ;
-    rdfs:comment "Ключ объекта или индекс массива и ровно одно скалярное либо вложенное значение."@ru .
-
-kg:MatchupObservation a owl:Class ;
-    rdfs:label "Статистика противостояния"@ru ;
-    rdfs:comment "Направленное статистическое наблюдение. Не является доказательством причинного контрпика."@ru ;
-    rdfs:subClassOf kg:Observation .
-
-kg:RankBracketObservation a owl:Class ;
-    rdfs:label "Статистика рейтингового интервала"@ru ;
-    rdfs:comment "Показатели одного исходного интервала; названия рангов не выдумываются."@ru ;
-    rdfs:subClassOf kg:Observation .
-
-prov:Entity a owl:Class .
-
-kg:Ability a owl:Class ;
-    rdfs:label "Способность"@ru ;
-    rdfs:comment "Конкретная способность с идентификатором Valve."@ru ;
-    rdfs:subClassOf kg:Entity .
-
-kg:DatasetSnapshot a owl:Class ;
-    rdfs:label "Снимок всех данных"@ru ;
-    rdfs:comment "Идентификатор зависит от SHA256 всех входных файлов."@ru ;
-    rdfs:subClassOf prov:Entity .
-
-kg:FeatureObservation a owl:Class ;
-    rdfs:label "Извлечённый признак героя"@ru ;
-    rdfs:comment "Герой, тип признака, значение, метод и исходное доказательство."@ru ;
-    rdfs:subClassOf kg:Observation .
-
 kg:Entity a owl:Class ;
     rdfs:label "Сущность игры"@ru ;
-    rdfs:comment "Устойчивая сущность с идентификатором Valve."@ru .
+    rdfs:comment "Самостоятельный игровой объект: герой, его способность или предмет."@ru .
+
+kg:GameCharacteristic a owl:Class ;
+    rdfs:label "Игровая характеристика"@ru ;
+    rdfs:comment "Вид свойства героя, способности или предмета, для которого задаются значения."@ru .
+
+kg:GameFact a owl:Class ;
+    rdfs:label "Факт об игровой характеристике"@ru ;
+    rdfs:comment "Составное утверждение о характеристике: значение, оценка роли, условие изменения или примечание о механике."@ru .
+
+kg:Statistics a owl:Class ;
+    rdfs:label "Игровая статистика"@ru ;
+    rdfs:comment "Показатели матчей, противостояний героев и использования предметов."@ru .
 
 kg:Hero a owl:Class ;
     rdfs:label "Герой"@ru ;
-    rdfs:comment "Конкретный герой; изменяемые характеристики хранятся в снимках."@ru ;
+    rdfs:comment "Игровой герой с характеристиками, способностями, признаками и статистикой."@ru ;
     rdfs:subClassOf kg:Entity .
+
+kg:Ability a owl:Class ;
+    rdfs:label "Способность"@ru ;
+    rdfs:comment "Способность героя с описанием механики, параметрами и улучшениями."@ru ;
+    rdfs:subClassOf kg:Entity .
+
+kg:Talent a owl:Class ;
+    rdfs:label "Талант"@ru ;
+    rdfs:comment "Пассивная способность героя из дерева талантов, изменяющая характеристики или игровые механики."@ru ;
+    rdfs:subClassOf kg:Ability .
+
+kg:Item a owl:Class ;
+    rdfs:label "Предмет"@ru ;
+    rdfs:comment "Игровой предмет со стоимостью, эффектами, параметрами и статистикой использования."@ru ;
+    rdfs:subClassOf kg:Entity .
+
+kg:Feature a owl:Class ;
+    rdfs:label "Признак"@ru ;
+    rdfs:comment "Вид игрового свойства, например оглушение, невидимость или дальность атаки."@ru ;
+    rdfs:subClassOf kg:GameCharacteristic .
 
 kg:Parameter a owl:Class ;
     rdfs:label "Параметр способности или предмета"@ru ;
-    rdfs:comment "Именованный special_values с исходными массивами и модификаторами."@ru .
+    rdfs:comment "Именованная характеристика способности или предмета: урон, радиус, длительность, бонус или стоимость применения."@ru ;
+    rdfs:subClassOf kg:GameCharacteristic .
 
-kg:Observation a owl:Class ;
-    rdfs:label "Наблюдение"@ru ;
-    rdfs:comment "Факт в конкретном снимке данных; не вечное свойство героя."@ru ;
-    rdfs:subClassOf prov:Entity .
+kg:GameNote a owl:Class ;
+    rdfs:label "Игровое примечание"@ru ;
+    rdfs:comment "Пояснение механики способности, таланта, аспекта или предмета с сохранением вида и порядка примечаний."@ru ;
+    rdfs:subClassOf kg:GameFact .
 
-kg:JsonValue a owl:Class ;
-    rdfs:label "Структурное значение"@ru ;
-    rdfs:comment "Структурное значение JSON с явным jsonKind. Ключи объектов, порядок и повторяющиеся элементы массивов, скаляры и null сохранены; точный текст файлов хранится в архиве."@ru .
+kg:ParameterModifier a owl:Class ;
+    rdfs:label "Модификатор параметра"@ru ;
+    rdfs:comment "Условие, операция и изменение параметра от бонуса или аспекта."@ru ;
+    rdfs:subClassOf kg:GameFact .
+
+kg:RoleRating a owl:Class ;
+    rdfs:label "Оценка игровой роли"@ru ;
+    rdfs:comment "Игровая роль и степень её выраженности у героя."@ru ;
+    rdfs:subClassOf kg:GameFact .
+
+kg:FeatureValue a owl:Class ;
+    rdfs:label "Значение признака героя"@ru ;
+    rdfs:comment "Числовая характеристика героя и связь с её объяснением. Нулевое значение без объяснения не доказывает отсутствие свойства."@ru ;
+    rdfs:subClassOf kg:GameFact .
+
+kg:ParameterValue a owl:Class ;
+    rdfs:label "Значение параметра"@ru ;
+    rdfs:comment "Число в последовательности значений параметра. Порядок сохраняется без предположения, что каждая позиция обозначает уровень способности."@ru ;
+    rdfs:subClassOf kg:GameFact .
+
+kg:FeatureObservation a owl:Class ;
+    rdfs:label "Признак героя с объяснением"@ru ;
+    rdfs:comment "Утверждение об игровом свойстве героя: тип признака, значение, объяснение механики и связанные способности."@ru ;
+    rdfs:subClassOf kg:GameFact .
+
+kg:HeroStatisticsObservation a owl:Class ;
+    rdfs:label "Общая статистика героя"@ru ;
+    rdfs:comment "Число матчей и побед героя, доля побед и показатели профессиональных матчей."@ru ;
+    rdfs:subClassOf kg:Statistics .
+
+kg:RankBracketObservation a owl:Class ;
+    rdfs:label "Статистика рейтингового интервала"@ru ;
+    rdfs:comment "Число матчей, побед и доля побед героя в определённом рейтинговом интервале."@ru ;
+    rdfs:subClassOf kg:Statistics .
+
+kg:ItemUsageObservation a owl:Class ;
+    rdfs:label "Популярность предмета"@ru ;
+    rdfs:comment "Число использований предмета конкретным героем на определённой стадии игры."@ru ;
+    rdfs:subClassOf kg:Statistics .
+
+kg:MatchupObservation a owl:Class ;
+    rdfs:label "Статистика противостояния"@ru ;
+    rdfs:comment "Направленное противостояние двух героев: матчи, победы, доля побед и её отклонение от общей статистики героя."@ru ;
+    rdfs:subClassOf kg:Statistics .
+
+[] a owl:AllDisjointClasses ;
+    owl:members ( kg:Entity kg:GameCharacteristic kg:GameFact kg:Statistics ) .
 
 [] a owl:AllDisjointClasses ;
     owl:members ( kg:Hero kg:Ability kg:Item ) .
 
+
+kg:turnRate a owl:DatatypeProperty ;
+    rdfs:label "Скорость поворота"@ru .
+
+kg:projectileSpeed a owl:DatatypeProperty ;
+    rdfs:label "Скорость снаряда"@ru ;
+    rdfs:range xsd:integer .
+
+kg:dayVision a owl:DatatypeProperty ;
+    rdfs:label "Дальность обзора днем"@ru ;
+    rdfs:range xsd:integer .
+
+kg:nightVision a owl:DatatypeProperty ;
+    rdfs:label "Дальность обзора ночью"@ru ;
+    rdfs:range xsd:integer .
+
+kg:roleSummary a owl:DatatypeProperty ;
+    rdfs:label "Краткая игровая характеристика"@ru ;
+    rdfs:range xsd:string .
+
+kg:gameplayDescription a owl:DatatypeProperty ;
+    rdfs:label "Описание стиля игры"@ru ;
+    rdfs:range xsd:string .
+
+kg:hasScepterUpgrade a owl:DatatypeProperty ;
+    rdfs:label "Есть улучшение Scepter"@ru ;
+    rdfs:range xsd:boolean .
+
+kg:hasShardUpgrade a owl:DatatypeProperty ;
+    rdfs:label "Есть улучшение Shard"@ru ;
+    rdfs:range xsd:boolean .
+
+kg:grantedByScepter a owl:DatatypeProperty ;
+    rdfs:label "Предоставляется Scepter"@ru ;
+    rdfs:range xsd:boolean .
+
+kg:grantedByShard a owl:DatatypeProperty ;
+    rdfs:label "Предоставляется Shard"@ru ;
+    rdfs:range xsd:boolean .
+
+kg:maxLevel a owl:DatatypeProperty ;
+    rdfs:label "Максимальное число уровней"@ru ;
+    rdfs:range xsd:integer .
+
+kg:behaviorFlags a owl:DatatypeProperty ;
+    rdfs:label "Флаги игровой механики"@ru ;
+    rdfs:range xsd:integer .
+
+kg:initialCharges a owl:DatatypeProperty ;
+    rdfs:label "Начальное число зарядов"@ru ;
+    rdfs:range xsd:integer .
+
+kg:stockLimit a owl:DatatypeProperty ;
+    rdfs:label "Максимальный запас в магазине"@ru ;
+    rdfs:range xsd:integer .
+
+kg:stockReplenishTime a owl:DatatypeProperty ;
+    rdfs:label "Время восстановления запаса магазина"@ru ;
+    rdfs:range xsd:integer .
+
+kg:qualityCode a owl:DatatypeProperty ;
+    rdfs:label "Код категории предмета"@ru ;
+    rdfs:range xsd:integer .
+
+kg:baseHealth a owl:DatatypeProperty ;
+    rdfs:label "Базовое здоровье"@ru ;
+    rdfs:range xsd:integer .
+
+kg:baseHealthRegen a owl:DatatypeProperty ;
+    rdfs:label "Базовое восстановление здоровья"@ru .
+
+kg:baseMana a owl:DatatypeProperty ;
+    rdfs:label "Базовая мана"@ru ;
+    rdfs:range xsd:integer .
+
+kg:baseManaRegen a owl:DatatypeProperty ;
+    rdfs:label "Базовое восстановление маны"@ru .
+
+kg:baseArmor a owl:DatatypeProperty ;
+    rdfs:label "Базовая броня"@ru .
+
+kg:baseDamageMin a owl:DatatypeProperty ;
+    rdfs:label "Базовый минимальный урон атаки"@ru ;
+    rdfs:range xsd:integer .
+
+kg:baseDamageMax a owl:DatatypeProperty ;
+    rdfs:label "Базовый максимальный урон атаки"@ru ;
+    rdfs:range xsd:integer .
+
+kg:baseAttackTime a owl:DatatypeProperty ;
+    rdfs:label "Базовое время атаки"@ru ;
+    rdfs:range xsd:integer .
+
+kg:attackPoint a owl:DatatypeProperty ;
+    rdfs:label "Задержка атаки"@ru .
+
+kg:captainsModeEnabled a owl:DatatypeProperty ;
+    rdfs:label "Доступен в Captains Mode"@ru ;
+    rdfs:range xsd:boolean .
+
+kg:turboMatches a owl:DatatypeProperty ;
+    rdfs:label "Матчи Turbo"@ru ;
+    rdfs:range xsd:integer .
+
+kg:turboWins a owl:DatatypeProperty ;
+    rdfs:label "Победы Turbo"@ru ;
+    rdfs:range xsd:integer .
+
+kg:roleName a owl:DatatypeProperty ;
+    rdfs:label "Название игровой роли"@ru ;
+    rdfs:range xsd:string .
+
+
+kg:requiresTalent a owl:ObjectProperty ;
+    rdfs:label "Требует талант"@ru ;
+    rdfs:domain kg:ParameterModifier ;
+    rdfs:range kg:Talent .
+
+kg:hasPublicMatchTrend a owl:ObjectProperty ;
+    rdfs:label "Динамика числа публичных матчей"@ru ;
+    rdfs:domain kg:HeroStatisticsObservation ;
+    rdfs:range kg:Parameter .
+
+kg:hasPublicWinTrend a owl:ObjectProperty ;
+    rdfs:label "Динамика публичных побед"@ru ;
+    rdfs:domain kg:HeroStatisticsObservation ;
+    rdfs:range kg:Parameter .
+
+kg:hasTurboMatchTrend a owl:ObjectProperty ;
+    rdfs:label "Динамика числа матчей Turbo"@ru ;
+    rdfs:domain kg:HeroStatisticsObservation ;
+    rdfs:range kg:Parameter .
+
+kg:hasTurboWinTrend a owl:ObjectProperty ;
+    rdfs:label "Динамика побед Turbo"@ru ;
+    rdfs:domain kg:HeroStatisticsObservation ;
+    rdfs:range kg:Parameter .
+
+kg:publicMatches a owl:DatatypeProperty ;
+    rdfs:label "Публичные матчи"@ru ;
+    rdfs:range xsd:integer .
+
+kg:publicWins a owl:DatatypeProperty ;
+    rdfs:label "Публичные победы"@ru ;
+    rdfs:range xsd:integer .

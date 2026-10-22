@@ -1,9 +1,0 @@
-PREFIX kg: <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/ontology#>
-SELECT ?class (COUNT(?entity) AS ?count)
-WHERE {
-  VALUES ?class { kg:Hero kg:Ability kg:Item kg:Feature kg:FeatureObservation
-                  kg:MatchupObservation kg:ItemUsageObservation kg:FeatureVector }
-  ?entity a ?class .
-}
-GROUP BY ?class
-ORDER BY ?class

@@ -1,4 +1,4 @@
-"""Canonical ontology readers and shared source-to-RDF predicate mappings."""
+"""Canonical game ontology and dataset-to-RDF predicate mappings."""
 from __future__ import annotations
 
 from pathlib import Path
@@ -8,23 +8,20 @@ from rdflib import Graph, Namespace, RDF, RDFS, OWL, XSD
 BASE = "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/"
 KG = Namespace(BASE + "ontology#")
 RES = Namespace(BASE + "resource/")
-PROV = Namespace("http://www.w3.org/ns/prov#")
 SH = Namespace("http://www.w3.org/ns/shacl#")
 
 TABLES = {
-    "heroes": ("HeroSnapshot", ("hero_id",)),
-    "abilities": ("AbilitySnapshot", ("ability_id",)),
-    "items": ("ItemSnapshot", ("item_id",)),
+    "heroes": ("Hero", ("hero_id",)),
+    "abilities": ("Ability", ("ability_id",)),
+    "items": ("Item", ("item_id",)),
     "hero_features": ("FeatureObservation", ("hero_id", "feature")),
-    "hero_feature_matrix": ("FeatureVector", ("hero_id",)),
+    "hero_feature_matrix": ("FeatureValue", ("hero_id",)),
     "matchups": ("MatchupObservation", ("hero_id", "opponent_hero_id")),
     "hero_items": ("ItemUsageObservation", ("hero_id", "item_id", "phase")),
     "hero_meta": ("HeroStatisticsObservation", ("hero_id",)),
 }
 
 JSON_COLUMNS = {
-    # raw is retained as the exact original cell string. Its full source tree is
-    # already exported in the raw-archive modules, avoiding a second huge tree.
     "heroes": {"facets", "role_levels"},
     "abilities": {"notes", "cast_range", "cast_point", "radius", "duration", "cooldown",
                   "mana_cost", "health_cost", "damage", "special_values"},
@@ -82,12 +79,9 @@ SEMANTIC_FIELDS = {
     "professional_matches": KG.professionalMatches, "professional_wins": KG.professionalWins,
     "professional_bans": KG.professionalBans, "evidence": KG.evidence,
 }
-DATA_GROUPS = {
-    **dict.fromkeys(("heroes", "abilities", "items"), "entities"),
-    **dict.fromkeys(("hero_features", "hero_feature_matrix"), "features"),
-    **dict.fromkeys(("matchups", "hero_items", "hero_meta"), "statistics"),
-}
-SCHEMA_FILES = ("schema.ttl", "archive-schema.ttl")
+# These columns describe collection or implementation, not game facts.
+NON_DOMAIN_COLUMNS = {"source", "retrieved_at", "derivation_method", "raw", "source_index"}
+IDENTITY_COLUMNS = {"hero_id", "opponent_hero_id", "ability_id", "item_id", "feature", "display_name"}
 
 
 def _camel(name: str) -> str:
@@ -97,54 +91,24 @@ def _camel(name: str) -> str:
 
 def column_predicate(table: str, name: str):
     """One canonical RDF predicate for each source column; no duplicate aliases."""
-    if table == "hero_feature_matrix" and name != "hero_id":
-        return KG.matrixValues
-    special = {
-        "feature": "featureCode", "source": "sourceCode", "retrieved_at": "retrievedAtText",
-        "derivation_method": "method", "raw": "rawRecord",
-    }
-    if name in special:
-        return KG[special[name]]
     if name in SEMANTIC_FIELDS:
         return SEMANTIC_FIELDS[name]
-    if name in JSON_COLUMNS.get(table, set()):
-        return KG[_camel(name) + "Text"]
     return KG[_camel(name)]
 
 
-def structured_predicate(name: str):
-    """Direct link from a record to a queryable, ordered JSON value."""
-    return KG.specialValues if name == "special_values" else KG[_camel(name) + "Values"]
-
-
-JSON_TEXT_PROPERTIES = {
-    column_predicate(table, name)
-    for table, names in JSON_COLUMNS.items() for name in names
-} | {KG.rawRecord}
-STRUCTURED_PROPERTIES = {
-    structured_predicate(name) for names in JSON_COLUMNS.values() for name in names
-}
-
-
 def bind(graph: Graph) -> Graph:
-    for prefix, ns in (("kg", KG), ("res", RES), ("prov", PROV),
+    for prefix, ns in (("kg", KG), ("res", RES),
                        ("owl", OWL), ("rdf", RDF), ("rdfs", RDFS), ("xsd", XSD)):
         graph.bind(prefix, ns)
     return graph
 
 
-def schema_graph(root=None, *, include_technical=False) -> Graph:
-    """Read editable canonical TTL, optionally adding archive vocabulary.
-
-    ``root`` is a project directory containing ``ontology/``. Schema definitions
-    live only in those TTL files, so edits made in Protege survive data exports.
-    Imports are resolved explicitly from bundled files, without network access.
-    """
+def schema_graph(root=None) -> Graph:
+    """Read the editable OWL schema; local imports are handled by the loader."""
     root = Path(root) if root is not None else Path(__file__).resolve().parent.parent
-    names = [SCHEMA_FILES[0]]
-    if include_technical:
-        names.append(SCHEMA_FILES[1])
-    graph = bind(Graph())
-    for name in names:
-        graph.parse(root / "ontology" / name, format="turtle")
-    return graph
+    return bind(Graph()).parse(root / "ontology/schema.ttl", format="turtle")
+
+
+def evidence_text(value: str) -> str:
+    """Keep the gameplay explanation without the collection brand prefix."""
+    return value.replace("Valve ", "").replace("special_values", "parameter")

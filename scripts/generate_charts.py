@@ -284,19 +284,85 @@ def ontology_overview(graph):
     save(fig, "ontology_overview")
 
 
+def ontology_hierarchy(graph):
+    """Draw the actual class hierarchy from the editable OWL schema."""
+    import textwrap
+
+    roots = [(KG.Entity, "Игровые сущности"),
+             (KG.GameCharacteristic, "Характеристики"),
+             (KG.GameFact, "Факты о характеристиках"),
+             (KG.Statistics, "Статистика")]
+    order = {name: index for index, name in enumerate((
+        "Hero", "Ability", "Item", "Talent", "Feature", "Parameter",
+        "FeatureObservation", "FeatureValue", "RoleRating", "ParameterValue",
+        "ParameterModifier", "GameNote", "HeroStatisticsObservation",
+        "RankBracketObservation", "MatchupObservation", "ItemUsageObservation"))}
+    hierarchy = defaultdict(list)
+    for child, parent in graph.subject_objects(RDFS.subClassOf):
+        if (child, RDF.type, OWL.Class) in graph:
+            hierarchy[parent].append(child)
+
+    def descendants(parent, depth=1):
+        result = []
+        for child in sorted(hierarchy[parent], key=lambda node: order.get(str(node).split("#")[-1], 99)):
+            result.append((depth, child))
+            result.extend(descendants(child, depth + 1))
+        return result
+
+    fig = figure("Иерархия предметной области", "Четыре ветви классов и их игровые понятия", (13, 6.8))
+    ax = fig.add_axes([.025, .08, .95, .72])
+    ax.set_xlim(0, 1)
+    ax.set_ylim(0, 1)
+    ax.axis("off")
+    for column, (root, title) in enumerate(roots):
+        x, width = .01 + column * .25, .23
+        ax.add_patch(FancyBboxPatch((x, .04), width, .91,
+                     boxstyle="round,pad=0.006,rounding_size=0.022",
+                     facecolor=WHITE, edgecolor=GRID, linewidth=.8))
+        ax.text(x + .015, .89, "\n".join(textwrap.wrap(title, width=19)),
+                fontsize=11.4, fontweight="bold", color=BLUE, va="top", linespacing=1.3)
+        ax.text(x + .015, .735, str(root).split("#")[-1], fontsize=8.5, color=MUTED)
+        ax.plot([x + .015, x + width - .015], [.70, .70], color=GRID, linewidth=1)
+        nodes = descendants(root)
+        positions = [(.62 - index * .09, depth, node) for index, (depth, node) in enumerate(nodes)]
+        first_level = [y for y, depth, _ in positions if depth == 1]
+        if first_level:
+            ax.plot([x + .018] * 2, [.68, min(first_level)], color=BLUE, linewidth=1.2)
+        last_parent_y = None
+        for y, depth, node in positions:
+            start_x = x + .018 if depth == 1 else x + .038
+            end_x = x + .04 + (depth - 1) * .018
+            if depth > 1 and last_parent_y is not None:
+                ax.plot([start_x] * 2, [last_parent_y - .025, y], color=BLUE, linewidth=1.1)
+            ax.plot([start_x, end_x - .006], [y, y], color=BLUE, linewidth=1.1)
+            label = str(graph.value(node, RDFS.label))
+            ax.text(end_x, y, "\n".join(textwrap.wrap(label, width=25 if depth == 1 else 22)),
+                    fontsize=9.4, color=INK, va="center", linespacing=1.12)
+            if depth == 1:
+                last_parent_y = y
+    fig.text(.045, .045, "Талант - разновидность способности. Числа, тексты и флаги представлены свойствами данных.",
+             fontsize=9.5, color=MUTED)
+    save(fig, "ontology_hierarchy")
+
+
 def ontology_relations(graph):
     selected = [
-        ("snapshot", "Привязка к снимку данных"),
         ("hero", "Привязка к герою"),
+        ("opponent", "Противник в матчапе"),
         ("baselineStatistics", "Базовая статистика матчапа"),
-        ("hasParameter", "Параметры способностей и предметов"),
+        ("item", "Привязка к предмету"),
+        ("hasParameter", "Игровые параметры"),
         ("feature", "Назначение игрового признака"),
         ("supportedByAbility", "Способность как основание признака"),
-        ("hasAbilitySnapshot", "Способности в снимке героя"),
+        ("hasAbility", "Способность героя"),
+        ("hasTalent", "Талант героя"),
+        ("requiresTalent", "Талант как условие модификации"),
     ]
-    values = [sum(1 for _ in graph.triples((None, KG[predicate], None))) for predicate, _ in selected]
-    labels = [f"{label}\n{predicate}" for predicate, label in selected]
-    fig = figure("Какие отношения хранит граф", "Число RDF-утверждений по выбранным объектным свойствам игровой модели", (13, 6.5))
+    counted = sorted(((predicate, label, sum(1 for _ in graph.triples((None, KG[predicate], None))))
+                      for predicate, label in selected), key=lambda row: row[2], reverse=True)
+    values = [value for _, _, value in counted]
+    labels = [f"{label}\n{predicate}" for predicate, label, _ in counted]
+    fig = figure("Какие отношения хранит граф", "Число RDF-утверждений по выбранным объектным свойствам игровой модели", (13, 7.5))
     ax = fig.add_axes([.44, .12, .48, .65])
     y = list(range(len(selected) - 1, -1, -1))
     ax.barh(y, values, height=.52, color=BLUE, zorder=2)
@@ -373,7 +439,7 @@ def ontology_example(graph):
     arrow((.608, .61), (.782, .465), "supportedByAbility", (.704, .567))
     arrow((.4875, .562), (.4875, .458), "value", (.522, .51))
 
-    # Keep the literal English evidence, distinguishing it from Russian diagram labels.
+    # Show the actual gameplay explanation alongside the Russian diagram labels.
     evidence_lines = "\n".join(textwrap.wrap(str(evidence), width=116))
     evidence_bottom = .015
     evidence_height = .20
@@ -396,8 +462,9 @@ def ontology_figures():
     for name, details in report["package_files"].items():
         if hashlib.sha256((directory / name).read_bytes()).hexdigest() != details["sha256"]:
             raise RuntimeError(f"Отчет проверки не соответствует файлу {name}")
-    graph = load_ontology(directory, include_archive=False)
+    graph = load_ontology(directory)
     ontology_overview(graph)
+    ontology_hierarchy(graph)
     ontology_relations(graph)
     ontology_example(graph)
 

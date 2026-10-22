@@ -15,13 +15,12 @@ def main():
     collection = sub.add_parser("collect", help="Collect one source independently")
     collection.add_argument("source", choices=("valve", "opendota"))
     sub.add_parser("build", help="Build current Parquet datasets from raw snapshots")
-    for name, help_text in (("ontology", "Export all data into OWL/RDF and verify every source value"),
-                            ("validate-ontology", "Recheck the saved ontology against every source file")):
+    for name, help_text in (("ontology", "Export game datasets into OWL/RDF and verify their values"),
+                            ("validate-ontology", "Recheck the saved ontology against the game datasets")):
         command = sub.add_parser(name, help=help_text)
         command.add_argument("--output", type=Path, help="Ontology directory, default: ontology/")
     query = sub.add_parser("query", help="Выполнить локальный SPARQL-запрос из файла")
     query.add_argument("file", type=Path, help="Файл .rq или .sparql")
-    query.add_argument("--full", action="store_true", help="Подключить полный архив исходных данных")
     query.add_argument("--format", choices=("table", "json", "csv", "turtle"), default="table",
                        help="Формат результата; по умолчанию таблица, для графа Turtle")
     args = parser.parse_args()
@@ -29,7 +28,7 @@ def main():
         if args.command == "query":
             from .common import ROOT
             from .ontology_queries import run_query
-            run_query(args.file, directory=ROOT / "ontology", include_archive=args.full,
+            run_query(args.file, directory=ROOT / "ontology",
                       output_format=args.format)
             return
         elif args.command == "build":
@@ -44,8 +43,8 @@ def main():
                 report = validate_export(ROOT, args.output or ROOT / "ontology")
                 if not report["conforms"]:
                     raise RuntimeError(f"Ontology validation failed: {report['errors']}")
-            result = {key: report[key] for key in ("conforms", "triples", "source_files",
-                                                   "cells_verified", "class_counts")}
+            result = {key: report[key] for key in ("conforms", "triples", "source_tables",
+                                                   "cells_checked", "class_counts")}
             result["report"] = str((args.output or ROOT / "ontology") / "validation.json")
         elif args.source == "valve":
             result = valve.collect()

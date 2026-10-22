@@ -1,4 +1,4 @@
-"""Local SPARQL execution without loading the complete ontology package."""
+"""Local SPARQL execution with typed results and fully local imports."""
 import csv
 import io
 import json
@@ -46,7 +46,7 @@ class SparqlRunnerTests(unittest.TestCase):
         with patch("dota_kg.ontology.load_ontology", return_value=self.graph) as load:
             count = run_query(path, directory=self.ontology, output_format="json",
                               output=output, progress=progress)
-        load.assert_called_once_with(self.ontology, include_archive=False)
+        load.assert_called_once_with(self.ontology)
         self.assertEqual(count, 1)
         result = json.loads(output.getvalue())
         self.assertEqual(result["head"]["vars"], ["hero", "value", "missing", "text"])
@@ -90,7 +90,7 @@ class SparqlRunnerTests(unittest.TestCase):
                 else:
                     self.assertEqual(len(output.getvalue().splitlines()), 3)
 
-    def test_construct_exports_turtle_and_can_include_the_archive(self):
+    def test_construct_exports_precise_turtle(self):
         precise = Literal(0.12345678901234566, datatype=XSD.double)
         self.graph.add((EX.rubick, EX.precision, precise))
         path = self.query_file('''
@@ -101,9 +101,9 @@ class SparqlRunnerTests(unittest.TestCase):
         ''')
         output = io.StringIO()
         with patch("dota_kg.ontology.load_ontology", return_value=self.graph) as load:
-            count = run_query(path, directory=self.ontology, include_archive=True,
+            count = run_query(path, directory=self.ontology,
                               output_format="turtle", output=output, progress=io.StringIO())
-        load.assert_called_once_with(self.ontology, include_archive=True)
+        load.assert_called_once_with(self.ontology)
         self.assertEqual(count, 2)
         restored = Graph().parse(data=output.getvalue(), format="turtle")
         expected = Graph()
