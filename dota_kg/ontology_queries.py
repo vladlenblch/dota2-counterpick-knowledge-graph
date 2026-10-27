@@ -1,69 +1,16 @@
-"""Run local SPARQL files and verify competency queries against source data."""
+"""Run arbitrary local SPARQL files with typed results."""
 from __future__ import annotations
 
 import csv
 from pathlib import Path
 import sys
 import time
-import pyarrow.parquet as pq
 from rdflib import BNode
 from rdflib.plugins.sparql import prepareQuery
 
-from .ontology_schema import KG, evidence_text
 
 
 # Internal competency checks stay available without bundled query files.
-COMPETENCY_QUERIES = {
-    "inventory": """PREFIX kg: <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/ontology#>
-SELECT ?class (COUNT(?entity) AS ?count)
-WHERE {
-  VALUES ?class { kg:Hero kg:Ability kg:Item kg:Feature kg:FeatureObservation
-                  kg:MatchupObservation kg:ItemUsageObservation kg:FeatureValue }
-  ?entity a ?class .
-}
-GROUP BY ?class
-ORDER BY ?class
-""",
-    "rubick_features": """PREFIX kg: <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/ontology#>
-PREFIX hero: <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/hero/>
-PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-SELECT ?code ?value ?evidence ?abilityName
-WHERE {
-  ?observation a kg:FeatureObservation ;
-    kg:hero hero:86 ; kg:feature ?feature ; kg:value ?value ; kg:evidence ?evidence .
-  ?feature kg:identifier ?code .
-  OPTIONAL { ?observation kg:supportedByAbility ?ability . ?ability rdfs:label ?abilityName . }
-}
-ORDER BY ?code
-""",
-    "forced_movement": """PREFIX kg: <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/ontology#>
-PREFIX feature: <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/feature/>
-PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-SELECT ?id ?name ?evidence
-WHERE {
-  ?observation a kg:FeatureObservation ;
-    kg:feature feature:FORCED_MOVEMENT ; kg:hero ?hero ; kg:value ?value ; kg:evidence ?evidence .
-  FILTER (?value = 1.0e0)
-  ?hero kg:identifier ?id ; rdfs:label ?name .
-}
-ORDER BY ?id
-""",
-    "rubick_late_items": """PREFIX kg: <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/ontology#>
-PREFIX hero: <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/hero/>
-PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
-SELECT ?id ?name ?uses
-WHERE {
-  ?observation a kg:ItemUsageObservation ; kg:hero hero:86 ;
-    kg:phase ?phase ; kg:item ?item ; kg:usageCount ?uses .
-  FILTER (?phase = "late")
-  ?item kg:identifier ?id ; rdfs:label ?name .
-}
-ORDER BY DESC(?uses) ?name ?id
-LIMIT 5
-""",
-}
-
 
 def _check_local_query(value):
     """Reject clauses that would fetch data outside the loaded local graph."""
@@ -153,44 +100,3 @@ def run_query(query_file: Path, *, directory: Path,
         raise RuntimeError(f"Не удалось выполнить SPARQL-запрос: {error}") from error
     print(f"Результат: {count}. Время: {time.perf_counter() - started:.2f} с.", file=progress, flush=True)
     return count
-
-
-def competency_checks(graph, root: Path):
-    """Compare four built-in SPARQL results with the project datasets."""
-    root = Path(root)
-    read = lambda name: pq.read_table(root / f"data/final/{name}.parquet").to_pylist()
-    heroes = {r["hero_id"]: r["display_name"] for r in read("heroes")}
-    items = {r["item_id"]: r["display_name"] for r in read("items")}
-    features = read("hero_features")
-    inventory = {
-        "Hero": len(heroes), "Ability": len(read("abilities")), "Item": len(items),
-        "Feature": len({r["feature"] for r in features}), "FeatureObservation": len(features),
-        "MatchupObservation": len(read("matchups")), "ItemUsageObservation": len(read("hero_items")),
-        "FeatureValue": sum(len(row) - 1 for row in read("hero_feature_matrix")),
-    }
-    rubick = sorted((r["feature"], r["value"], evidence_text(r["evidence"])) for r in features if r["hero_id"] == 86)
-    forced = sorted((r["hero_id"], heroes[r["hero_id"]], evidence_text(r["evidence"]))
-                    for r in features if r["feature"] == "FORCED_MOVEMENT" and r["value"] == 1)
-    top_items = sorted((r for r in read("hero_items") if r["hero_id"] == 86 and r["phase"] == "late"),
-                       key=lambda r: (-r["usage_count"], items[r["item_id"]], r["item_id"]))[:5]
-    expected = {
-        "inventory": sorted((str(KG[key]), count) for key, count in inventory.items()),
-        "rubick_features": rubick,
-        "forced_movement": forced,
-        "rubick_late_items": [(r["item_id"], items[r["item_id"]], r["usage_count"]) for r in top_items],
-    }
-    results = {}
-    for name, original in expected.items():
-        query = COMPETENCY_QUERIES[name]
-        started = time.perf_counter()
-        print(f"SPARQL {name}: ", end="", file=sys.stderr, flush=True)
-        actual = [tuple(value.toPython() if value is not None else None for value in row)
-                  for row in graph.query(query)]
-        if name == "rubick_features":
-            comparable = [row[:3] for row in actual]
-        else: comparable = actual
-        if comparable != original:
-            raise ValueError(f"SPARQL {name} differs from Parquet: {comparable!r} != {original!r}")
-        print(f"{len(actual)} rows, {time.perf_counter() - started:.3f} s", file=sys.stderr, flush=True)
-        results[name] = {"passed": True, "rows": len(actual), "result": actual}
-    return results

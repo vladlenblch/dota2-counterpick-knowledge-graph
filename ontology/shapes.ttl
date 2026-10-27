@@ -13,25 +13,6 @@ kg:AbilityShape a sh:NodeShape ;
             sh:path kg:hero ] ;
     sh:targetClass kg:Ability .
 
-kg:FeatureObservationShape a sh:NodeShape ;
-    sh:property [ sh:class kg:Hero ;
-            sh:maxCount 1 ;
-            sh:minCount 1 ;
-            sh:path kg:hero ],
-        [ sh:class kg:Feature ;
-            sh:maxCount 1 ;
-            sh:minCount 1 ;
-            sh:path kg:feature ],
-        [ sh:datatype xsd:double ;
-            sh:maxCount 1 ;
-            sh:minCount 1 ;
-            sh:path kg:value ],
-        [ sh:datatype xsd:string ;
-            sh:maxCount 1 ;
-            sh:minCount 1 ;
-            sh:path kg:evidence ] ;
-    sh:targetClass kg:FeatureObservation .
-
 kg:FeatureShape a sh:NodeShape ;
     sh:property [ sh:datatype xsd:string ;
             sh:maxCount 1 ;
@@ -48,7 +29,11 @@ kg:FeatureShape a sh:NodeShape ;
     sh:targetClass kg:Feature .
 
 kg:FeatureValueShape a sh:NodeShape ;
-    sh:property [ sh:class kg:Feature ;
+    sh:property [ sh:class kg:Hero ;
+            sh:maxCount 1 ;
+            sh:minCount 1 ;
+            sh:path kg:hero ],
+        [ sh:class kg:Feature ;
             sh:maxCount 1 ;
             sh:minCount 1 ;
             sh:path kg:feature ],
@@ -56,15 +41,18 @@ kg:FeatureValueShape a sh:NodeShape ;
             sh:maxCount 1 ;
             sh:minCount 1 ;
             sh:path kg:value ],
-        [ sh:datatype xsd:integer ;
+        [ sh:datatype xsd:boolean ;
             sh:maxCount 1 ;
             sh:minCount 1 ;
-            sh:minInclusive 0 ;
-            sh:path kg:position ],
-        [ sh:class kg:FeatureObservation ;
+            sh:path kg:isObserved ],
+        [ sh:datatype xsd:string ;
             sh:maxCount 1 ;
             sh:minCount 0 ;
-            sh:path kg:supportedByObservation ] ;
+            sh:path kg:evidence ],
+        [ sh:class kg:Ability ;
+            sh:maxCount 1 ;
+            sh:minCount 0 ;
+            sh:path kg:supportedByAbility ] ;
     sh:targetClass kg:FeatureValue .
 
 kg:GameNoteShape a sh:NodeShape ;
@@ -88,9 +76,63 @@ kg:HeroShape a sh:NodeShape ;
             sh:maxCount 1 ;
             sh:minCount 1 ;
             sh:path kg:identifier ],
+        [ sh:datatype xsd:integer ;
+            sh:maxCount 1 ;
+            sh:maxInclusive 3 ;
+            sh:minCount 0 ;
+            sh:minInclusive 0 ;
+            sh:path kg:carryLevel ],
         [ sh:class kg:FeatureValue ;
             sh:minCount 0 ;
-            sh:path kg:hasFeatureValue ] ;
+            sh:path kg:hasFeatureValue ],
+        [ sh:datatype xsd:integer ;
+            sh:maxCount 1 ;
+            sh:maxInclusive 3 ;
+            sh:minCount 0 ;
+            sh:minInclusive 0 ;
+            sh:path kg:supportLevel ],
+        [ sh:datatype xsd:integer ;
+            sh:maxCount 1 ;
+            sh:maxInclusive 3 ;
+            sh:minCount 0 ;
+            sh:minInclusive 0 ;
+            sh:path kg:nukerLevel ],
+        [ sh:datatype xsd:integer ;
+            sh:maxCount 1 ;
+            sh:maxInclusive 3 ;
+            sh:minCount 0 ;
+            sh:minInclusive 0 ;
+            sh:path kg:disablerLevel ],
+        [ sh:datatype xsd:integer ;
+            sh:maxCount 1 ;
+            sh:maxInclusive 3 ;
+            sh:minCount 0 ;
+            sh:minInclusive 0 ;
+            sh:path kg:junglerLevel ],
+        [ sh:datatype xsd:integer ;
+            sh:maxCount 1 ;
+            sh:maxInclusive 3 ;
+            sh:minCount 0 ;
+            sh:minInclusive 0 ;
+            sh:path kg:durableLevel ],
+        [ sh:datatype xsd:integer ;
+            sh:maxCount 1 ;
+            sh:maxInclusive 3 ;
+            sh:minCount 0 ;
+            sh:minInclusive 0 ;
+            sh:path kg:escapeLevel ],
+        [ sh:datatype xsd:integer ;
+            sh:maxCount 1 ;
+            sh:maxInclusive 3 ;
+            sh:minCount 0 ;
+            sh:minInclusive 0 ;
+            sh:path kg:pusherLevel ],
+        [ sh:datatype xsd:integer ;
+            sh:maxCount 1 ;
+            sh:maxInclusive 3 ;
+            sh:minCount 0 ;
+            sh:minInclusive 0 ;
+            sh:path kg:initiatorLevel ] ;
     sh:targetClass kg:Hero .
 
 kg:HeroStatisticsObservationShape a sh:NodeShape ;
@@ -237,44 +279,4 @@ kg:ParameterValueShape a sh:NodeShape ;
             sh:nodeKind sh:Literal ;
             sh:path kg:numericValue ] ;
     sh:targetClass kg:ParameterValue .
-
-kg:RankBracketObservationShape a sh:NodeShape ;
-    sh:property [ sh:class kg:Hero ;
-            sh:maxCount 1 ;
-            sh:minCount 1 ;
-            sh:path kg:hero ],
-        [ sh:datatype xsd:string ;
-            sh:maxCount 1 ;
-            sh:minCount 1 ;
-            sh:path kg:rankBracket ],
-        [ sh:datatype xsd:integer ;
-            sh:maxCount 1 ;
-            sh:minCount 1 ;
-            sh:minInclusive 0 ;
-            sh:path kg:matches ],
-        [ sh:datatype xsd:integer ;
-            sh:maxCount 1 ;
-            sh:minCount 1 ;
-            sh:minInclusive 0 ;
-            sh:path kg:wins ],
-        [ sh:datatype xsd:double ;
-            sh:maxCount 1 ;
-            sh:maxInclusive 1 ;
-            sh:minCount 0 ;
-            sh:minInclusive 0 ;
-            sh:path kg:winRate ] ;
-    sh:targetClass kg:RankBracketObservation .
-
-kg:RoleRatingShape a sh:NodeShape ;
-    sh:property [ sh:datatype xsd:integer ;
-            sh:maxCount 1 ;
-            sh:minCount 1 ;
-            sh:minInclusive 0 ;
-            sh:path kg:roleCode ],
-        [ sh:datatype xsd:integer ;
-            sh:maxCount 1 ;
-            sh:minCount 1 ;
-            sh:minInclusive 0 ;
-            sh:path kg:roleLevel ] ;
-    sh:targetClass kg:RoleRating .
 

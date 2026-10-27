@@ -6,7 +6,7 @@ import json
 from rdflib import Graph, Literal, RDF, RDFS, URIRef
 
 from .ontology import entity, literal, record_uri
-from .ontology_schema import KG, JSON_COLUMNS, NON_DOMAIN_COLUMNS, IDENTITY_COLUMNS, FEATURE_LABELS, NUMERIC_FEATURES, column_predicate, bind, evidence_text
+from .ontology_schema import KG, ROLE_PROPERTIES, JSON_COLUMNS, NON_DOMAIN_COLUMNS, IDENTITY_COLUMNS, FEATURE_LABELS, NUMERIC_FEATURES, column_predicate, bind, evidence_text
 
 
 NATIVE_PARAMETERS = {
@@ -22,7 +22,6 @@ SERIES = {"values_float": KG.hasBaseValue, "values_shard": KG.hasShardValue,
           "values_scepter": KG.hasScepterValue}
 SERIES_TITLES = {KG.hasBaseValue: "значение", KG.hasShardValue: "Shard", KG.hasScepterValue: "Scepter"}
 OBSERVATIONS = {
-    "hero_features": KG.FeatureObservation,
     "hero_meta": KG.HeroStatisticsObservation, "matchups": KG.MatchupObservation,
     "hero_items": KG.ItemUsageObservation,
 }
@@ -75,8 +74,8 @@ class DomainBuilder:
         self.groups = {name: bind(Graph()) for name in ("entities", "features", "statistics")}
         self.hero_names = {r["hero_id"]: r["display_name"] for r in rows.get("heroes", [])}
         self.item_names = {r["item_id"]: r["display_name"] for r in rows.get("items", [])}
-        self.feature_observations = {(r["hero_id"], r["feature"]): record_uri("hero_features", r)
-                                     for r in rows.get("hero_features", [])}
+        self.features = {(r["hero_id"], r["feature"]): r
+                         for r in rows.get("hero_features", [])}
 
     @staticmethod
     def node(graph, node, kind, label):
@@ -182,7 +181,9 @@ class DomainBuilder:
     def entities(self):
         graph = self.groups["entities"]
         feature_graph = self.groups["features"]
-        for code in sorted({r["feature"] for r in self.rows.get("hero_features", [])}):
+        codes = {r["feature"] for r in self.rows.get("hero_features", [])}
+        codes.update(code for row in self.rows.get("hero_feature_matrix", []) for code in row if code != "hero_id")
+        for code in sorted(codes):
             node = entity("feature", code)
             kind = "count" if code.endswith("_COUNT") else "numeric" if code in NUMERIC_FEATURES else "binary"
             self.node(feature_graph, node, KG.Feature, FEATURE_LABELS.get(code, code))
@@ -206,14 +207,13 @@ class DomainBuilder:
                     facets = checked_json(row["facets"], list, "hero/facets")
                     if facets:
                         raise ValueError("New facet records require a domain mapping before export")
-                    for code, level in enumerate(checked_json(row["role_levels"], list, "hero/roles")):
-                        if type(level) is not int:
+                    levels = checked_json(row["role_levels"], list, "hero/roles")
+                    if len(levels) > len(ROLE_PROPERTIES):
+                        raise ValueError("Unknown hero role needs an explicit property mapping")
+                    for prop, level in zip(ROLE_PROPERTIES, levels):
+                        if type(level) is not int or not 0 <= level <= 3:
                             raise ValueError("Invalid role level")
-                        node = URIRef(str(owner) + f"/role/{code}")
-                        self.node(graph, node, KG.RoleRating, f"{title}: роль {code}, оценка {level}")
-                        graph.add((owner, KG.hasRoleRating, node))
-                        graph.add((node, KG.roleCode, literal(code)))
-                        graph.add((node, KG.roleLevel, literal(level)))
+                        graph.add((owner, prop, literal(level)))
                 else:
                     self.parameters(graph, owner, table, row, title)
                 if table == "abilities":
@@ -232,7 +232,7 @@ class DomainBuilder:
 
     def observations(self):
         for table, cls in OBSERVATIONS.items():
-            graph = self.groups["features" if table in ("hero_features", "hero_feature_matrix") else "statistics"]
+            graph = self.groups["statistics"]
             for row in self.rows.get(table, []):
                 record, hero = record_uri(table, row), entity("hero", row["hero_id"])
                 name = self.hero_names[row["hero_id"]]
@@ -240,23 +240,12 @@ class DomainBuilder:
                     title = f"{name} против {self.hero_names[row['opponent_hero_id']]}"
                 elif table == "hero_items":
                     title = f"{name}: {self.item_names[row['item_id']]} ({row['phase']})"
-                elif table == "hero_features":
-                    title = f"{name}: {row['feature']}"
                 else:
-                    title = f"{name}: {'вектор признаков' if table == 'hero_feature_matrix' else 'общая статистика'}"
+                    title = f"{name}: общая статистика"
                 self.node(graph, record, cls, title)
                 self.scalars(graph, record, table, row)
                 graph.add((record, KG.hero, hero))
-                if table == "hero_features":
-                    feature = entity("feature", row["feature"])
-                    graph.add((record, KG.feature, feature))
-                    graph.add((hero, KG.hasFeatureObservation, record))
-                    abilities = [a for a in self.rows.get("abilities", []) if a["hero_id"] == row["hero_id"]
-                                 and any(row["evidence"].startswith(f"Valve ability {a['display_name']}{suffix}")
-                                         for suffix in (":", " damage code =", " immunity code ="))]
-                    if len(abilities) == 1:
-                        graph.add((record, KG.supportedByAbility, entity("ability", abilities[0]["ability_id"])))
-                elif table == "hero_items":
+                if table == "hero_items":
                     item = entity("item", row["item_id"])
                     graph.add((record, KG.item, item))
                     graph.add((hero, KG.hasItemUsage, record))
@@ -269,35 +258,32 @@ class DomainBuilder:
                         graph.add((record, KG.baselineStatistics, baseline))
                 else:
                     graph.add((hero, KG.hasStatistics, record))
-                    for index, original in enumerate(checked_json(row["rank_brackets"], list, "hero/ranks")):
-                        if original.keys() != {"rank_bracket", "matches", "wins", "win_rate"}:
-                            raise ValueError("Unmapped rank statistics fields")
-                        node = URIRef(str(record) + f"/rank/{index}")
-                        self.node(graph, node, KG.RankBracketObservation, f"{name}: рейтинг {original['rank_bracket']}")
-                        graph.add((record, KG.hasRankObservation, node))
-                        graph.add((node, KG.hero, hero))
-                        for field, value in original.items():
-                            if value is not None:
-                                graph.add((node, column_predicate("hero_meta", field), literal(value)))
-                        # rank_bracket is not a source table column, but maps to
-                        # the same canonical rankBracket datatype property.
 
     def feature_values(self):
         graph = self.groups["features"]
         for row in self.rows.get("hero_feature_matrix", []):
             hero = entity("hero", row["hero_id"])
             name = self.hero_names[row["hero_id"]]
-            for index, (code, value) in enumerate((k, v) for k, v in row.items() if k != "hero_id"):
+            for code, value in ((k, v) for k, v in row.items() if k != "hero_id"):
                 # Stable addresses keep existing references usable without a vector object.
                 node = URIRef(str(record_uri("hero_feature_matrix", row)) + "/value/" + code)
                 self.node(graph, node, KG.FeatureValue, f"{name}: {code} = {value}")
                 graph.add((hero, KG.hasFeatureValue, node))
+                graph.add((node, KG.hero, hero))
                 graph.add((node, KG.feature, entity("feature", code)))
                 graph.add((node, KG.value, literal(value)))
-                graph.add((node, KG.position, literal(index)))
-                evidence = self.feature_observations.get((row["hero_id"], code))
-                if evidence is not None:
-                    graph.add((node, KG.supportedByObservation, evidence))
+                observed = self.features.get((row["hero_id"], code))
+                graph.add((node, KG.isObserved, literal(observed is not None)))
+                if observed is not None:
+                    from .ontology_validation import same_json
+                    if not same_json(value, observed["value"]):
+                        raise ValueError("Observed feature value differs from its matrix cell")
+                    graph.add((node, KG.evidence, literal(evidence_text(observed["evidence"]))))
+                    abilities = [a for a in self.rows.get("abilities", []) if a["hero_id"] == row["hero_id"]
+                                 and any(observed["evidence"].startswith(f"Valve ability {a['display_name']}{suffix}")
+                                         for suffix in (":", " damage code =", " immunity code ="))]
+                    if len(abilities) == 1:
+                        graph.add((node, KG.supportedByAbility, entity("ability", abilities[0]["ability_id"])))
 
     def build(self):
         self.entities()

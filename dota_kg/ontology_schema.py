@@ -14,7 +14,7 @@ TABLES = {
     "heroes": ("Hero", ("hero_id",)),
     "abilities": ("Ability", ("ability_id",)),
     "items": ("Item", ("item_id",)),
-    "hero_features": ("FeatureObservation", ("hero_id", "feature")),
+    "hero_features": ("FeatureValue", ("hero_id", "feature")),
     "hero_feature_matrix": ("FeatureValue", ("hero_id",)),
     "matchups": ("MatchupObservation", ("hero_id", "opponent_hero_id")),
     "hero_items": ("ItemUsageObservation", ("hero_id", "item_id", "phase")),
@@ -26,8 +26,23 @@ JSON_COLUMNS = {
     "abilities": {"notes", "cast_range", "cast_point", "radius", "duration", "cooldown",
                   "mana_cost", "health_cost", "damage", "special_values"},
     "items": {"bonuses", "cooldown", "mana_cost", "special_values"},
+    # Rank detail remains in the dataset; only aggregate statistics enter RDF.
     "hero_meta": {"rank_brackets"},
 }
+
+# The role_levels order matches Valve's role display, independently of lane positions:
+# Carry, Support, Nuker, Disabler, Jungler, Durable, Escape, Pusher, Initiator.
+ROLE_PROPERTIES = (
+    KG.carryLevel,
+    KG.supportLevel,
+    KG.nukerLevel,
+    KG.disablerLevel,
+    KG.junglerLevel,
+    KG.durableLevel,
+    KG.escapeLevel,
+    KG.pusherLevel,
+    KG.initiatorLevel,
+)
 
 FEATURE_LABELS = {
     "ALLY_DISPEL": "Развеивание на союзнике", "ANTI_HEAL": "Противодействие лечению",

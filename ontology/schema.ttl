@@ -24,6 +24,9 @@ kg:armor a owl:DatatypeProperty ;
     rdfs:label "Броня"@ru ;
     rdfs:range xsd:double .
 
+kg:attackPoint a owl:DatatypeProperty ;
+    rdfs:label "Задержка атаки"@ru .
+
 kg:attackRange a owl:DatatypeProperty ;
     rdfs:label "Дальность атаки"@ru ;
     rdfs:range xsd:double .
@@ -36,6 +39,35 @@ kg:attackType a owl:DatatypeProperty ;
     rdfs:label "Тип атаки"@ru ;
     rdfs:range xsd:string .
 
+kg:baseArmor a owl:DatatypeProperty ;
+    rdfs:label "Базовая броня"@ru .
+
+kg:baseAttackTime a owl:DatatypeProperty ;
+    rdfs:label "Базовое время атаки"@ru ;
+    rdfs:range xsd:integer .
+
+kg:baseDamageMax a owl:DatatypeProperty ;
+    rdfs:label "Базовый максимальный урон атаки"@ru ;
+    rdfs:range xsd:integer .
+
+kg:baseDamageMin a owl:DatatypeProperty ;
+    rdfs:label "Базовый минимальный урон атаки"@ru ;
+    rdfs:range xsd:integer .
+
+kg:baseHealth a owl:DatatypeProperty ;
+    rdfs:label "Базовое здоровье"@ru ;
+    rdfs:range xsd:integer .
+
+kg:baseHealthRegen a owl:DatatypeProperty ;
+    rdfs:label "Базовое восстановление здоровья"@ru .
+
+kg:baseMana a owl:DatatypeProperty ;
+    rdfs:label "Базовая мана"@ru ;
+    rdfs:range xsd:integer .
+
+kg:baseManaRegen a owl:DatatypeProperty ;
+    rdfs:label "Базовое восстановление маны"@ru .
+
 kg:baselineStatistics a owl:ObjectProperty ;
     rdfs:label "Агрегат для базовой доли побед"@ru ;
     rdfs:domain kg:MatchupObservation ;
@@ -44,6 +76,19 @@ kg:baselineStatistics a owl:ObjectProperty ;
 kg:behavior a owl:DatatypeProperty ;
     rdfs:label "Код поведения"@ru ;
     rdfs:range xsd:string .
+
+kg:behaviorFlags a owl:DatatypeProperty ;
+    rdfs:label "Флаги игровой механики"@ru ;
+    rdfs:range xsd:integer .
+
+kg:captainsModeEnabled a owl:DatatypeProperty ;
+    rdfs:label "Доступен в Captains Mode"@ru ;
+    rdfs:range xsd:boolean .
+
+kg:carryLevel a owl:DatatypeProperty ;
+    rdfs:label "Выраженность роли керри"@ru ;
+    rdfs:domain kg:Hero ;
+    rdfs:range xsd:integer .
 
 kg:complexity a owl:DatatypeProperty ;
     rdfs:label "Сложность"@ru ;
@@ -73,9 +118,18 @@ kg:damageTypeCode a owl:DatatypeProperty ;
     rdfs:label "Код типа урона"@ru ;
     rdfs:range xsd:integer .
 
+kg:dayVision a owl:DatatypeProperty ;
+    rdfs:label "Дальность обзора днем"@ru ;
+    rdfs:range xsd:integer .
+
 kg:description a owl:DatatypeProperty ;
     rdfs:label "Описание"@ru ;
     rdfs:range xsd:string .
+
+kg:disablerLevel a owl:DatatypeProperty ;
+    rdfs:label "Выраженность роли контроля"@ru ;
+    rdfs:domain kg:Hero ;
+    rdfs:range xsd:integer .
 
 kg:dispelType a owl:DatatypeProperty ;
     rdfs:label "Тип развеивания"@ru ;
@@ -85,6 +139,16 @@ kg:dispellableCode a owl:DatatypeProperty ;
     rdfs:label "Код снимаемости эффектов"@ru ;
     rdfs:range xsd:integer .
 
+kg:durableLevel a owl:DatatypeProperty ;
+    rdfs:label "Выраженность роли стойкости"@ru ;
+    rdfs:domain kg:Hero ;
+    rdfs:range xsd:integer .
+
+kg:escapeLevel a owl:DatatypeProperty ;
+    rdfs:label "Выраженность роли побега"@ru ;
+    rdfs:domain kg:Hero ;
+    rdfs:range xsd:integer .
+
 kg:evidence a owl:DatatypeProperty ;
     rdfs:label "Объяснение игрового признака"@ru ;
     rdfs:range xsd:string .
@@ -92,6 +156,18 @@ kg:evidence a owl:DatatypeProperty ;
 kg:feature a owl:ObjectProperty ;
     rdfs:label "Тип признака"@ru ;
     rdfs:range kg:Feature .
+
+kg:gameplayDescription a owl:DatatypeProperty ;
+    rdfs:label "Описание стиля игры"@ru ;
+    rdfs:range xsd:string .
+
+kg:grantedByScepter a owl:DatatypeProperty ;
+    rdfs:label "Предоставляется Scepter"@ru ;
+    rdfs:range xsd:boolean .
+
+kg:grantedByShard a owl:DatatypeProperty ;
+    rdfs:label "Предоставляется Shard"@ru ;
+    rdfs:range xsd:boolean .
 
 kg:hasAbility a owl:ObjectProperty ;
     rdfs:label "Способность героя"@ru ;
@@ -131,11 +207,6 @@ kg:hasDuration a owl:ObjectProperty ;
     rdfs:label "Параметр длительности"@ru ;
     rdfs:range kg:Parameter .
 
-kg:hasFeatureObservation a owl:ObjectProperty ;
-    rdfs:label "Наблюдение признака"@ru ;
-    rdfs:domain kg:Hero ;
-    rdfs:range kg:FeatureObservation .
-
 kg:hasFeatureValue a owl:ObjectProperty ;
     rdfs:label "Значение признака героя"@ru ;
     rdfs:domain kg:Hero ;
@@ -172,25 +243,33 @@ kg:hasParameter a owl:ObjectProperty ;
     rdfs:label "Именованный параметр"@ru ;
     rdfs:range kg:Parameter .
 
+kg:hasPublicMatchTrend a owl:ObjectProperty ;
+    rdfs:label "Динамика числа публичных матчей"@ru ;
+    rdfs:domain kg:HeroStatisticsObservation ;
+    rdfs:range kg:Parameter .
+
+kg:hasPublicWinTrend a owl:ObjectProperty ;
+    rdfs:label "Динамика публичных побед"@ru ;
+    rdfs:domain kg:HeroStatisticsObservation ;
+    rdfs:range kg:Parameter .
+
 kg:hasRadiusParameter a owl:ObjectProperty ;
     rdfs:label "Параметр радиуса"@ru ;
     rdfs:domain kg:Ability ;
     rdfs:range kg:Parameter .
 
-kg:hasRankObservation a owl:ObjectProperty ;
-    rdfs:label "Статистика по интервалу"@ru ;
-    rdfs:domain kg:HeroStatisticsObservation ;
-    rdfs:range kg:RankBracketObservation .
-
-kg:hasRoleRating a owl:ObjectProperty ;
-    rdfs:label "Оценка роли"@ru ;
-    rdfs:domain kg:Hero ;
-    rdfs:range kg:RoleRating .
+kg:hasScepterUpgrade a owl:DatatypeProperty ;
+    rdfs:label "Есть улучшение Scepter"@ru ;
+    rdfs:range xsd:boolean .
 
 kg:hasScepterValue a owl:ObjectProperty ;
     rdfs:label "Изменение Scepter"@ru ;
     rdfs:domain kg:Parameter ;
     rdfs:range kg:ParameterValue .
+
+kg:hasShardUpgrade a owl:DatatypeProperty ;
+    rdfs:label "Есть улучшение Shard"@ru ;
+    rdfs:range xsd:boolean .
 
 kg:hasShardValue a owl:ObjectProperty ;
     rdfs:label "Изменение Shard"@ru ;
@@ -206,6 +285,16 @@ kg:hasTalent a owl:ObjectProperty ;
     rdfs:label "Талант героя"@ru ;
     rdfs:domain kg:Hero ;
     rdfs:range kg:Talent .
+
+kg:hasTurboMatchTrend a owl:ObjectProperty ;
+    rdfs:label "Динамика числа матчей Turbo"@ru ;
+    rdfs:domain kg:HeroStatisticsObservation ;
+    rdfs:range kg:Parameter .
+
+kg:hasTurboWinTrend a owl:ObjectProperty ;
+    rdfs:label "Динамика побед Turbo"@ru ;
+    rdfs:domain kg:HeroStatisticsObservation ;
+    rdfs:range kg:Parameter .
 
 kg:health a owl:DatatypeProperty ;
     rdfs:label "Здоровье"@ru ;
@@ -224,6 +313,15 @@ kg:identifier a owl:DatatypeProperty ;
 
 kg:immunityCode a owl:DatatypeProperty ;
     rdfs:label "Код взаимодействия с невосприимчивостью"@ru ;
+    rdfs:range xsd:integer .
+
+kg:initialCharges a owl:DatatypeProperty ;
+    rdfs:label "Начальное число зарядов"@ru ;
+    rdfs:range xsd:integer .
+
+kg:initiatorLevel a owl:DatatypeProperty ;
+    rdfs:label "Выраженность роли инициации"@ru ;
+    rdfs:domain kg:Hero ;
     rdfs:range xsd:integer .
 
 kg:intelligence a owl:DatatypeProperty ;
@@ -246,6 +344,12 @@ kg:isNeutral a owl:DatatypeProperty ;
     rdfs:label "Нейтральный предмет"@ru ;
     rdfs:range xsd:boolean .
 
+kg:isObserved a owl:DatatypeProperty ;
+    rdfs:label "Значение задано"@ru ;
+    rdfs:comment "true означает известное значение признака; false означает заполнитель матрицы, а не отсутствие игровой механики."@ru ;
+    rdfs:domain kg:FeatureValue ;
+    rdfs:range xsd:boolean .
+
 kg:isPercentage a owl:DatatypeProperty ;
     rdfs:label "Значение в процентах"@ru ;
     rdfs:range xsd:boolean .
@@ -261,6 +365,11 @@ kg:isUltimate a owl:DatatypeProperty ;
 kg:item a owl:ObjectProperty ;
     rdfs:label "Предмет"@ru ;
     rdfs:range kg:Item .
+
+kg:junglerLevel a owl:DatatypeProperty ;
+    rdfs:label "Выраженность роли лесника"@ru ;
+    rdfs:domain kg:Hero ;
+    rdfs:range xsd:integer .
 
 kg:magicResistance a owl:DatatypeProperty ;
     rdfs:label "Сопротивление магии"@ru ;
@@ -278,6 +387,10 @@ kg:matches a owl:DatatypeProperty ;
     rdfs:label "Число матчей"@ru ;
     rdfs:range xsd:integer .
 
+kg:maxLevel a owl:DatatypeProperty ;
+    rdfs:label "Максимальное число уровней"@ru ;
+    rdfs:range xsd:integer .
+
 kg:modifierKind a owl:DatatypeProperty ;
     rdfs:label "Тип модификатора"@ru ;
     rdfs:range xsd:string .
@@ -290,18 +403,27 @@ kg:neutralTier a owl:DatatypeProperty ;
     rdfs:label "Уровень нейтрального предмета"@ru ;
     rdfs:range xsd:integer .
 
+kg:nightVision a owl:DatatypeProperty ;
+    rdfs:label "Дальность обзора ночью"@ru ;
+    rdfs:range xsd:integer .
+
 kg:normalizedAdvantage a owl:DatatypeProperty ;
     rdfs:label "Отклонение от базовой доли побед"@ru ;
     rdfs:comment "winRate этого матчапа минус winRate общей статистики ТОГО ЖЕ героя. Это описательная оценка по агрегатам, не причинная сила контрпика."@ru ;
     rdfs:range xsd:double .
 
+kg:noteKind a owl:DatatypeProperty ;
+    rdfs:label "Вид игрового примечания"@ru ;
+    rdfs:range xsd:string .
+
 kg:noteText a owl:DatatypeProperty ;
     rdfs:label "Текст примечания"@ru ;
     rdfs:range xsd:string .
 
-kg:noteKind a owl:DatatypeProperty ;
-    rdfs:label "Вид игрового примечания"@ru ;
-    rdfs:range xsd:string .
+kg:nukerLevel a owl:DatatypeProperty ;
+    rdfs:label "Выраженность роли быстрого урона"@ru ;
+    rdfs:domain kg:Hero ;
+    rdfs:range xsd:integer .
 
 kg:numericValue a owl:DatatypeProperty ;
     rdfs:label "Числовое значение параметра"@ru .
@@ -337,7 +459,7 @@ kg:piercesDebuffImmunity a owl:DatatypeProperty ;
     rdfs:range xsd:boolean .
 
 kg:position a owl:DatatypeProperty ;
-    rdfs:label "Позиция в последовательности с 0"@ru ;
+    rdfs:label "Позиция значения, примечания или модификатора"@ru ;
     rdfs:range xsd:integer .
 
 kg:primaryAttribute a owl:DatatypeProperty ;
@@ -356,22 +478,43 @@ kg:professionalWins a owl:DatatypeProperty ;
     rdfs:label "Победы в профессиональных матчах"@ru ;
     rdfs:range xsd:integer .
 
-kg:rankBracket a owl:DatatypeProperty ;
-    rdfs:label "Код рейтингового интервала"@ru ;
-    rdfs:domain kg:RankBracketObservation ;
-    rdfs:range xsd:string .
+kg:projectileSpeed a owl:DatatypeProperty ;
+    rdfs:label "Скорость снаряда"@ru ;
+    rdfs:range xsd:integer .
+
+kg:publicMatches a owl:DatatypeProperty ;
+    rdfs:label "Публичные матчи"@ru ;
+    rdfs:range xsd:integer .
+
+kg:publicWins a owl:DatatypeProperty ;
+    rdfs:label "Публичные победы"@ru ;
+    rdfs:range xsd:integer .
+
+kg:pusherLevel a owl:DatatypeProperty ;
+    rdfs:label "Выраженность роли осады"@ru ;
+    rdfs:domain kg:Hero ;
+    rdfs:range xsd:integer .
+
+kg:qualityCode a owl:DatatypeProperty ;
+    rdfs:label "Код категории предмета"@ru ;
+    rdfs:range xsd:integer .
 
 kg:requiredFacet a owl:DatatypeProperty ;
     rdfs:label "Необходимый аспект"@ru ;
     rdfs:range xsd:string .
 
-kg:roleCode a owl:DatatypeProperty ;
-    rdfs:label "Код игровой роли"@ru ;
-    rdfs:range xsd:integer .
+kg:requiresTalent a owl:ObjectProperty ;
+    rdfs:label "Требует талант"@ru ;
+    rdfs:domain kg:ParameterModifier ;
+    rdfs:range kg:Talent .
 
-kg:roleLevel a owl:DatatypeProperty ;
-    rdfs:label "Выраженность роли"@ru ;
-    rdfs:range xsd:integer .
+kg:roleName a owl:DatatypeProperty ;
+    rdfs:label "Название игровой роли"@ru ;
+    rdfs:range xsd:string .
+
+kg:roleSummary a owl:DatatypeProperty ;
+    rdfs:label "Краткая игровая характеристика"@ru ;
+    rdfs:range xsd:string .
 
 kg:scepterDescription a owl:DatatypeProperty ;
     rdfs:label "Описание улучшения Scepter"@ru ;
@@ -381,6 +524,14 @@ kg:shardDescription a owl:DatatypeProperty ;
     rdfs:label "Описание улучшения Shard"@ru ;
     rdfs:range xsd:string .
 
+kg:stockLimit a owl:DatatypeProperty ;
+    rdfs:label "Максимальный запас в магазине"@ru ;
+    rdfs:range xsd:integer .
+
+kg:stockReplenishTime a owl:DatatypeProperty ;
+    rdfs:label "Время восстановления запаса магазина"@ru ;
+    rdfs:range xsd:integer .
+
 kg:strength a owl:DatatypeProperty ;
     rdfs:label "Сила"@ru ;
     rdfs:range xsd:double .
@@ -389,15 +540,15 @@ kg:strengthGain a owl:DatatypeProperty ;
     rdfs:label "Прирост силы"@ru ;
     rdfs:range xsd:double .
 
+kg:supportLevel a owl:DatatypeProperty ;
+    rdfs:label "Выраженность роли поддержки"@ru ;
+    rdfs:domain kg:Hero ;
+    rdfs:range xsd:integer .
+
 kg:supportedByAbility a owl:ObjectProperty ;
     rdfs:label "Способность, объясняющая признак"@ru ;
-    rdfs:domain kg:FeatureObservation ;
-    rdfs:range kg:Ability .
-
-kg:supportedByObservation a owl:ObjectProperty ;
-    rdfs:label "Основание значения признака"@ru ;
     rdfs:domain kg:FeatureValue ;
-    rdfs:range kg:FeatureObservation .
+    rdfs:range kg:Ability .
 
 kg:targetTeam a owl:DatatypeProperty ;
     rdfs:label "Код команды цели"@ru ;
@@ -406,6 +557,17 @@ kg:targetTeam a owl:DatatypeProperty ;
 kg:targetType a owl:DatatypeProperty ;
     rdfs:label "Код типа цели"@ru ;
     rdfs:range xsd:integer .
+
+kg:turboMatches a owl:DatatypeProperty ;
+    rdfs:label "Матчи Turbo"@ru ;
+    rdfs:range xsd:integer .
+
+kg:turboWins a owl:DatatypeProperty ;
+    rdfs:label "Победы Turbo"@ru ;
+    rdfs:range xsd:integer .
+
+kg:turnRate a owl:DatatypeProperty ;
+    rdfs:label "Скорость поворота"@ru .
 
 kg:unit a owl:DatatypeProperty ;
     rdfs:label "Единица значения признака"@ru ;
@@ -438,91 +600,34 @@ kg:wins a owl:DatatypeProperty ;
     rdfs:label "Точное число побед"@ru ;
     rdfs:range xsd:integer .
 
-kg:Entity a owl:Class ;
-    rdfs:label "Сущность игры"@ru ;
-    rdfs:comment "Самостоятельный игровой объект: герой, его способность или предмет."@ru .
-
-kg:GameCharacteristic a owl:Class ;
-    rdfs:label "Игровая характеристика"@ru ;
-    rdfs:comment "Вид свойства героя, способности или предмета, для которого задаются значения."@ru .
-
-kg:GameFact a owl:Class ;
-    rdfs:label "Факт об игровой характеристике"@ru ;
-    rdfs:comment "Составное утверждение о характеристике: значение, оценка роли, условие изменения или примечание о механике."@ru .
-
-kg:Statistics a owl:Class ;
-    rdfs:label "Игровая статистика"@ru ;
-    rdfs:comment "Показатели матчей, противостояний героев и использования предметов."@ru .
-
-kg:Hero a owl:Class ;
-    rdfs:label "Герой"@ru ;
-    rdfs:comment "Игровой герой с характеристиками, способностями, признаками и статистикой."@ru ;
-    rdfs:subClassOf kg:Entity .
-
-kg:Ability a owl:Class ;
-    rdfs:label "Способность"@ru ;
-    rdfs:comment "Способность героя с описанием механики, параметрами и улучшениями."@ru ;
-    rdfs:subClassOf kg:Entity .
-
-kg:Talent a owl:Class ;
-    rdfs:label "Талант"@ru ;
-    rdfs:comment "Пассивная способность героя из дерева талантов, изменяющая характеристики или игровые механики."@ru ;
-    rdfs:subClassOf kg:Ability .
-
-kg:Item a owl:Class ;
-    rdfs:label "Предмет"@ru ;
-    rdfs:comment "Игровой предмет со стоимостью, эффектами, параметрами и статистикой использования."@ru ;
-    rdfs:subClassOf kg:Entity .
+kg:GameNote a owl:Class ;
+    rdfs:label "Игровое примечание"@ru ;
+    rdfs:comment "Пояснение механики способности, таланта, аспекта или предмета с сохранением вида и порядка примечаний."@ru ;
+    rdfs:subClassOf kg:GameFact .
 
 kg:Feature a owl:Class ;
     rdfs:label "Признак"@ru ;
     rdfs:comment "Вид игрового свойства, например оглушение, невидимость или дальность атаки."@ru ;
     rdfs:subClassOf kg:GameCharacteristic .
 
-kg:Parameter a owl:Class ;
-    rdfs:label "Параметр способности или предмета"@ru ;
-    rdfs:comment "Именованная характеристика способности или предмета: урон, радиус, длительность, бонус или стоимость применения."@ru ;
-    rdfs:subClassOf kg:GameCharacteristic .
-
-kg:GameNote a owl:Class ;
-    rdfs:label "Игровое примечание"@ru ;
-    rdfs:comment "Пояснение механики способности, таланта, аспекта или предмета с сохранением вида и порядка примечаний."@ru ;
-    rdfs:subClassOf kg:GameFact .
-
 kg:ParameterModifier a owl:Class ;
     rdfs:label "Модификатор параметра"@ru ;
     rdfs:comment "Условие, операция и изменение параметра от бонуса или аспекта."@ru ;
     rdfs:subClassOf kg:GameFact .
 
-kg:RoleRating a owl:Class ;
-    rdfs:label "Оценка игровой роли"@ru ;
-    rdfs:comment "Игровая роль и степень её выраженности у героя."@ru ;
-    rdfs:subClassOf kg:GameFact .
+kg:Talent a owl:Class ;
+    rdfs:label "Талант"@ru ;
+    rdfs:comment "Пассивная способность героя из дерева талантов, изменяющая характеристики или игровые механики."@ru ;
+    rdfs:subClassOf kg:Ability .
 
 kg:FeatureValue a owl:Class ;
     rdfs:label "Значение признака героя"@ru ;
-    rdfs:comment "Числовая характеристика героя и связь с её объяснением. Нулевое значение без объяснения не доказывает отсутствие свойства."@ru ;
+    rdfs:comment "Значение признака конкретного героя, его объяснение и связанные способности. isObserved отличает известное значение, включая ноль, от заполнителя матрицы."@ru ;
     rdfs:subClassOf kg:GameFact .
 
-kg:ParameterValue a owl:Class ;
-    rdfs:label "Значение параметра"@ru ;
-    rdfs:comment "Число в последовательности значений параметра. Порядок сохраняется без предположения, что каждая позиция обозначает уровень способности."@ru ;
-    rdfs:subClassOf kg:GameFact .
-
-kg:FeatureObservation a owl:Class ;
-    rdfs:label "Признак героя с объяснением"@ru ;
-    rdfs:comment "Утверждение об игровом свойстве героя: тип признака, значение, объяснение механики и связанные способности."@ru ;
-    rdfs:subClassOf kg:GameFact .
-
-kg:HeroStatisticsObservation a owl:Class ;
-    rdfs:label "Общая статистика героя"@ru ;
-    rdfs:comment "Число матчей и побед героя, доля побед и показатели профессиональных матчей."@ru ;
-    rdfs:subClassOf kg:Statistics .
-
-kg:RankBracketObservation a owl:Class ;
-    rdfs:label "Статистика рейтингового интервала"@ru ;
-    rdfs:comment "Число матчей, побед и доля побед героя в определённом рейтинговом интервале."@ru ;
-    rdfs:subClassOf kg:Statistics .
+kg:GameCharacteristic a owl:Class ;
+    rdfs:label "Игровая характеристика"@ru ;
+    rdfs:comment "Вид свойства героя, способности или предмета, для которого задаются значения."@ru .
 
 kg:ItemUsageObservation a owl:Class ;
     rdfs:label "Популярность предмета"@ru ;
@@ -534,154 +639,51 @@ kg:MatchupObservation a owl:Class ;
     rdfs:comment "Направленное противостояние двух героев: матчи, победы, доля побед и её отклонение от общей статистики героя."@ru ;
     rdfs:subClassOf kg:Statistics .
 
+kg:ParameterValue a owl:Class ;
+    rdfs:label "Значение параметра"@ru ;
+    rdfs:comment "Число в последовательности значений параметра. Порядок сохраняется без предположения, что каждая позиция обозначает уровень способности."@ru ;
+    rdfs:subClassOf kg:GameFact .
+
+kg:Entity a owl:Class ;
+    rdfs:label "Сущность игры"@ru ;
+    rdfs:comment "Самостоятельный игровой объект: герой, его способность или предмет."@ru .
+
+kg:Item a owl:Class ;
+    rdfs:label "Предмет"@ru ;
+    rdfs:comment "Игровой предмет со стоимостью, эффектами, параметрами и статистикой использования."@ru ;
+    rdfs:subClassOf kg:Entity .
+
+kg:Statistics a owl:Class ;
+    rdfs:label "Игровая статистика"@ru ;
+    rdfs:comment "Показатели матчей, противостояний героев и использования предметов."@ru .
+
+kg:Ability a owl:Class ;
+    rdfs:label "Способность"@ru ;
+    rdfs:comment "Способность героя с описанием механики, параметрами и улучшениями."@ru ;
+    rdfs:subClassOf kg:Entity .
+
+kg:GameFact a owl:Class ;
+    rdfs:label "Факт об игровой характеристике"@ru ;
+    rdfs:comment "Составное утверждение о характеристике: значение, оценка роли, условие изменения или примечание о механике."@ru .
+
+kg:HeroStatisticsObservation a owl:Class ;
+    rdfs:label "Общая статистика героя"@ru ;
+    rdfs:comment "Число матчей и побед героя, доля побед и показатели профессиональных матчей."@ru ;
+    rdfs:subClassOf kg:Statistics .
+
+kg:Hero a owl:Class ;
+    rdfs:label "Герой"@ru ;
+    rdfs:comment "Игровой герой с характеристиками, способностями, признаками и статистикой."@ru ;
+    rdfs:subClassOf kg:Entity .
+
+kg:Parameter a owl:Class ;
+    rdfs:label "Параметр способности или предмета"@ru ;
+    rdfs:comment "Именованная характеристика способности или предмета: урон, радиус, длительность, бонус или стоимость применения."@ru ;
+    rdfs:subClassOf kg:GameCharacteristic .
+
 [] a owl:AllDisjointClasses ;
     owl:members ( kg:Entity kg:GameCharacteristic kg:GameFact kg:Statistics ) .
 
 [] a owl:AllDisjointClasses ;
     owl:members ( kg:Hero kg:Ability kg:Item ) .
 
-
-kg:turnRate a owl:DatatypeProperty ;
-    rdfs:label "Скорость поворота"@ru .
-
-kg:projectileSpeed a owl:DatatypeProperty ;
-    rdfs:label "Скорость снаряда"@ru ;
-    rdfs:range xsd:integer .
-
-kg:dayVision a owl:DatatypeProperty ;
-    rdfs:label "Дальность обзора днем"@ru ;
-    rdfs:range xsd:integer .
-
-kg:nightVision a owl:DatatypeProperty ;
-    rdfs:label "Дальность обзора ночью"@ru ;
-    rdfs:range xsd:integer .
-
-kg:roleSummary a owl:DatatypeProperty ;
-    rdfs:label "Краткая игровая характеристика"@ru ;
-    rdfs:range xsd:string .
-
-kg:gameplayDescription a owl:DatatypeProperty ;
-    rdfs:label "Описание стиля игры"@ru ;
-    rdfs:range xsd:string .
-
-kg:hasScepterUpgrade a owl:DatatypeProperty ;
-    rdfs:label "Есть улучшение Scepter"@ru ;
-    rdfs:range xsd:boolean .
-
-kg:hasShardUpgrade a owl:DatatypeProperty ;
-    rdfs:label "Есть улучшение Shard"@ru ;
-    rdfs:range xsd:boolean .
-
-kg:grantedByScepter a owl:DatatypeProperty ;
-    rdfs:label "Предоставляется Scepter"@ru ;
-    rdfs:range xsd:boolean .
-
-kg:grantedByShard a owl:DatatypeProperty ;
-    rdfs:label "Предоставляется Shard"@ru ;
-    rdfs:range xsd:boolean .
-
-kg:maxLevel a owl:DatatypeProperty ;
-    rdfs:label "Максимальное число уровней"@ru ;
-    rdfs:range xsd:integer .
-
-kg:behaviorFlags a owl:DatatypeProperty ;
-    rdfs:label "Флаги игровой механики"@ru ;
-    rdfs:range xsd:integer .
-
-kg:initialCharges a owl:DatatypeProperty ;
-    rdfs:label "Начальное число зарядов"@ru ;
-    rdfs:range xsd:integer .
-
-kg:stockLimit a owl:DatatypeProperty ;
-    rdfs:label "Максимальный запас в магазине"@ru ;
-    rdfs:range xsd:integer .
-
-kg:stockReplenishTime a owl:DatatypeProperty ;
-    rdfs:label "Время восстановления запаса магазина"@ru ;
-    rdfs:range xsd:integer .
-
-kg:qualityCode a owl:DatatypeProperty ;
-    rdfs:label "Код категории предмета"@ru ;
-    rdfs:range xsd:integer .
-
-kg:baseHealth a owl:DatatypeProperty ;
-    rdfs:label "Базовое здоровье"@ru ;
-    rdfs:range xsd:integer .
-
-kg:baseHealthRegen a owl:DatatypeProperty ;
-    rdfs:label "Базовое восстановление здоровья"@ru .
-
-kg:baseMana a owl:DatatypeProperty ;
-    rdfs:label "Базовая мана"@ru ;
-    rdfs:range xsd:integer .
-
-kg:baseManaRegen a owl:DatatypeProperty ;
-    rdfs:label "Базовое восстановление маны"@ru .
-
-kg:baseArmor a owl:DatatypeProperty ;
-    rdfs:label "Базовая броня"@ru .
-
-kg:baseDamageMin a owl:DatatypeProperty ;
-    rdfs:label "Базовый минимальный урон атаки"@ru ;
-    rdfs:range xsd:integer .
-
-kg:baseDamageMax a owl:DatatypeProperty ;
-    rdfs:label "Базовый максимальный урон атаки"@ru ;
-    rdfs:range xsd:integer .
-
-kg:baseAttackTime a owl:DatatypeProperty ;
-    rdfs:label "Базовое время атаки"@ru ;
-    rdfs:range xsd:integer .
-
-kg:attackPoint a owl:DatatypeProperty ;
-    rdfs:label "Задержка атаки"@ru .
-
-kg:captainsModeEnabled a owl:DatatypeProperty ;
-    rdfs:label "Доступен в Captains Mode"@ru ;
-    rdfs:range xsd:boolean .
-
-kg:turboMatches a owl:DatatypeProperty ;
-    rdfs:label "Матчи Turbo"@ru ;
-    rdfs:range xsd:integer .
-
-kg:turboWins a owl:DatatypeProperty ;
-    rdfs:label "Победы Turbo"@ru ;
-    rdfs:range xsd:integer .
-
-kg:roleName a owl:DatatypeProperty ;
-    rdfs:label "Название игровой роли"@ru ;
-    rdfs:range xsd:string .
-
-
-kg:requiresTalent a owl:ObjectProperty ;
-    rdfs:label "Требует талант"@ru ;
-    rdfs:domain kg:ParameterModifier ;
-    rdfs:range kg:Talent .
-
-kg:hasPublicMatchTrend a owl:ObjectProperty ;
-    rdfs:label "Динамика числа публичных матчей"@ru ;
-    rdfs:domain kg:HeroStatisticsObservation ;
-    rdfs:range kg:Parameter .
-
-kg:hasPublicWinTrend a owl:ObjectProperty ;
-    rdfs:label "Динамика публичных побед"@ru ;
-    rdfs:domain kg:HeroStatisticsObservation ;
-    rdfs:range kg:Parameter .
-
-kg:hasTurboMatchTrend a owl:ObjectProperty ;
-    rdfs:label "Динамика числа матчей Turbo"@ru ;
-    rdfs:domain kg:HeroStatisticsObservation ;
-    rdfs:range kg:Parameter .
-
-kg:hasTurboWinTrend a owl:ObjectProperty ;
-    rdfs:label "Динамика побед Turbo"@ru ;
-    rdfs:domain kg:HeroStatisticsObservation ;
-    rdfs:range kg:Parameter .
-
-kg:publicMatches a owl:DatatypeProperty ;
-    rdfs:label "Публичные матчи"@ru ;
-    rdfs:range xsd:integer .
-
-kg:publicWins a owl:DatatypeProperty ;
-    rdfs:label "Публичные победы"@ru ;
-    rdfs:range xsd:integer .

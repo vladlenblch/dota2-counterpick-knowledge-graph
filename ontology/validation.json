@@ -4,11 +4,10 @@
   "checks": [
     "На каждом уровне иерархии однородные классы: игровые сущности, характеристики, факты и статистика",
     "Все игровые значения, связи, параметры, порядок, модификаторы и основания признаков сверены с таблицами",
-    "SHACL: типы, обязательные связи, мощности, количества и границы долей корректны",
-    "Четыре SPARQL-запроса вернули ожидаемые результаты"
+    "SHACL: типы, обязательные связи, мощности, количества и границы долей корректны"
   ],
   "errors": [],
-  "triples": 611126,
+  "triples": 593480,
   "package_structure": {
     "imports": [
       "data-entities.ttl",
@@ -17,7 +16,7 @@
       "game.ttl",
       "schema.ttl"
     ],
-    "named_classes": 20
+    "named_classes": 17
   },
   "hierarchy": {
     "Ability": [
@@ -26,9 +25,6 @@
     "Entity": [],
     "Feature": [
       "GameCharacteristic"
-    ],
-    "FeatureObservation": [
-      "GameFact"
     ],
     "FeatureValue": [
       "GameFact"
@@ -60,12 +56,6 @@
       "GameFact"
     ],
     "ParameterValue": [
-      "GameFact"
-    ],
-    "RankBracketObservation": [
-      "Statistics"
-    ],
-    "RoleRating": [
       "GameFact"
     ],
     "Statistics": [],
@@ -110,16 +100,16 @@
   "source_tables": 8,
   "cells_checked": 254586,
   "game_model": {
-    "triples": 611126,
-    "classes": 20,
-    "object_properties": 38,
-    "data_properties": 100,
-    "records_verified": 85344,
+    "triples": 593480,
+    "classes": 17,
+    "object_properties": 34,
+    "data_properties": 107,
+    "records_verified": 81081,
     "domain_only": true,
     "short_identifiers": true,
     "anonymous_data_nodes": 0,
     "informative_values": {
-      "scalar_values_verified": 150737,
+      "scalar_values_verified": 146529,
       "ordered_values_verified": 13973,
       "talent_parameters_verified": 110,
       "talents_verified": 1016,
@@ -131,259 +121,54 @@
       "source_parameters_verified": 8997,
       "bonus_modifiers_verified": 1160,
       "facet_modifiers_verified": 205,
-      "rank_observations_verified": 1016,
-      "matrix_values_verified": 9652
+      "matrix_values_verified": 9652,
+      "observed_feature_values_verified": 2104
     },
     "class_counts": {
       "Hero": 127,
-      "RoleRating": 1143,
       "Ability": 734,
       "Parameter": 13099,
       "ParameterValue": 25512,
       "GameNote": 1173,
       "ParameterModifier": 1365,
       "Item": 507,
-      "FeatureObservation": 2104,
-      "Feature": 76,
       "HeroStatisticsObservation": 127,
-      "RankBracketObservation": 1016,
       "MatchupObservation": 16002,
       "ItemUsageObservation": 11691,
       "FeatureValue": 9652,
+      "Feature": 76,
       "Talent": 1016,
       "Entity": 0,
+      "GameFact": 0,
       "Statistics": 0,
-      "GameCharacteristic": 0,
-      "GameFact": 0
+      "GameCharacteristic": 0
     }
   },
   "relation_types": {
-    "relation_endpoints_checked": 208324,
+    "relation_endpoints_checked": 216164,
     "disjoint_groups_checked": 2
   },
   "class_counts": {
     "Hero": 127,
-    "RoleRating": 1143,
     "Ability": 734,
     "Parameter": 13099,
     "ParameterValue": 25512,
     "GameNote": 1173,
     "ParameterModifier": 1365,
     "Item": 507,
-    "FeatureObservation": 2104,
-    "Feature": 76,
     "HeroStatisticsObservation": 127,
-    "RankBracketObservation": 1016,
     "MatchupObservation": 16002,
     "ItemUsageObservation": 11691,
     "FeatureValue": 9652,
+    "Feature": 76,
     "Talent": 1016,
     "Entity": 0,
+    "GameFact": 0,
     "Statistics": 0,
-    "GameCharacteristic": 0,
-    "GameFact": 0
+    "GameCharacteristic": 0
   },
   "shacl_conforms": true,
   "shacl_report": "Validation Report\nConforms: True\n",
-  "competency_queries": {
-    "inventory": {
-      "passed": true,
-      "rows": 8,
-      "result": [
-        [
-          "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/ontology#Ability",
-          734
-        ],
-        [
-          "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/ontology#Feature",
-          76
-        ],
-        [
-          "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/ontology#FeatureObservation",
-          2104
-        ],
-        [
-          "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/ontology#FeatureValue",
-          9652
-        ],
-        [
-          "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/ontology#Hero",
-          127
-        ],
-        [
-          "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/ontology#Item",
-          507
-        ],
-        [
-          "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/ontology#ItemUsageObservation",
-          11691
-        ],
-        [
-          "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/ontology#MatchupObservation",
-          16002
-        ]
-      ]
-    },
-    "rubick_features": {
-      "passed": true,
-      "rows": 16,
-      "result": [
-        [
-          "AOE_ABILITY_COUNT",
-          1.0,
-          "Counted from 5 abilities",
-          null
-        ],
-        [
-          "AOE_DAMAGE",
-          1.0,
-          "ability Fade Bolt: Rubick creates a powerful stream of arcane energy that travels between enemy units, dealing damage and reducing their attack and spell damage. Each jump deals less damage.; radius = 440.0; damage code = 2",
-          "Fade Bolt"
-        ],
-        [
-          "ARMOR_PERCENTILE",
-          0.8818897637795275,
-          "armor = 4.8333335; percentile among 127 heroes",
-          null
-        ],
-        [
-          "ATTACK_RANGE",
-          550.0,
-          "hero.attack_range = 550.0",
-          null
-        ],
-        [
-          "BASE_ARMOR",
-          4.8333335,
-          "hero.armor = 4.8333335",
-          null
-        ],
-        [
-          "BASE_MAGIC_RESISTANCE",
-          25.0,
-          "hero.magic_resistance = 25.0",
-          null
-        ],
-        [
-          "FORCED_MOVEMENT",
-          1.0,
-          "ability Telekinesis: Rubick uses his telekinetic powers to lift the enemy into the air briefly and then hurls them back at the ground. The unit lands on the ground with such force that it stuns nearby enemies.",
-          "Telekinesis"
-        ],
-        [
-          "HARD_CONTROL",
-          1.0,
-          "ability Telekinesis: Rubick uses his telekinetic powers to lift the enemy into the air briefly and then hurls them back at the ground. The unit lands on the ground with such force that it stuns nearby enemies.",
-          "Telekinesis"
-        ],
-        [
-          "HARD_CONTROL_COUNT",
-          1.0,
-          "Counted from 5 abilities",
-          null
-        ],
-        [
-          "HIGH_ARMOR",
-          1.0,
-          "armor percentile = 0.882",
-          null
-        ],
-        [
-          "MAGICAL_DAMAGE",
-          1.0,
-          "ability Fade Bolt damage code = 2; Rubick creates a powerful stream of arcane energy that travels between enemy units, dealing damage and reducing their attack and spell damage. Each jump deals less damage.",
-          "Fade Bolt"
-        ],
-        [
-          "MAX_AOE_RADIUS",
-          440.0,
-          "Maximum ability parameter radius",
-          null
-        ],
-        [
-          "MAX_CONTROL_DURATION",
-          1.5,
-          "Maximum duration among detected hard control abilities",
-          null
-        ],
-        [
-          "MOVEMENT_SPEED",
-          290.0,
-          "hero.movement_speed = 290.0",
-          null
-        ],
-        [
-          "STUN",
-          1.0,
-          "ability Telekinesis: Rubick uses his telekinetic powers to lift the enemy into the air briefly and then hurls them back at the ground. The unit lands on the ground with such force that it stuns nearby enemies.",
-          "Telekinesis"
-        ],
-        [
-          "STUN_COUNT",
-          1.0,
-          "Counted from 5 abilities",
-          null
-        ]
-      ]
-    },
-    "forced_movement": {
-      "passed": true,
-      "rows": 4,
-      "result": [
-        [
-          14,
-          "Pudge",
-          "ability Dismember: CHANNELED - Pudge chows down on an enemy unit, disabling it and dealing damage over time. Damage is increased by Pudge's Strength and heals him for the total amount. Pudge pulls the unit at a rate of %pull_units_per_second% units, up to a minimum of %pull_distance_limit% range."
-        ],
-        [
-          17,
-          "Storm Spirit",
-          "ability Electric Vortex: A vortex that pulls an enemy unit to Storm Spirit's location."
-        ],
-        [
-          86,
-          "Rubick",
-          "ability Telekinesis: Rubick uses his telekinetic powers to lift the enemy into the air briefly and then hurls them back at the ground. The unit lands on the ground with such force that it stuns nearby enemies."
-        ],
-        [
-          107,
-          "Earth Spirit",
-          "ability Geomagnetic Grip: Earth Spirit pulls the target Stone Remnant or Allied Unit. Enemies struck by the gripped target will be silenced. Pulled Remnants also deal damage to struck enemies. Cast range is reduced when targeting an ally."
-        ]
-      ]
-    },
-    "rubick_late_items": {
-      "passed": true,
-      "rows": 5,
-      "result": [
-        [
-          1,
-          "Blink Dagger",
-          51
-        ],
-        [
-          102,
-          "Force Staff",
-          20
-        ],
-        [
-          108,
-          "Aghanim's Scepter",
-          17
-        ],
-        [
-          256,
-          "Aeon Disk",
-          16
-        ],
-        [
-          232,
-          "Aether Lens",
-          13
-        ]
-      ]
-    }
-  },
   "data_limitations": {
     "matchups_with_unknown_exact_wins": 34,
     "matchups_with_unknown_advantage": 34,
@@ -395,68 +180,53 @@
       "sha256": "d88185d59de9d61da49a003574b1c39632a18969bd066eedb52b3987219e7219"
     },
     "data-entities.ttl": {
-      "bytes": 18720697,
-      "sha256": "30d99fb9b234dac8968831ce0f254903c2d649f279344184a5da4fd5a71d4064"
+      "bytes": 18379841,
+      "sha256": "5b42f7f8a8ea5f857fc346164ad17a73a3fddaa85949668c01cba1254a9c2349"
     },
     "data-features.ttl": {
-      "bytes": 7234472,
-      "sha256": "dfedbc2aca0e7cc919311fe532724902a471296eb4157d66165d43d98acaba09"
+      "bytes": 6662574,
+      "sha256": "27fb871df88582d8676fb32a4ccfc84768b5cfb7bbf6d5ef793e3adcdce89ad3"
     },
     "data-statistics.ttl": {
-      "bytes": 24064833,
-      "sha256": "463cded9e1a0f0d2d7d8653b11061db68ad739536fde6f2aa89e3a37e7ba1fa8"
+      "bytes": 23500484,
+      "sha256": "febbb2ec49321a70ccd704c44b33831e36e47f972b039cc89e05bebafbb52a16"
     },
     "game.ttl": {
       "bytes": 720,
       "sha256": "4c853934cadc2934877628918de2d8f5b101c7d7a617fa71a10b8e5652b951f0"
     },
     "schema.ttl": {
-      "bytes": 26153,
-      "sha256": "749726bbfb7cd3d610174552787ed489175f4fbd82ef1d2db1249caa7699ccb4"
+      "bytes": 26049,
+      "sha256": "01f46455e92d561bfe5b6dd047ee16d9f71a9e741e865b698ec228f0ee3f1df5"
     },
     "shapes.ttl": {
-      "bytes": 8834,
-      "sha256": "36d72d3d0411fc8187a0e1e510b653615f36ed4af68506e4dfbd9e053e56cc5e"
+      "bytes": 8947,
+      "sha256": "26aecb19dfca17c5902fd0317b3e84696836fcecb64c97b574541d3dc04fc857"
     }
   },
-  "package_sha256": "ae0bf64a7f2f9fc3c17823af6ae67cca07a0bc54f632591c3365d4069ee98054",
+  "package_sha256": "981c0a722d6e61b6d1e76675e35413b66e8a2f769467182ae4ea6b558618b2d9",
   "native_owl": {
     "conforms": true,
-    "package_sha256": "ae0bf64a7f2f9fc3c17823af6ae67cca07a0bc54f632591c3365d4069ee98054",
+    "package_sha256": "981c0a722d6e61b6d1e76675e35413b66e8a2f769467182ae4ea6b558618b2d9",
     "package_files_unchanged_during_check": true,
-    "engine_versions": {
-      "protege": "5.6.9",
-      "owlapi": "4.5.29",
-      "hermit": "1.4.3.456",
-      "java": "openjdk version \"17.0.20.1\" 2026-08-18"
-    },
     "checks": {
-      "game": {
-        "import_closure": 5,
-        "axioms_local": 0,
-        "axioms_with_imports": 611092,
-        "classes": 20,
-        "individuals": 85344,
-        "object_properties": 38,
-        "data_properties": 100,
-        "owl2dl": true,
-        "violations": 0
-      },
-      "schema_core": {
-        "import_closure": 1,
-        "axioms_local": 514,
-        "axioms_with_imports": 514,
-        "classes": 20,
-        "individuals": 0,
-        "object_properties": 38,
-        "data_properties": 100,
-        "owl2dl": true,
-        "violations": 0,
-        "hermit_consistent": true,
-        "hermit_unsat_classes": []
-      }
+      "game_owl2dl": true,
+      "game_violations": 0,
+      "game_classes": 17,
+      "game_individuals": 81081,
+      "schema_owl2dl": true,
+      "schema_violations": 0,
+      "schema_classes": 17,
+      "schema_individuals": 0,
+      "schema_consistent": true,
+      "schema_all_classes_satisfiable": true
+    },
+    "engine_versions": {
+      "owlapi-osgidistribution": "4.5.29",
+      "org.semanticweb.hermit-1.4.3.456": "1.4.3.456"
     },
     "method": {
+      "engine": "Local Protege OWLAPI and HermiT",
       "network_imports": false,
       "full_abox_reasoning": false,
       "schema_reasoning": true

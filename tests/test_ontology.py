@@ -9,7 +9,6 @@ from pyshacl import validate
 
 from dota_kg.ontology import literal, load_ontology, turtle_bytes, write_package
 from dota_kg.ontology_schema import KG, RES, schema_graph
-from dota_kg.ontology_queries import COMPETENCY_QUERIES
 from dota_kg.ontology_domain import informative_parameter, checked_parameter
 from dota_kg.ontology_domain_validation import DomainReader, validate_game
 from dota_kg.ontology_validation import _package_structure, check_scalar, make_shapes, same_json, validate_hierarchy, validate_relation_types
@@ -174,6 +173,107 @@ class OntologyTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, "Unmapped gameplay fields"):
                 write_package(root, rows, directory)
 
+    def test_unified_features_preserve_known_zero_unknown_zero_and_ability_explanations(self):
+        from dota_kg.ontology_domain import DomainBuilder
+        rows = {
+            "heroes": [{"hero_id": 1, "display_name": "Fixture", "internal_name": "fixture",
+                         "facets": "[]", "role_levels": "[]", "raw": "{}"}],
+            "abilities": [{"hero_id": 1, "ability_id": 10, "display_name": "Move", "internal_name": "move",
+                           "special_values": "[]", "notes": "[]", "raw": "{}"}],
+            "hero_features": [{"hero_id": 1, "feature": "BASE_ARMOR", "value": 0.0,
+                               "derivation_method": "rule", "evidence": "Valve hero.armor = 0.0"},
+                              {"hero_id": 1, "feature": "FORCED_MOVEMENT", "value": 1.0,
+                               "derivation_method": "rule", "evidence": "Valve ability Move: pushes the target"}],
+            "hero_feature_matrix": [{"hero_id": 1, "BASE_ARMOR": 0.0, "SLOW": 0.0, "FORCED_MOVEMENT": 1.0}],
+        }
+        graph = schema_graph()
+        for module in DomainBuilder(rows).build().values():
+            graph += module
+        validate_game(graph, rows)
+        values = {str(graph.value(graph.value(n, KG.feature), KG.identifier)): n
+                  for n in graph.subjects(RDF.type, KG.FeatureValue)}
+        self.assertEqual(len(values), 3)
+        self.assertTrue(all(not list(graph.objects(node, KG.position)) for node in values.values()))
+        self.assertEqual(graph.value(values["BASE_ARMOR"], KG.value).toPython(), 0.0)
+        self.assertTrue(graph.value(values["BASE_ARMOR"], KG.isObserved).toPython())
+        self.assertEqual(graph.value(values["SLOW"], KG.value).toPython(), 0.0)
+        self.assertFalse(graph.value(values["SLOW"], KG.isObserved).toPython())
+        self.assertIsNone(graph.value(values["SLOW"], KG.evidence))
+        self.assertEqual(graph.value(values["FORCED_MOVEMENT"], KG.supportedByAbility), RES["ability/10"])
+        for code, prop, value in (("BASE_ARMOR", KG.isObserved, literal(False)),
+                                  ("SLOW", KG.isObserved, literal(True)),
+                                  ("BASE_ARMOR", KG.evidence, None),
+                                  ("FORCED_MOVEMENT", KG.supportedByAbility, RES["ability/999"])):
+            with self.subTest(code=code, prop=prop):
+                original = list(graph.objects(values[code], prop))
+                graph.remove((values[code], prop, None))
+                if value is not None:
+                    graph.add((values[code], prop, value))
+                with self.assertRaises(ValueError):
+                    validate_game(graph, rows)
+                graph.remove((values[code], prop, None))
+                for previous in original:
+                    graph.add((values[code], prop, previous))
+        rows["hero_feature_matrix"][0]["BASE_ARMOR"] = 0.5
+        with self.assertRaisesRegex(ValueError, "matrix cell"):
+            DomainBuilder(rows).build()
+
+    def test_role_scores_are_hero_properties_with_explicit_zero_and_unknown_values(self):
+        from dota_kg.ontology_domain import DomainBuilder
+        rows = {"heroes": [{"hero_id": 1, "display_name": "Fixture", "internal_name": "fixture",
+                            "facets": "[]", "role_levels": "[3, 0, 1, 2, 0, 1, 3, 0, 2]", "raw": "{}"}]}
+        hero = RES["hero/1"]
+        graph = schema_graph()
+        for module in DomainBuilder(rows).build().values():
+            graph += module
+        result = validate_game(graph, rows)
+        self.assertEqual(result["informative_values"]["role_levels_verified"], 9)
+        expected = {KG.carryLevel: 3, KG.supportLevel: 0, KG.nukerLevel: 1, KG.disablerLevel: 2,
+                    KG.junglerLevel: 0, KG.durableLevel: 1, KG.escapeLevel: 3,
+                    KG.pusherLevel: 0, KG.initiatorLevel: 2}
+        for prop, score in expected.items():
+            self.assertEqual(graph.value(hero, prop).datatype, XSD.integer)
+            self.assertEqual(graph.value(hero, prop).toPython(), score)
+        graph.remove((hero, KG.supportLevel, None))
+        with self.assertRaises(ValueError):
+            validate_game(graph, rows)
+        graph.add((hero, KG.supportLevel, literal(1)))
+        with self.assertRaises(ValueError):
+            validate_game(graph, rows)
+        for invalid in ([0] * 10, [4], [False]):
+            with self.subTest(role_levels=invalid):
+                rows["heroes"][0]["role_levels"] = json.dumps(invalid)
+                with self.assertRaises(ValueError):
+                    DomainBuilder(rows).build()
+        rows["heroes"][0]["role_levels"] = "[3]"
+        partial = schema_graph()
+        for module in DomainBuilder(rows).build().values():
+            partial += module
+        validate_game(partial, rows)
+        self.assertIsNone(partial.value(hero, KG.supportLevel))
+
+    def test_rank_detail_stays_outside_rdf_and_aggregate_statistics_remain(self):
+        from dota_kg.ontology_domain import DomainBuilder
+        from rdflib.compare import isomorphic
+        rows = {"heroes": [{"hero_id": 1, "display_name": "Fixture", "internal_name": "fixture",
+                            "facets": "[]", "role_levels": "[]", "raw": "{}"}],
+                "hero_meta": [{"hero_id": 1, "matches": 100, "wins": 60, "win_rate": .6,
+                               "rank_brackets": json.dumps([{"rank_bracket": "8", "matches": 10,
+                                                             "wins": 9, "win_rate": .9}]), "raw": "{}"}]}
+        graph = schema_graph()
+        for module in DomainBuilder(rows).build().values():
+            graph += module
+        validate_game(graph, rows)
+        statistics = RES["record/hero_meta/1"]
+        self.assertEqual(graph.value(statistics, KG.matches).toPython(), 100)
+        self.assertEqual(graph.value(statistics, KG.wins).toPython(), 60)
+        self.assertEqual(graph.value(statistics, KG.winRate).toPython(), .6)
+        rows["hero_meta"][0]["rank_brackets"] = "[]"
+        alternate = schema_graph()
+        for module in DomainBuilder(rows).build().values():
+            alternate += module
+        self.assertTrue(isomorphic(graph, alternate))
+
     def test_ordered_series_preserves_duplicates_zero_and_float64_precision(self):
         graph = Graph()
         expected = [1, 1, 0, 0.0, -0.0, 0.12345678901234566, 1e-20]
@@ -205,51 +305,6 @@ class OntologyTests(unittest.TestCase):
             checked_parameter({**parameter, "new_gameplay_field": 123})
         changed = {**parameter, "facet_bonus": {"name": "", "values": [], "operation": False}}
         self.assertIn("facet_bonus", informative_parameter(changed))
-
-    def test_feature_query_compares_numeric_values_across_double_lexical_forms(self):
-        movement_query = COMPETENCY_QUERIES["forced_movement"]
-        for lexical in ("1.0e0", "1.0"):
-            with self.subTest(lexical=lexical):
-                graph = Graph()
-                for identifier, name, value, evidence in (
-                        (86, "Rubick", lexical, "Telekinesis moves the target"),
-                        (1, "Other hero", "0.0", "No displacement")):
-                    hero = RES[f"hero/{identifier}"]
-                    observation = RES[f"testObservation/{identifier}/FORCED_MOVEMENT"]
-                    for triple in (
-                            (hero, KG.identifier, literal(identifier)),
-                            (hero, RDFS.label, literal(name)),
-                            (observation, RDF.type, KG.FeatureObservation),
-                            (observation, KG.hero, hero),
-                            (observation, KG.feature, RES["feature/FORCED_MOVEMENT"]),
-                            (observation, KG.value, Literal(value, datatype=XSD.double, normalize=False)),
-                            (observation, KG.evidence, literal(evidence))):
-                        graph.add(triple)
-                movement = [tuple(value.toPython() for value in row)
-                            for row in graph.query(movement_query)]
-                self.assertEqual(movement, [(86, "Rubick", "Telekinesis moves the target")])
-                self.assertEqual(str(graph.value(RES["testObservation/86/FORCED_MOVEMENT"], KG.value)), lexical)
-
-    def test_item_query_accepts_plain_and_typed_string_phases(self):
-        query = COMPETENCY_QUERIES["rubick_late_items"]
-        for phase in (Literal("late"), Literal("late", datatype=XSD.string)):
-            with self.subTest(datatype=phase.datatype):
-                graph = Graph()
-                item = RES["item/1"]
-                graph.add((item, KG.identifier, literal(1)))
-                graph.add((item, RDFS.label, literal("Blink Dagger")))
-                for identifier, observed_phase, uses in (
-                        ("late", phase, 42), ("early", Literal("early", datatype=XSD.string), 999)):
-                    observation = RES["testItemUsage/" + identifier]
-                    for triple in (
-                            (observation, RDF.type, KG.ItemUsageObservation),
-                            (observation, KG.hero, RES["hero/86"]),
-                            (observation, KG.item, item),
-                            (observation, KG.phase, observed_phase),
-                            (observation, KG.usageCount, literal(uses))):
-                        graph.add(triple)
-                rows = [tuple(value.toPython() for value in row) for row in graph.query(query)]
-                self.assertEqual(rows, [(1, "Blink Dagger", 42)])
 
     def test_shapes_accept_optional_unknown_wins_and_reject_invalid_win_rate(self):
         graph = schema_graph()

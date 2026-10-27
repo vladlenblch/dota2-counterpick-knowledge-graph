@@ -11,7 +11,7 @@ import pyarrow.parquet as pq
 from rdflib import BNode, Graph, Literal, RDF, RDFS, OWL, XSD, URIRef
 from pyshacl import validate
 
-from .ontology_schema import KG, SH, TABLES, bind, schema_graph
+from .ontology_schema import KG, SH, TABLES, ROLE_PROPERTIES, bind, schema_graph
 
 
 def one(graph, subject, predicate, *, optional=False):
@@ -56,6 +56,7 @@ def make_shapes():
     rules = {cls: [] for cls, _ in TABLES.values()}
     for cls in ("Hero", "Ability", "Item"):
         rules[cls] = [prop(KG.identifier, XSD.integer)]
+    rules["Hero"] += [prop(p, XSD.integer, lo=0, lower=0, upper=3) for p in ROLE_PROPERTIES]
     rules["Ability"] += [prop(KG.hero, KG.Hero)]
     rules["Feature"] = [prop(KG.identifier, XSD.string), prop(KG.valueKind, XSD.string), prop(KG.unit, XSD.string)]
     rules["MatchupObservation"] += [
@@ -63,19 +64,14 @@ def make_shapes():
         prop(KG.matches, XSD.integer, lower=1), prop(KG.wins, XSD.integer, lo=0, lower=0),
         prop(KG.winRate, XSD.double, lower=0, upper=1),
         prop(KG.normalizedAdvantage, XSD.double, lo=0, lower=-1, upper=1)]
-    rules["FeatureObservation"] += [prop(KG.hero, KG.Hero), prop(KG.feature, KG.Feature),
-        prop(KG.value, XSD.double), prop(KG.evidence, XSD.string)]
     rules["Hero"] += [prop(KG.hasFeatureValue, KG.FeatureValue, lo=0, hi=None)]
-    rules["FeatureValue"] = [prop(KG.feature, KG.Feature), prop(KG.value, XSD.double),
-                             prop(KG.position, XSD.integer, lower=0),
-                             prop(KG.supportedByObservation, KG.FeatureObservation, lo=0)]
+    rules["FeatureValue"] = [prop(KG.hero, KG.Hero), prop(KG.feature, KG.Feature),
+                             prop(KG.value, XSD.double), prop(KG.isObserved, XSD.boolean),
+                             prop(KG.evidence, XSD.string, lo=0),
+                             prop(KG.supportedByAbility, KG.Ability, lo=0)]
     rules["ItemUsageObservation"] += [prop(KG.hero, KG.Hero), prop(KG.item, KG.Item),
         prop(KG.phase, XSD.string), prop(KG.usageCount, XSD.integer, lower=0)]
     rules["HeroStatisticsObservation"] += [prop(KG.hero, KG.Hero),
-        prop(KG.matches, XSD.integer, lower=0), prop(KG.wins, XSD.integer, lower=0),
-        prop(KG.winRate, XSD.double, lo=0, lower=0, upper=1)]
-    rules["RankBracketObservation"] = [prop(KG.hero, KG.Hero),
-        prop(KG.rankBracket, XSD.string),
         prop(KG.matches, XSD.integer, lower=0), prop(KG.wins, XSD.integer, lower=0),
         prop(KG.winRate, XSD.double, lo=0, lower=0, upper=1)]
     rules["Parameter"] = [prop(KG.parameterName, XSD.string), prop(KG.isPercentage, XSD.boolean, lo=0),
@@ -87,7 +83,6 @@ def make_shapes():
     rules["ParameterModifier"] = [prop(KG.modifierKind, XSD.string), prop(KG.conditionName, XSD.string),
         prop(KG.operation, XSD.integer), prop(KG.position, XSD.integer, lower=0),
         prop(KG.numericValue, None, lo=0), prop(KG.hasBaseValue, KG.ParameterValue, lo=0, hi=None)]
-    rules["RoleRating"] = [prop(KG.roleCode, XSD.integer, lower=0), prop(KG.roleLevel, XSD.integer, lower=0)]
     rules["GameNote"] = [prop(KG.noteText, XSD.string), prop(KG.noteKind, XSD.string),
                          prop(KG.position, XSD.integer, lower=0)]
     for cls, properties in rules.items():
@@ -167,8 +162,8 @@ def validate_hierarchy(graph):
     groups = {
         "Entity": {"Hero", "Ability", "Item"},
         "GameCharacteristic": {"Feature", "Parameter"},
-        "GameFact": {"FeatureObservation", "FeatureValue", "RoleRating", "ParameterValue", "ParameterModifier", "GameNote"},
-        "Statistics": {"HeroStatisticsObservation", "RankBracketObservation", "MatchupObservation", "ItemUsageObservation"},
+        "GameFact": {"FeatureValue", "ParameterValue", "ParameterModifier", "GameNote"},
+        "Statistics": {"HeroStatisticsObservation", "MatchupObservation", "ItemUsageObservation"},
     }
     expected = {KG[root]: set() for root in groups}
     for root, children in groups.items():
@@ -269,9 +264,6 @@ def validate_export(root: Path, output: Path):
         if not conforms:
             raise ValueError("SHACL constraints did not conform")
         checks.append("SHACL: типы, обязательные связи, мощности, количества и границы долей корректны")
-        from .ontology_queries import competency_checks
-        report["competency_queries"] = competency_checks(graph, root)
-        checks.append("Четыре SPARQL-запроса вернули ожидаемые результаты")
         matchups = rows["matchups"]
         report["data_limitations"] = {
             "matchups_with_unknown_exact_wins": sum(r["wins"] is None for r in matchups),

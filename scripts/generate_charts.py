@@ -22,7 +22,7 @@ from rdflib import OWL, RDF, RDFS, URIRef
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 from dota_kg.ontology import load_ontology
-from dota_kg.ontology_schema import KG, RES, schema_graph
+from dota_kg.ontology_schema import KG, RES, ROLE_PROPERTIES, schema_graph
 
 FINAL = ROOT / "data" / "final"
 CHARTS = ROOT / "assets" / "charts"
@@ -261,7 +261,7 @@ def ontology_overview(graph):
     fig = figure("Онтология в числах", "Структура OWL и факты игровой модели Dota 2", (13, 6.4))
     cards = [("RDF-ТРОЕК", len(graph)),
              ("ГЕРОЕВ", len(set(graph.subjects(RDF.type, KG.Hero)))),
-             ("НАБЛЮДЕНИЙ ПРИЗНАКОВ", len(set(graph.subjects(RDF.type, KG.FeatureObservation)))),
+             ("ЗНАЧЕНИЙ С ОБЪЯСНЕНИЕМ", sum(1 for _ in graph.triples((None, KG.evidence, None)))),
              ("ПАРАМЕТРОВ", len(set(graph.subjects(RDF.type, KG.Parameter))))]
     for index, (label, value) in enumerate(cards):
         x = .045 + index * .238
@@ -294,9 +294,9 @@ def ontology_hierarchy(graph):
              (KG.Statistics, "Статистика")]
     order = {name: index for index, name in enumerate((
         "Hero", "Ability", "Item", "Talent", "Feature", "Parameter",
-        "FeatureObservation", "FeatureValue", "RoleRating", "ParameterValue",
+        "FeatureValue", "ParameterValue",
         "ParameterModifier", "GameNote", "HeroStatisticsObservation",
-        "RankBracketObservation", "MatchupObservation", "ItemUsageObservation"))}
+        "MatchupObservation", "ItemUsageObservation"))}
     hierarchy = defaultdict(list)
     for child, parent in graph.subject_objects(RDFS.subClassOf):
         if (child, RDF.type, OWL.Class) in graph:
@@ -340,7 +340,7 @@ def ontology_hierarchy(graph):
                     fontsize=9.4, color=INK, va="center", linespacing=1.12)
             if depth == 1:
                 last_parent_y = y
-    fig.text(.045, .045, "Талант - разновидность способности. Числа, тексты и флаги представлены свойствами данных.",
+    fig.text(.045, .045, f"Оценки {len(ROLE_PROPERTIES)} ролей заданы свойствами героя. Талант наследует свойства способности.",
              fontsize=9.5, color=MUTED)
     save(fig, "ontology_hierarchy")
 
@@ -355,6 +355,7 @@ def ontology_relations(graph):
         ("feature", "Назначение игрового признака"),
         ("supportedByAbility", "Способность как основание признака"),
         ("hasAbility", "Способность героя"),
+        ("hasFeatureValue", "Значение признака героя"),
         ("hasTalent", "Талант героя"),
         ("requiresTalent", "Талант как условие модификации"),
     ]
@@ -362,7 +363,7 @@ def ontology_relations(graph):
                       for predicate, label in selected), key=lambda row: row[2], reverse=True)
     values = [value for _, _, value in counted]
     labels = [f"{label}\n{predicate}" for predicate, label, _ in counted]
-    fig = figure("Какие отношения хранит граф", "Число RDF-утверждений по выбранным объектным свойствам игровой модели", (13, 7.5))
+    fig = figure("Какие отношения хранит граф", "Число RDF-утверждений по выбранным объектным свойствам игровой модели", (13, 8))
     ax = fig.add_axes([.44, .12, .48, .65])
     y = list(range(len(selected) - 1, -1, -1))
     ax.barh(y, values, height=.52, color=BLUE, zorder=2)
@@ -378,15 +379,16 @@ def ontology_relations(graph):
 
 
 def ontology_example(graph):
-    """Draw an actual feature observation with its value and supporting ability."""
+    """Draw an actual unified hero feature with its value and supporting ability."""
     import textwrap
     from matplotlib.patches import FancyArrowPatch
 
     hero = RES["hero/86"]
     feature = RES["feature/FORCED_MOVEMENT"]
     observations = [node for node in graph.subjects(KG.hero, hero)
-                    if (node, RDF.type, KG.FeatureObservation) in graph
-                    and (node, KG.feature, feature) in graph]
+                    if (node, RDF.type, KG.FeatureValue) in graph
+                    and (node, KG.feature, feature) in graph
+                    and bool(graph.value(node, KG.isObserved))]
     if len(observations) != 1:
         raise ValueError("Expected one FORCED_MOVEMENT observation for Rubick")
     observation = observations[0]
@@ -395,14 +397,14 @@ def ontology_example(graph):
     evidence = graph.value(observation, KG.evidence)
     if ability is None or value is None or evidence is None:
         raise ValueError("Incomplete Rubick observation in the ontology")
-    if (hero, KG.hasFeatureObservation, observation) not in graph:
+    if (hero, KG.hasFeatureValue, observation) not in graph:
         raise ValueError("Missing Rubick-to-observation link")
     name = str(graph.value(hero, RDFS.label))
     ability_name = str(graph.value(ability, RDFS.label))
     code = str(graph.value(feature, KG.identifier))
 
     fig = figure("Признак и его обоснование в графе",
-                 "Реальный фрагмент RDF: герой, наблюдение, значение и подтверждающая способность", (13, 7.3))
+                 "Реальный фрагмент RDF: герой, признак, значение и объясняющая способность", (13, 7.3))
     ax = fig.add_axes([.035, .03, .93, .88])
     ax.set_xlim(0, 1)
     ax.set_ylim(0, 1)
@@ -428,13 +430,15 @@ def ontology_example(graph):
                 bbox={"facecolor": BG, "edgecolor": "none", "pad": 2}, zorder=5)
 
     card(.015, .57, .18, .19, "Hero", name)
-    card(.375, .57, .225, .19, "FeatureObservation", "Наблюдение признака", title_size=11.5)
+    observation_label = str(graph.value(KG.FeatureValue, RDFS.label))
+    card(.375, .57, .225, .19, "FeatureValue",
+         "\n".join(textwrap.wrap(observation_label, width=22)), title_size=11.5)
     card(.79, .67, .195, .18, "Feature", "\n".join(textwrap.wrap(str(graph.value(feature, RDFS.label)), width=19)),
          subtitle=code, title_size=11.3)
     card(.79, .36, .195, .18, "Ability", ability_name)
     card(.39, .30, .195, .15, "xsd:double", f"{float(value):g}",
          subtitle="Бинарный признак", title_size=19)
-    arrow((.202, .665), (.367, .665), "hasFeatureObservation", (.284, .705))
+    arrow((.202, .665), (.367, .665), "hasFeatureValue", (.284, .705))
     arrow((.608, .715), (.782, .75), "feature", (.696, .765))
     arrow((.608, .61), (.782, .465), "supportedByAbility", (.704, .567))
     arrow((.4875, .562), (.4875, .458), "value", (.522, .51))

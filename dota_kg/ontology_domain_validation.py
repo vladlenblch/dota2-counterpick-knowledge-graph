@@ -8,7 +8,7 @@ from collections import defaultdict
 from rdflib import BNode, RDF, RDFS, OWL, URIRef
 
 from .ontology import entity, literal, record_uri
-from .ontology_schema import KG, JSON_COLUMNS, NON_DOMAIN_COLUMNS, IDENTITY_COLUMNS, FEATURE_LABELS, NUMERIC_FEATURES, column_predicate, evidence_text
+from .ontology_schema import KG, ROLE_PROPERTIES, JSON_COLUMNS, NON_DOMAIN_COLUMNS, IDENTITY_COLUMNS, FEATURE_LABELS, NUMERIC_FEATURES, column_predicate, evidence_text
 from .ontology_domain import NATIVE_PARAMETERS, OBSERVATIONS, SERIES, parameter_uri, informative_parameter
 from .ontology_validation import one, check_scalar, same_json
 
@@ -200,14 +200,15 @@ def validate_game(game, rows):
                 facets = json.loads(row["facets"])
                 if facets:
                     raise ValueError("Facet data has not been mapped")
-                source = json.loads(row["role_levels"])
-                nodes = {reader.scalar(n, KG.roleCode): n for n in game.objects(owner, KG.hasRoleRating)}
-                if set(nodes) != set(range(len(source))) or len(nodes) != len(list(game.objects(owner, KG.hasRoleRating))):
-                    raise ValueError("Role codes changed")
-                for code, value in enumerate(source):
-                    expect(nodes[code], KG.RoleRating)
-                    scalar(nodes[code], KG.roleLevel, value)
-                    counts["role_levels_verified"] += 1
+                levels = json.loads(row["role_levels"])
+                if type(levels) is not list or len(levels) > len(ROLE_PROPERTIES):
+                    raise ValueError("Unexpected hero role codes")
+                for index, prop in enumerate(ROLE_PROPERTIES):
+                    value = levels[index] if index < len(levels) else None
+                    if value is not None and (type(value) is not int or not 0 <= value <= 3):
+                        raise ValueError("Invalid role score")
+                    scalar(owner, prop, value)
+                    counts["role_levels_verified"] += value is not None
             else:
                 validate_parameters(owner, table, row)
             if table == "abilities":
@@ -225,7 +226,7 @@ def validate_game(game, rows):
                     scalar(note, KG.noteKind, "note")
                 counts["notes_verified"] += len(notes)
 
-    features = {(r["hero_id"], r["feature"]): record_uri("hero_features", r)
+    features = {(r["hero_id"], r["feature"]): r
                 for r in rows.get("hero_features", [])}
     for table, cls in OBSERVATIONS.items():
         for row in rows.get(table, []):
@@ -233,19 +234,7 @@ def validate_game(game, rows):
             expect(record, cls)
             original_scalars(record, table, row)
             link(record, KG.hero, hero)
-            if table == "hero_features":
-                feature = entity("feature", row["feature"])
-                expect(feature, KG.Feature)
-                link(record, KG.feature, feature)
-                link(hero, KG.hasFeatureObservation, record)
-                relations[(hero, KG.hasFeatureObservation)].add(record)
-                abilities = [a for a in rows.get("abilities", []) if a["hero_id"] == row["hero_id"]
-                             and any(row["evidence"].startswith(f"Valve ability {a['display_name']}{suffix}")
-                                     for suffix in (":", " damage code =", " immunity code ="))]
-                targets = {entity("ability", abilities[0]["ability_id"])} if len(abilities) == 1 else set()
-                if set(game.objects(record, KG.supportedByAbility)) != targets:
-                    raise ValueError("Ability evidence relation changed")
-            elif table == "hero_items":
+            if table == "hero_items":
                 item = entity("item", row["item_id"])
                 link(record, KG.item, item)
                 link(hero, KG.hasItemUsage, record)
@@ -262,49 +251,57 @@ def validate_game(game, rows):
             else:
                 link(hero, KG.hasStatistics, record)
                 relations[(hero, KG.hasStatistics)].add(record)
-                ranks = json.loads(row["rank_brackets"])
-                targets = set()
-                for index, source in enumerate(ranks):
-                    node = URIRef(str(record) + f"/rank/{index}")
-                    targets.add(node)
-                    expect(node, KG.RankBracketObservation)
-                    hero_name = next(h["display_name"] for h in rows["heroes"] if h["hero_id"] == row["hero_id"])
-                    scalar(node, RDFS.label, f"{hero_name}: рейтинг {source['rank_bracket']}")
-                    link(node, KG.hero, hero)
-                    for name, value in source.items():
-                        scalar(node, column_predicate("hero_meta", name), value)
-                    counts["rank_observations_verified"] += 1
-                if set(game.objects(record, KG.hasRankObservation)) != targets:
-                    raise ValueError("Rank statistics relations changed")
 
     # Dense matrix cells are values owned directly by the hero. The row URI is
     # only the stable address prefix; no intermediate vector instance exists.
+    mapped_features = set()
     for row in rows.get("hero_feature_matrix", []):
         hero = entity("hero", row["hero_id"])
         prefix = record_uri("hero_feature_matrix", row)
         wanted = set()
-        for index, (code, value) in enumerate((k, v) for k, v in row.items() if k != "hero_id"):
+        for code, value in ((k, v) for k, v in row.items() if k != "hero_id"):
             node = URIRef(str(prefix) + "/value/" + code)
             wanted.add(node)
             expect(node, KG.FeatureValue)
             feature = entity("feature", code)
             expect(feature, KG.Feature)
             link(hero, KG.hasFeatureValue, node)
+            link(node, KG.hero, hero)
             link(node, KG.feature, feature)
-            scalar(node, KG.position, index)
+            if list(game.objects(node, KG.position)):
+                raise ValueError("Matrix column positions do not belong to game feature values")
             scalar(node, KG.value, value)
-            evidence = features.get((row["hero_id"], code))
-            if set(game.objects(node, KG.supportedByObservation)) != ({evidence} if evidence else set()):
-                raise ValueError("Observed zero and matrix fill became indistinguishable")
+            observed = features.get((row["hero_id"], code))
+            scalar(node, KG.isObserved, observed is not None)
+            if observed is not None:
+                if not same_json(observed["value"], value):
+                    raise ValueError("Observed feature differs from its matrix value")
+                scalar(node, KG.evidence, evidence_text(observed["evidence"]))
+                abilities = [a for a in rows.get("abilities", []) if a["hero_id"] == row["hero_id"]
+                             and any(observed["evidence"].startswith(f"Valve ability {a['display_name']}{suffix}")
+                                     for suffix in (":", " damage code =", " immunity code ="))]
+                targets = {entity("ability", abilities[0]["ability_id"])} if len(abilities) == 1 else set()
+                mapped_features.add((row["hero_id"], code))
+                counts["observed_feature_values_verified"] += 1
+            else:
+                scalar(node, KG.evidence, None)
+                targets = set()
+            if set(game.objects(node, KG.supportedByAbility)) != targets:
+                raise ValueError("Ability explanation relation changed")
             counts["matrix_values_verified"] += 1
         if set(game.objects(hero, KG.hasFeatureValue)) != wanted:
             raise ValueError("Direct hero feature values changed")
+
+    if mapped_features != set(features):
+        raise ValueError("Some feature explanations have no matrix cell")
 
     units = {"ARMOR_PERCENTILE": "ratio", "BASE_MAGIC_RESISTANCE": "percent",
              "BASE_ARMOR": "armor", "MOVEMENT_SPEED": "game_distance_per_second",
              "ATTACK_RANGE": "game_distance", "MAX_AOE_RADIUS": "game_distance",
              "MAX_CONTROL_DURATION": "seconds"}
-    for code in {r["feature"] for r in rows.get("hero_features", [])}:
+    codes = {r["feature"] for r in rows.get("hero_features", [])}
+    codes.update(code for row in rows.get("hero_feature_matrix", []) for code in row if code != "hero_id")
+    for code in codes:
         feature = entity("feature", code)
         kind = "count" if code.endswith("_COUNT") else "numeric" if code in NUMERIC_FEATURES else "binary"
         scalar(feature, KG.identifier, code)

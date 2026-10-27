@@ -1,6 +1,9 @@
+from pathlib import Path
+import tempfile
 import unittest
+from unittest.mock import patch
 
-from dota_kg.build import _merge_matchups
+from dota_kg.build import _merge_matchups, _build_report
 from dota_kg.features import extract
 from dota_kg.mapping import Mapper
 
@@ -15,6 +18,23 @@ class PipelineTests(unittest.TestCase):
         ]
         self.mapper = Mapper(heroes, [])
         self.heroes = heroes
+
+    def test_single_report_keeps_coverage_review_and_mapping_diagnostics(self):
+        features = [{"hero_id": 12, "feature": "STUN", "value": 1.0, "derivation_method": "manual"},
+                    {"hero_id": 12, "feature": "BASE_ARMOR", "value": 3.0, "derivation_method": "rule"},
+                    {"hero_id": 2, "feature": "BASE_ARMOR", "value": 4.0, "derivation_method": "rule"}]
+        warnings = [{"kind": "hero", "numeric_id": 999}]
+        with tempfile.TemporaryDirectory() as temporary, patch("dota_kg.build.RAW", Path(temporary)):
+            report = _build_report(self.heroes, [], [], features, [], [], warnings)
+        self.assertEqual(report["summary"]["hero_feature_relations"], 3)
+        self.assertEqual(report["summary"]["mapping_problems"], 1)
+        self.assertEqual(report["mapping_problems"], warnings)
+        self.assertEqual(report["errors"], [])
+        self.assertEqual(report["feature_coverage"]["12"]["features"], ["BASE_ARMOR", "STUN"])
+        self.assertEqual(report["feature_coverage"]["12"]["manual_features"], ["STUN"])
+        self.assertEqual(report["feature_coverage"]["12"]["semantic_feature_count"], 1)
+        self.assertEqual(set(report["heroes_needing_review"]), {12, 2})
+        self.assertEqual(report["matchup_coverage"]["missing_opponent_ids"], {"12": [2], "2": [12]})
 
     def test_illusion_dependency_is_explicit_manual_review(self):
         abilities = [{"hero_id": 12, "ability_id": 1, "display_name": "Juxtapose",

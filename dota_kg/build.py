@@ -1,7 +1,6 @@
 """Merge observations, write current Parquet snapshot, and validate coverage."""
 from __future__ import annotations
 
-import csv
 import json
 from collections import Counter, defaultdict
 
@@ -120,6 +119,47 @@ def _validate(heroes, abilities, items, features, matchups, hero_items):
     return problems, coverage, matchup_coverage
 
 
+def _build_report(heroes, abilities, items, features, matchups, hero_items, mapping_problems):
+    """One dataset report containing validation, coverage and review diagnostics."""
+    problems, coverage, matchup_coverage = _validate(heroes, abilities, items, features, matchups, hero_items)
+    by_hero = defaultdict(list)
+    for row in features:
+        by_hero[row["hero_id"]].append(row)
+    needing_review = []
+    for hero in heroes:
+        hero_id = hero["hero_id"]
+        records = by_hero[hero_id]
+        semantic = [row for row in records
+                    if not row["feature"].startswith(("BASE_", "MAX_", "ARMOR_PERCENTILE"))
+                    and not row["feature"].endswith("_COUNT")
+                    and row["feature"] not in {"MOVEMENT_SPEED", "ATTACK_RANGE", "MELEE"}]
+        coverage[str(hero_id)]["semantic_feature_count"] = len(semantic)
+        coverage[str(hero_id)]["manual_features"] = sorted(
+            row["feature"] for row in records if row["derivation_method"] == "manual")
+        if len(semantic) < 2:
+            needing_review.append(hero_id)
+    unavailable = []
+    if (RAW / "opendota/manifest.json").exists():
+        unavailable.append({"source": "opendota", "data": ["overall pick/ban rates", "item usage rates"],
+                            "reason": "Public aggregate response lacks the required denominators"})
+        missing_pairs = sum(len(v) for v in matchup_coverage["missing_opponent_ids"].values())
+        if missing_pairs:
+            unavailable.append({"source": "opendota", "data": [f"{missing_pairs} directional matchup pairs"],
+                                "reason": "Not present in source responses; see matchup_coverage in this report"})
+    counts = Counter(row["hero_id"] for row in features)
+    summary = {
+        "heroes": len(heroes), "abilities": len(abilities), "items": len(items),
+        "unique_features": len({row["feature"] for row in features}),
+        "hero_feature_relations": len(features), "mean_features_per_hero": round(len(features) / len(heroes), 2) if heroes else 0,
+        "min_features_per_hero": min(counts.values(), default=0), "max_features_per_hero": max(counts.values(), default=0),
+        "matchups": len(matchups), "hero_items": len(hero_items),
+        "mapping_problems": len(mapping_problems), "validation_errors": len(problems),
+    }
+    return {"summary": summary, "errors": problems, "mapping_problems": mapping_problems,
+            "feature_coverage": coverage, "matchup_coverage": matchup_coverage,
+            "heroes_needing_review": needing_review, "unavailable_data": unavailable}
+
+
 def build():
     heroes, abilities, items = valve.normalize()
     if not heroes:
@@ -155,50 +195,6 @@ def build():
     ]:
         _write(name, rows, SCHEMAS[name])
     _write("hero_feature_matrix", matrix, {"hero_id": I, **{key: F for key in sorted({key for row in matrix for key in row if key != "hero_id"})}})
-    problems, feature_coverage, matchup_coverage = _validate(heroes, abilities, items, features, matchups, hero_items)
-    REPORTS.mkdir(parents=True, exist_ok=True)
-    write_json(REPORTS / "ambiguous_mappings.json", mapper.problems)
-    write_json(REPORTS / "feature_coverage.json", feature_coverage)
-    write_json(REPORTS / "matchup_coverage.json", matchup_coverage)
-    baseline_prefixes = ("BASE_", "MAX_", "ARMOR_PERCENTILE")
-    baseline_suffixes = ("_COUNT",)
-    semantic_counts = Counter(row["hero_id"] for row in features if not row["feature"].startswith(baseline_prefixes) and not row["feature"].endswith(baseline_suffixes) and row["feature"] not in ("MOVEMENT_SPEED", "ATTACK_RANGE", "MELEE"))
-    with (REPORTS / "feature_review.csv").open("w", encoding="utf-8", newline="") as stream:
-        writer = csv.writer(stream, lineterminator="\n")
-        writer.writerow(["hero_id", "hero", "semantic_feature_count", "semantic_features", "manual_features"])
-        for hero in sorted(heroes, key=lambda row: row["display_name"]):
-            hid = hero["hero_id"]
-            semantic = sorted(row["feature"] for row in features if row["hero_id"] == hid and not row["feature"].startswith(baseline_prefixes) and not row["feature"].endswith(baseline_suffixes) and row["feature"] not in ("MOVEMENT_SPEED", "ATTACK_RANGE", "MELEE"))
-            manual = sorted(row["feature"] for row in features if row["hero_id"] == hid and row["derivation_method"] == "manual")
-            writer.writerow([hid, hero["display_name"], len(semantic), "; ".join(semantic), "; ".join(manual)])
-    write_json(REPORTS / "heroes_needing_review.json", [
-        {"hero_id": hero["hero_id"], "hero": hero["display_name"], "semantic_feature_count": semantic_counts[hero["hero_id"]]}
-        for hero in heroes if semantic_counts[hero["hero_id"]] < 2
-    ])
-    source_status = {
-        "valve": {"raw_snapshot": (RAW / "valve" / "manifest.json").exists(), "hero_rows": len(heroes), "ability_rows": len(abilities), "item_rows": len(items)},
-        "opendota": {"raw_snapshot": (RAW / "opendota" / "manifest.json").exists(), "matchup_rows": sum(row["source"] == "opendota" for row in matchups)},
-    }
-    write_json(REPORTS / "validation.json", {"errors": problems, "source_status": source_status,
-                                                "source_manifests": {source: read_json(RAW / source / "manifest.json", {}) for source in ("valve", "opendota")}})
-    unavailable = []
-    if source_status["opendota"]["raw_snapshot"]:
-        unavailable.append({"source": "opendota", "data": ["overall pick/ban rates", "item usage rates"],
-                            "reason": "Public aggregate response lacks the required denominators"})
-        missing_pairs = sum(len(v) for v in matchup_coverage["missing_opponent_ids"].values())
-        if missing_pairs:
-            unavailable.append({"source": "opendota", "data": [f"{missing_pairs} directional matchup pairs"],
-                                "reason": "Not present in source responses; see matchup_coverage.json"})
-    write_json(REPORTS / "unavailable_data.json", unavailable)
-    counts = Counter(row["hero_id"] for row in features)
-    summary = {
-        "heroes": len(heroes), "abilities": len(abilities), "items": len(items),
-        "unique_features": len({row["feature"] for row in features}),
-        "hero_feature_relations": len(features), "mean_features_per_hero": round(len(features) / len(heroes), 2),
-        "min_features_per_hero": min(counts.values(), default=0), "max_features_per_hero": max(counts.values(), default=0),
-        "matchups": len(matchups),
-        "hero_items": len(hero_items),
-        "mapping_problems": len(mapper.problems), "validation_errors": len(problems),
-    }
-    write_json(REPORTS / "summary.json", summary)
-    return summary
+    report = _build_report(heroes, abilities, items, features, matchups, hero_items, mapper.problems)
+    write_json(REPORTS / "validation.json", report)
+    return report["summary"]
