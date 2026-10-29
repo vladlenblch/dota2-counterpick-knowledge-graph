@@ -1,0 +1,164 @@
+Способ генерации: встроенный image_gen. Отдельный MCP для переписки с ChatGPT недоступен.
+Результат: ontology_graph_ai_draft.png. Статус: дизайн-эскиз для сравнения, не утвержденная схема.
+Кодовая схема ontology_graph.svg и ее размещение в README сохранены.
+
+Выявленные ошибки изображения после второго прохода:
+- ParameterValue показан в группе GameCharacteristic, хотя является подклассом GameFact.
+- Связи hasStatistics, hasItemUsage и hasMatchup около Hero ошибочно направлены к FeatureValue.
+- Часть стрелок между параметрами и статистикой не соответствует приведенной ниже точной спецификации.
+Полную семантическую корректность растрового эскиза подтвердить нельзя.
+
+Репозиторий: https://github.com/vladlenblch/dota2-counterpick-knowledge-graph
+Актуальные определения классов: ontology/schema.ttl.
+Игровые связи: ontology/data-entities.ttl, ontology/data-features.ttl, ontology/data-statistics.ttl.
+Промпты включают точный список 17 классов, 34 свойств и 28 пар классов, извлеченный из локальной онтологии.
+
+================ INITIAL PROMPT ================
+Use case: infographic-diagram.
+Asset type: alternative image for a university knowledge-graph project's README. Render an actual polished diagram image, not code, not a screenshot of an editor.
+
+Primary request: Completely redesign the visual layout of the attached Dota 2 ontology graph to be more readable, attractive, balanced and professional than the code-rendered reference, while preserving its exact semantics. The user will compare both images and decide. Make this an alternative scientific class-relation map, similar in spirit to Protege OntoGraf. Freely rearrange the graph to greatly reduce long crossing wires, improve arrow routing and spacing, and make all labels legible. Use a large high-resolution canvas appropriate to the complete diagram.
+
+Inputs: Image 1 is the code-rendered diagram to redesign; retain its information, not its layout. Image 2 is a style reference from the existing README, not an additional diagram to reproduce.
+Repository for context: https://github.com/vladlenblch/dota2-counterpick-knowledge-graph
+Relevant project files: ontology/schema.ttl (OWL class/property definitions), ontology/game.ttl (entrypoint), ontology/data-entities.ttl, ontology/data-features.ttl, ontology/data-statistics.ttl, README.md, assets/charts/ontology_graph.svg. Do not rely on fetching URLs or files: the current authoritative semantic content is transcribed below. Do not add any repo URL or filenames to the image.
+
+Style: match the reference's restrained academic infographic language. Very light blue-grey background #F5F7FB, white cards, dark navy text #17263C, muted grey #617187, uniform medium-blue links #3869AE, subtle borders #DCE4ED. Clear Russian sans-serif typography. Flat vector-like appearance, no 3D, no decorative illustrations, no hero portraits, no watermark. Ample whitespace. Render exact case-sensitive English identifiers below Russian class labels, and exact English property identifiers on edges or in the three clearly defined edge-bundle legends. No extra classes, measurements, confidence, dates, sources, data tables, or fictional relationships.
+
+Title, verbatim: "Классы и связи онтологии".
+Subtitle, verbatim: "17 классов и 34 типа объектных свойств".
+All 17 OWL classes must appear exactly once as class cards or superclass container headers. Four superclass containers may replace their four separate root nodes. Group only true subclasses together. Talent is a subclass of Ability, which is itself within Entity; use a restrained dashed inheritance connector Talent -> Ability. Object properties are blue directed arrows and must not be confused with inheritance. Frame/group membership expresses inheritance from the four root classes. Never draw extra Hero -> Item links: heroes' item connections go through ItemUsageObservation. FeatureValue is a separate class from Feature. ParameterValue and ParameterModifier are separate classes from Parameter.
+
+EXACT CLASS LIST WITH RUSSIAN LABELS AND PARENTS:
+- Ability = Способность; parent: Entity
+- Entity = Сущность игры; parent: 
+- Feature = Признак; parent: GameCharacteristic
+- FeatureValue = Значение признака героя; parent: GameFact
+- GameCharacteristic = Игровая характеристика; parent: 
+- GameFact = Факт об игровой характеристике; parent: 
+- GameNote = Игровое примечание; parent: GameFact
+- Hero = Герой; parent: Entity
+- HeroStatisticsObservation = Общая статистика героя; parent: Statistics
+- Item = Предмет; parent: Entity
+- ItemUsageObservation = Популярность предмета; parent: Statistics
+- MatchupObservation = Статистика противостояния; parent: Statistics
+- Parameter = Параметр способности или предмета; parent: GameCharacteristic
+- ParameterModifier = Модификатор параметра; parent: GameFact
+- ParameterValue = Значение параметра; parent: GameFact
+- Statistics = Игровая статистика; parent: 
+- Talent = Талант; parent: Ability
+
+EXACT OBJECT-RELATION EDGES (28 source/target class pairs). When multiple names are listed for one class pair, they are separate properties connecting the same classes, not intermediate nodes. Arrow directions are essential. Bundles A, B and C denote the following exact property sets; they are labels/legend keys, never classes or nodes:
+A = hasCastPoint, hasCastRange, hasChannelTime, hasCooldown, hasDamage, hasDuration, hasHealthCost, hasManaCost, hasParameter
+B = hasParameter, hasPublicMatchTrend, hasPublicWinTrend, hasTurboMatchTrend, hasTurboWinTrend
+C = hasBaseValue, hasScepterValue, hasShardValue
+
+- Ability -> GameNote: hasNote
+- Ability -> Hero: hero
+- Ability -> Parameter: A, hasRadiusParameter
+- FeatureValue -> Ability: supportedByAbility
+- FeatureValue -> Feature: feature
+- FeatureValue -> Hero: hero
+- Hero -> Ability: hasAbility
+- Hero -> FeatureValue: hasFeatureValue
+- Hero -> HeroStatisticsObservation: hasStatistics
+- Hero -> ItemUsageObservation: hasItemUsage
+- Hero -> MatchupObservation: hasMatchup
+- Hero -> Talent: hasTalent
+- HeroStatisticsObservation -> Hero: hero
+- HeroStatisticsObservation -> Parameter: B
+- Item -> GameNote: hasNote
+- Item -> ItemUsageObservation: usedIn
+- Item -> Parameter: A, hasBonusParameter
+- ItemUsageObservation -> Hero: hero
+- ItemUsageObservation -> Item: item
+- MatchupObservation -> Hero: hero, opponent
+- MatchupObservation -> HeroStatisticsObservation: baselineStatistics
+- Parameter -> ParameterModifier: hasModifier
+- Parameter -> ParameterValue: C
+- ParameterModifier -> ParameterValue: hasBaseValue
+- ParameterModifier -> Talent: requiresTalent
+- Talent -> GameNote: hasNote
+- Talent -> Hero: hero
+- Talent -> Parameter: hasParameter
+
+All 34 distinct property identifiers must be present and spelled exactly. Bundle A has 9 properties shared by Ability -> Parameter and Item -> Parameter; include their extra hasRadiusParameter and hasBonusParameter labels respectively. Bundle B has 5 properties. Bundle C has 3 properties. Display the complete exact bundle expansions in three elegant readable legend cards. Other edge labels should remain adjacent to their arrows. Bidirectional relationships may use a clean double-arrow layout only if each property's direction remains unambiguous. Keep reversed "hero" links distinct from forward hasAbility/hasTalent/hasStatistics/hasMatchup/hasItemUsage/hasFeatureValue links. MatchupObservation -> Hero has both "hero" and "opponent".
+
+Priorities: (1) exact class and relation coverage and directions; (2) readability of every label; (3) reduced edge crossings; (4) visual polish. Do not simplify away any listed class or property. Produce one finished alternative image with a substantially improved composition, ready for review.
+
+
+================ REVISION PROMPT ================
+Use case: precise-object-edit / scientific diagram semantic correction.
+Image 1 is the generated candidate to correct; keep its attractive compact style and typography. Image 2 is the verified code-rendered graph: it is authoritative for class membership, property names and every arrow endpoint. Correct the semantics of Image 1 to match Image 2 and the exact edge list below. Clarity and scientific correctness have higher priority than preserving the present layout; move cards and reroute arrows as needed.
+
+CRITICAL ERRORS TO FIX IN IMAGE 1:
+1. ParameterModifier and ParameterValue are children of GameFact, not GameCharacteristic. Move BOTH fully inside GameFact. GameCharacteristic must contain ONLY Feature and Parameter.
+2. hasStatistics must connect Hero to HeroStatisticsObservation. hasItemUsage must connect Hero to ItemUsageObservation. hasMatchup must connect Hero to MatchupObservation. NONE of these three properties connects to FeatureValue. The only forward Hero -> FeatureValue property is hasFeatureValue.
+3. hero always points TO Hero. In particular Ability -> Hero, Talent -> Hero, FeatureValue -> Hero, HeroStatisticsObservation -> Hero, ItemUsageObservation -> Hero and MatchupObservation -> Hero. Hero -> Ability is hasAbility, not hero. Hero -> Talent is hasTalent.
+4. requiresTalent is ParameterModifier -> Talent, never Item -> Talent or Item -> anything else. hasParameter must connect Talent -> Parameter (and the other pairs listed), not ParameterValue -> Item. Remove the wrong lower hasParameter line.
+5. Add the missing B connection HeroStatisticsObservation -> Parameter. B expands to exactly five legend properties as below.
+6. hasModifier is a ONE-WAY Parameter -> ParameterModifier arrow; do not add a reverse arrowhead. C is Parameter -> ParameterValue. hasBaseValue is also ParameterModifier -> ParameterValue.
+7. Item -> ItemUsageObservation is usedIn. ItemUsageObservation -> Item is item. Keep those separate from Hero -> ItemUsageObservation (hasItemUsage). Do not share a merged bus with different sources that makes any false class-to-class connection.
+
+Before rendering, follow the exact 28 pair list in the full specification. Preserve every required node and property and their directions; no extra arrows or invented classes. Where a line crosses another line, it must not look like a junction unless it genuinely shares that source/target. Use deliberate clean routing and arrowheads outside the correct target cards. Keep all labels fully legible.
+
+Repository for context: https://github.com/vladlenblch/dota2-counterpick-knowledge-graph
+Keep the exact Russian title "Классы и связи онтологии" and subtitle "17 классов и 34 типа объектных свойств". Preserve the four named superclass containers and the exact English identifiers on every class card. Preserve the blue/grey flat academic style.
+
+COMPLETE VERIFIED SPECIFICATION:
+EXACT CLASS LIST WITH RUSSIAN LABELS AND PARENTS:
+- Ability = Способность; parent: Entity
+- Entity = Сущность игры; parent: 
+- Feature = Признак; parent: GameCharacteristic
+- FeatureValue = Значение признака героя; parent: GameFact
+- GameCharacteristic = Игровая характеристика; parent: 
+- GameFact = Факт об игровой характеристике; parent: 
+- GameNote = Игровое примечание; parent: GameFact
+- Hero = Герой; parent: Entity
+- HeroStatisticsObservation = Общая статистика героя; parent: Statistics
+- Item = Предмет; parent: Entity
+- ItemUsageObservation = Популярность предмета; parent: Statistics
+- MatchupObservation = Статистика противостояния; parent: Statistics
+- Parameter = Параметр способности или предмета; parent: GameCharacteristic
+- ParameterModifier = Модификатор параметра; parent: GameFact
+- ParameterValue = Значение параметра; parent: GameFact
+- Statistics = Игровая статистика; parent: 
+- Talent = Талант; parent: Ability
+
+EXACT OBJECT-RELATION EDGES (28 source/target class pairs). When multiple names are listed for one class pair, they are separate properties connecting the same classes, not intermediate nodes. Arrow directions are essential. Bundles A, B and C denote the following exact property sets; they are labels/legend keys, never classes or nodes:
+A = hasCastPoint, hasCastRange, hasChannelTime, hasCooldown, hasDamage, hasDuration, hasHealthCost, hasManaCost, hasParameter
+B = hasParameter, hasPublicMatchTrend, hasPublicWinTrend, hasTurboMatchTrend, hasTurboWinTrend
+C = hasBaseValue, hasScepterValue, hasShardValue
+
+- Ability -> GameNote: hasNote
+- Ability -> Hero: hero
+- Ability -> Parameter: A, hasRadiusParameter
+- FeatureValue -> Ability: supportedByAbility
+- FeatureValue -> Feature: feature
+- FeatureValue -> Hero: hero
+- Hero -> Ability: hasAbility
+- Hero -> FeatureValue: hasFeatureValue
+- Hero -> HeroStatisticsObservation: hasStatistics
+- Hero -> ItemUsageObservation: hasItemUsage
+- Hero -> MatchupObservation: hasMatchup
+- Hero -> Talent: hasTalent
+- HeroStatisticsObservation -> Hero: hero
+- HeroStatisticsObservation -> Parameter: B
+- Item -> GameNote: hasNote
+- Item -> ItemUsageObservation: usedIn
+- Item -> Parameter: A, hasBonusParameter
+- ItemUsageObservation -> Hero: hero
+- ItemUsageObservation -> Item: item
+- MatchupObservation -> Hero: hero, opponent
+- MatchupObservation -> HeroStatisticsObservation: baselineStatistics
+- Parameter -> ParameterModifier: hasModifier
+- Parameter -> ParameterValue: C
+- ParameterModifier -> ParameterValue: hasBaseValue
+- ParameterModifier -> Talent: requiresTalent
+- Talent -> GameNote: hasNote
+- Talent -> Hero: hero
+- Talent -> Parameter: hasParameter
+
+All 34 distinct property identifiers must be present and spelled exactly. Bundle A has 9 properties shared by Ability -> Parameter and Item -> Parameter; include their extra hasRadiusParameter and hasBonusParameter labels respectively. Bundle B has 5 properties. Bundle C has 3 properties. Display the complete exact bundle expansions in three elegant readable legend cards. Other edge labels should remain adjacent to their arrows. Bidirectional relationships may use a clean double-arrow layout only if each property's direction remains unambiguous. Keep reversed "hero" links distinct from forward hasAbility/hasTalent/hasStatistics/hasMatchup/hasItemUsage/hasFeatureValue links. MatchupObservation -> Hero has both "hero" and "opponent".
+
+Priorities: (1) exact class and relation coverage and directions; (2) readability of every label; (3) reduced edge crossings; (4) visual polish. Do not simplify away any listed class or property. Produce one finished alternative image with a substantially improved composition, ready for review.

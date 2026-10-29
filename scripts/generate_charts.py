@@ -458,6 +458,177 @@ def ontology_example(graph):
     save(fig, "ontology_example")
 
 
+
+def ontology_graph(graph):
+    """Collapse actual object assertions to class pairs; show all OWL classes."""
+    import math
+    import textwrap
+    from matplotlib.path import Path as MplPath
+    from matplotlib.patches import FancyArrowPatch
+
+    schema = schema_graph(ROOT)
+    classes = set(schema.subjects(RDF.type, OWL.Class))
+    properties = set(schema.subjects(RDF.type, OWL.ObjectProperty))
+    types = defaultdict(set)
+    for node, kind in graph.subject_objects(RDF.type):
+        if kind in classes:
+            types[node].add(kind)
+    pairs = defaultdict(set)
+    for prop in properties:
+        for subject, target in graph.subject_objects(prop):
+            for source_class in types[subject]:
+                for target_class in types[target]:
+                    pairs[source_class, target_class].add(prop)
+
+    roots = [KG.Entity, KG.GameFact, KG.GameCharacteristic, KG.Statistics]
+    positions = {
+        KG.Hero: (.14, .80), KG.Ability: (.14, .63), KG.Talent: (.14, .46), KG.Item: (.14, .29),
+        KG.FeatureValue: (.50, .80), KG.GameNote: (.50, .63),
+        KG.ParameterModifier: (.50, .46), KG.ParameterValue: (.50, .29),
+        KG.Feature: (.86, .80), KG.Parameter: (.86, .51),
+        KG.MatchupObservation: (.14, .10), KG.HeroStatisticsObservation: (.50, .10),
+        KG.ItemUsageObservation: (.86, .10),
+    }
+    if classes != set(roots) | set(positions):
+        raise ValueError("Update the ontology graph layout for the changed class vocabulary")
+    if set().union(*pairs.values()) != properties:
+        raise ValueError("Some object properties have no displayed class connections")
+
+    bundles = {
+        "A": pairs[KG.Ability, KG.Parameter] & pairs[KG.Item, KG.Parameter],
+        "B": pairs[KG.HeroStatisticsObservation, KG.Parameter],
+        "C": pairs[KG.Parameter, KG.ParameterValue],
+    }
+    local = lambda node: str(node).rsplit("#", 1)[-1]
+    # Routes are presentation coordinates; endpoints and labels come from RDF.
+    routes = {
+        (KG.Hero, KG.Ability): ([(.025, .80), (.025, .63)], (.033, .716)),
+        (KG.Ability, KG.Hero): ([(.26, .63), (.26, .80)], (.26, .716)),
+        (KG.Hero, KG.Talent): ([(.012, .80), (.012, .46)], (.012, .55)),
+        (KG.Talent, KG.Hero): ([(.285, .46), (.285, .80)], (.285, .755)),
+        (KG.Hero, KG.FeatureValue): ([], (.32, .835)),
+        (KG.FeatureValue, KG.Hero): ([(.50, .73), (.14, .73)], (.34, .737)),
+        (KG.FeatureValue, KG.Feature): ([], (.68, .82)),
+        (KG.FeatureValue, KG.Ability): ([(.365, .80), (.365, .68)], (.362, .72)),
+        (KG.Ability, KG.GameNote): ([], (.32, .65)),
+        (KG.Talent, KG.GameNote): ([(.32, .46), (.32, .59)], (.322, .562)),
+        (KG.Item, KG.GameNote): ([(.345, .29), (.345, .60)], (.347, .39)),
+        (KG.Ability, KG.Parameter): ([(.27, .56), (.70, .56)], (.58, .572)),
+        (KG.Talent, KG.Parameter): ([(.25, .40), (.71, .40)], (.64, .407)),
+        (KG.Item, KG.Parameter): ([(.25, .35), (.77, .35)], (.65, .36)),
+        (KG.Parameter, KG.ParameterModifier): ([], (.687, .502)),
+        (KG.Parameter, KG.ParameterValue): ([(.86, .29)], (.83, .36)),
+        (KG.ParameterModifier, KG.ParameterValue): ([], (.555, .377)),
+        (KG.ParameterModifier, KG.Talent): ([], (.323, .48)),
+        (KG.Hero, KG.MatchupObservation): ([(-.038, .80), (-.038, .10)], (-.036, .335)),
+        (KG.MatchupObservation, KG.Hero): ([(-.012, .10), (-.012, .87), (.14, .87)], (-.01, .40)),
+        (KG.Hero, KG.HeroStatisticsObservation): ([(.26, .875), (.67, .875), (.67, .18), (.50, .18)], (.67, .65)),
+        (KG.HeroStatisticsObservation, KG.Hero): ([(.50, .205), (-.064, .205), (-.064, .885), (.14, .885)], (-.064, .54)),
+        (KG.Hero, KG.ItemUsageObservation): ([(.14, .955), (1.015, .955), (1.015, .10)], (1.017, .55)),
+        (KG.ItemUsageObservation, KG.Hero): ([(.86, .01), (-.09, .01), (-.09, .90), (.14, .90)], (-.09, .66)),
+        (KG.MatchupObservation, KG.HeroStatisticsObservation): ([], (.32, .12)),
+        (KG.HeroStatisticsObservation, KG.Parameter): ([(.73, .10), (.73, .51)], (.73, .24)),
+        (KG.Item, KG.ItemUsageObservation): ([(.14, .23), (.98, .23), (.98, .10)], (.79, .24)),
+        (KG.ItemUsageObservation, KG.Item): ([(.86, .17), (.14, .17)], (.62, .18)),
+    }
+    if set(routes) != set(pairs):
+        raise ValueError("Update the ontology graph routes for the changed class connections")
+
+    fig = figure("Классы и связи онтологии",
+                 f"{len(classes)} классов и {len(properties)} типов объектных свойств; связи данных свернуты до классов", (17, 15))
+    ax = fig.add_axes([.07, .255, .87, .585])
+    ax.set_xlim(-.115, 1.055)
+    ax.set_ylim(-.025, .96)
+    ax.axis("off")
+    groups = [(KG.Entity, (.025, .24, .235, .70)),
+              (KG.GameFact, (.385, .24, .23, .70)),
+              (KG.GameCharacteristic, (.745, .24, .23, .70)),
+              (KG.Statistics, (.025, .035, .95, .185))]
+    for node, (cx, cy) in positions.items():
+        ancestors = set(schema.transitive_objects(node, RDFS.subClassOf))
+        parents = [(root, bounds) for root, bounds in groups if root in ancestors]
+        if len(parents) != 1:
+            raise ValueError(f"Unexpected class ancestry in the ontology graph: {node}")
+        _, (x, y, group_width, group_height) = parents[0]
+        if not (x <= cx <= x + group_width and y <= cy <= y + group_height):
+            raise ValueError(f"Class drawn inside the wrong superclass: {node}")
+    for root, (x, y, width, height) in groups:
+        ax.add_patch(FancyBboxPatch((x, y), width, height,
+                     boxstyle="round,pad=0.008,rounding_size=0.015",
+                     facecolor="#EEF2F8", edgecolor=GRID, linewidth=.8, zorder=0))
+        label = str(schema.value(root, RDFS.label))
+        if root == KG.Statistics:
+            ax.text(x + width - .016, y + height - .020, f"{label} / {local(root)}",
+                    fontsize=10, fontweight="bold", color=BLUE, va="top", ha="right")
+        else:
+            ax.text(x + .012, y + height - .012, "\n".join(textwrap.wrap(label, width=26)),
+                    fontsize=10, fontweight="bold", color=BLUE, va="top", linespacing=1.12)
+            ax.text(x + .012, y + height - .077, local(root), fontsize=8.3, color=MUTED, va="top")
+
+    width, height = .19, .078
+
+    def boundary(node, toward):
+        x, y = positions[node]
+        dx, dy = toward[0] - x, toward[1] - y
+        scale = min((width / 2 + .006) / abs(dx) if dx else math.inf,
+                    (height / 2 + .006) / abs(dy) if dy else math.inf)
+        return x + dx * scale, y + dy * scale
+
+    def arrow(source, target, via, label, label_pos, *, dashed=False):
+        points = [boundary(source, via[0] if via else positions[target]), *via,
+                  boundary(target, via[-1] if via else positions[source])]
+        path = MplPath(points, [MplPath.MOVETO] + [MplPath.LINETO] * (len(points) - 1))
+        ax.add_patch(FancyArrowPatch(path=path, arrowstyle="-|>", mutation_scale=11,
+                     color=MUTED if dashed else BLUE, linewidth=1 if dashed else 1.15,
+                     linestyle="--" if dashed else "-", alpha=.85, zorder=1))
+        ax.text(*label_pos, label, fontsize=8.5, color=MUTED if dashed else INK,
+                ha="center", va="center", linespacing=1.2,
+                bbox={"facecolor": BG, "edgecolor": "none", "pad": 2}, zorder=4,
+                rotation=90 if label_pos[0] < .02 or label_pos[0] > 1 else 0)
+
+    for (source, target), props in sorted(pairs.items(), key=lambda row: (str(row[0][0]), str(row[0][1]))):
+        selected = set(props)
+        labels = []
+        for code, members in bundles.items():
+            if members <= selected:
+                labels.append(code)
+                selected -= members
+        labels += sorted(map(local, selected))
+        via, label_pos = routes[source, target]
+        arrow(source, target, via, "\n".join(labels), label_pos)
+    for child, parent in schema.subject_objects(RDFS.subClassOf):
+        if child in positions and parent in positions:
+            x, y = positions[child]
+            px, py = positions[parent]
+            arrow(child, parent, [], "subClassOf", ((x + px) / 2 - .044, (y + py) / 2), dashed=True)
+
+    for node, (x, y) in positions.items():
+        ax.add_patch(FancyBboxPatch((x - width / 2, y - height / 2), width, height,
+                     boxstyle="round,pad=0.004,rounding_size=0.012",
+                     facecolor=WHITE, edgecolor=BLUE, linewidth=.85, zorder=3))
+        label = "\n".join(textwrap.wrap(str(schema.value(node, RDFS.label)), width=25))
+        ax.text(x, y + .009, label, fontsize=10.6, fontweight="bold", color=INK,
+                ha="center", va="center", linespacing=1.12, zorder=4)
+        ax.text(x, y - .027, local(node), fontsize=8.1, color=MUTED,
+                ha="center", va="center", zorder=4)
+
+    fig.text(.045, .225, "Синие стрелки - объектные связи. Рамки объединяют подклассы. Пунктир - наследование таланта от способности.",
+             fontsize=9.2, color=MUTED)
+    titles = {"A": "Параметры способностей и предметов", "B": "Параметры игровой статистики", "C": "Значения параметров"}
+    for column, (code, members) in enumerate(bundles.items()):
+        x = .045 + column * .315
+        fig.add_artist(FancyBboxPatch((x, .065), .295, .132,
+                       boxstyle="round,pad=0.009,rounding_size=0.012",
+                       transform=fig.transFigure, facecolor=WHITE, edgecolor=GRID, linewidth=.8))
+        fig.text(x + .012, .174, f"{code} / {titles[code]}", fontsize=10, fontweight="bold", color=BLUE)
+        names = sorted(map(local, members))
+        lines = ["  /  ".join(names[index:index + 2]) for index in range(0, len(names), 2)]
+        fig.text(x + .012, .15, "\n".join(lines), fontsize=8.8, color=INK, va="top", linespacing=1.7)
+    fig.text(.045, .033, "Показаны классы и связи между ними. Числовые и текстовые свойства не образуют связей между классами.",
+             fontsize=9.2, color=MUTED)
+    save(fig, "ontology_graph")
+
+
 def ontology_figures():
     directory = ROOT / "ontology"
     report = json.loads((directory / "validation.json").read_text(encoding="utf-8"))
@@ -471,6 +642,7 @@ def ontology_figures():
     ontology_hierarchy(graph)
     ontology_relations(graph)
     ontology_example(graph)
+    ontology_graph(graph)
 
 
 def main():
