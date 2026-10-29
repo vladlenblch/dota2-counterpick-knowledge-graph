@@ -2,9 +2,11 @@
 from __future__ import annotations
 
 import json
+import re
 
 from rdflib import Graph, Literal, RDF, RDFS, URIRef
 
+from .common import clean_text
 from .ontology import entity, literal, record_uri
 from .ontology_schema import KG, ROLE_PROPERTIES, JSON_COLUMNS, NON_DOMAIN_COLUMNS, IDENTITY_COLUMNS, FEATURE_LABELS, NUMERIC_FEATURES, column_predicate, bind, evidence_text
 
@@ -12,6 +14,7 @@ from .ontology_schema import KG, ROLE_PROPERTIES, JSON_COLUMNS, NON_DOMAIN_COLUM
 NATIVE_PARAMETERS = {
     "cast_range": (KG.hasCastRange, "Дальность применения", ("AbilityCastRange", "cast_range")),
     "cast_point": (KG.hasCastPoint, "Задержка применения", ("AbilityCastPoint", "cast_point")),
+    "channel_time": (KG.hasChannelTime, "Время поддержания", ("AbilityChannelTime", "channel_time")),
     "duration": (KG.hasDuration, "Длительность", ("AbilityDuration", "duration")),
     "cooldown": (KG.hasCooldown, "Перезарядка", ("AbilityCooldown", "cooldown")),
     "mana_cost": (KG.hasManaCost, "Расход маны", ("AbilityManaCost", "mana_cost")),
@@ -25,6 +28,98 @@ OBSERVATIONS = {
     "hero_meta": KG.HeroStatisticsObservation, "matchups": KG.MatchupObservation,
     "hero_items": KG.ItemUsageObservation,
 }
+
+
+def default_zero(values):
+    """Recognize generic API defaults without discarding explicit float zeroes."""
+    return all(type(value) is int and value == 0 for value in values)
+
+
+def damage_parameter(parameter):
+    """Find damage components by Valve's tooltip heading, without summing them.
+
+    Headings distinguish damage amounts/factors from protection, timing and
+    area parameters. An unlabelled value is used only for the native aliases;
+    other ambiguous fields remain accessible through hasParameter.
+    """
+    heading = clean_text(parameter["heading_loc"]) or ""
+    if not heading:
+        return parameter["name"] in {"AbilityDamage", "damage"}
+    words = set(re.findall(r"[A-Z]+", heading.upper()))
+    excluded = {"REDUCTION", "REDUCED", "RESISTANCE", "BLOCK", "BLOCKED", "BARRIER",
+                "ABSORB", "ABSORBED", "TAKEN", "INCOMING", "THRESHOLD", "DURATION",
+                "INTERVAL", "COOLDOWN", "RADIUS", "RANGE", "AOE", "DELAY", "DRAIN", "RATE",
+                "AMP", "AMPLIFICATION", "INCREASED", "COST"}
+    if not words & {"DAMAGE", "DMG", "DPS"} or words & excluded:
+        return False
+    if "TO HEALING" in heading.upper() or parameter["name"] == "minimum_damage":
+        return False  # Healing conversion and a minimum triggering threshold.
+    # A tick interval has a damage heading too, whereas damage PER TICK is an amount.
+    return "TICK" not in words or "PER" in words
+
+
+def channel_plan(field, source, values, *, retain_zero=False):
+    """Select named components and, when informative, a separate native series.
+
+    Named values, units, modifiers and order stay unchanged. A generic zero
+    must not hide a named effect duration or an ongoing resource cost. Zero
+    cast points, mana costs and cooldowns without alternatives are retained.
+    """
+    from .ontology_validation import same_json
+
+    if any(type(v) not in (int, float) for v in values):
+        raise ValueError("Nonnumeric gameplay channel value")
+    _, _, aliases = NATIVE_PARAMETERS[field]
+    indices = []
+    for index, parameter in enumerate(source):
+        name = parameter["name"]
+        heading = (clean_text(parameter["heading_loc"]) or "").upper()
+        words = set(re.findall(r"[A-Z]+", heading))
+        reduction = bool(words & {"REDUCTION", "REDUCED", "AMPLIFICATION", "AMP"})
+        selected = name in aliases
+        if field == "damage":
+            selected = damage_parameter(parameter)
+        elif field == "duration":
+            selected |= name.endswith("_duration") and not parameter["is_percentage"]
+            selected |= "DURATION" in words and not reduction and not parameter["is_percentage"]
+        elif field == "channel_time":
+            selected |= name.endswith("_channel_time") or {"CHANNEL", "TIME"} <= words and not reduction
+        elif field in {"mana_cost", "health_cost"}:
+            resource = {"MANA"} if field == "mana_cost" else {"HEALTH", "HP"}
+            aliases_in_name = ("mana_cost", "manacost") if field == "mana_cost" else ("health_cost", "healthcost", "hp_cost")
+            selected |= (bool(words & resource) and "COST" in words or any(alias in name for alias in aliases_in_name)) and not reduction and "reduction" not in name
+            selected |= field == "mana_cost" and heading.rstrip(":") == "MANA/SEC"
+        elif field == "cooldown":
+            selected |= "COOLDOWN" in words and not reduction and not parameter["is_percentage"]
+        elif field == "cast_range" and name == "cast_range":
+            # The same name denotes bonuses on Arcane Supremacy, Burrow and
+            # Telescope. A labelled alias must agree with a nonzero native
+            # distance and must not be a bonus.
+            selected = not heading or (bool(values) and not default_zero(values)
+                                      and not words & {"BONUS", "REDUCTION"}
+                                      and not parameter["is_percentage"]
+                                      and same_json(values, parameter["values_float"]))
+        if selected:
+            indices.append(index)
+    keep = bool(values)
+    if default_zero(values):
+        alternate = any(any(value != 0 for value in source[i]["values_float"]) for i in indices)
+        keep &= retain_zero and field not in {"damage", "duration", "channel_time"} and not alternate
+    if field == "cast_range":
+        for i in indices:
+            original = source[i]["values_float"]
+            expanded = original * len(values) if len(original) == 1 else original
+            if (original and any(type(v) is int and v < 0 for v in original)
+                    and len(expanded) == len(values)
+                    and all(type(a) is int and type(b) is int and a == b % 2**32
+                            for a, b in zip(values, expanded))):
+                keep = False  # Keep the explicit signed parameter, not its unsigned API encoding.
+    native = None
+    if keep:
+        matches = [i for i in indices if source[i]["name"] in aliases
+                   and same_json(values, source[i]["values_float"])]
+        native = matches[0] if matches else field
+    return indices, native
 
 
 def parameter_uri(table, row, index):
@@ -146,27 +241,9 @@ class DomainBuilder:
     def parameters(self, graph, owner, table, row, title):
         source = checked_json(row["special_values"], list, f"{table}/special_values")
         nodes = [self.parameter(graph, owner, table, row, i, p, title) for i, p in enumerate(source)]
-        for field, (predicate, caption, names) in NATIVE_PARAMETERS.items():
-            if field not in row:
-                continue
-            values = checked_json(row[field], list, f"{table}/{field}")
-            if not values:
-                continue
-            # Reuse a special parameter only when the complete ordered series
-            # has identical scalar types and float64 values.
-            from .ontology_validation import same_json
-            candidates = [i for i, p in enumerate(source)
-                          if p["name"] in names and same_json(values, p["values_float"])]
-            if candidates:
-                node = nodes[candidates[0]]
-            else:
-                node = URIRef(str(owner) + "/parameter/" + field)
-                label = f"{title}: {caption}"
-                self.node(graph, node, KG.Parameter, label)
-                graph.add((node, KG.parameterName, literal(field)))
-                graph.add((owner, KG.hasParameter, node))
-                self.series(graph, node, KG.hasBaseValue, values, label)
-            graph.add((owner, predicate, node))
+        for field in NATIVE_PARAMETERS:
+            values = checked_json(row[field], list, f"{table}/{field}") if field in row else []
+            self.channel(graph, owner, source, field, values, title, retain_zero=True)
         for field, predicate in (("radius", KG.hasRadiusParameter), ("bonuses", KG.hasBonusParameter)):
             if field not in row:
                 continue
@@ -177,6 +254,22 @@ class DomainBuilder:
                     raise ValueError(f"Unmapped {field} outside special_values")
                 for index in matches:
                     graph.add((owner, predicate, nodes[index]))
+
+    def channel(self, graph, owner, source, field, values, title, *, retain_zero=False):
+        predicate, caption, _ = NATIVE_PARAMETERS[field]
+        indices, native = channel_plan(field, source, values, retain_zero=retain_zero)
+        for index in indices:
+            graph.add((owner, predicate, URIRef(str(owner) + f"/parameter/{index}")))
+        if native is None:
+            return
+        node = URIRef(str(owner) + f"/parameter/{native}")
+        if type(native) is str:
+            label = f"{title}: {caption}"
+            self.node(graph, node, KG.Parameter, label)
+            graph.add((node, KG.parameterName, literal(field)))
+            graph.add((owner, KG.hasParameter, node))
+            self.series(graph, node, KG.hasBaseValue, values, label)
+        graph.add((owner, predicate, node))
 
     def entities(self):
         graph = self.groups["entities"]

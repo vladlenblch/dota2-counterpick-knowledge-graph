@@ -9,7 +9,7 @@ from rdflib import BNode, RDF, RDFS, OWL, URIRef
 
 from .ontology import entity, literal, record_uri
 from .ontology_schema import KG, ROLE_PROPERTIES, JSON_COLUMNS, NON_DOMAIN_COLUMNS, IDENTITY_COLUMNS, FEATURE_LABELS, NUMERIC_FEATURES, column_predicate, evidence_text
-from .ontology_domain import NATIVE_PARAMETERS, OBSERVATIONS, SERIES, parameter_uri, informative_parameter
+from .ontology_domain import NATIVE_PARAMETERS, OBSERVATIONS, SERIES, parameter_uri, informative_parameter, channel_plan
 from .ontology_validation import one, check_scalar, same_json
 
 
@@ -158,23 +158,21 @@ def validate_game(game, rows):
             counts["source_parameters_verified"] += 1
             counts["bonus_modifiers_verified"] += len(original["bonuses"])
             counts["facet_modifiers_verified"] += "facet_bonus" in informative_parameter(original)
-        for field, (prop, _, names) in NATIVE_PARAMETERS.items():
-            if field not in row:
-                continue
-            values = json.loads(row[field])
-            actual = list(game.objects(owner, prop))
-            if not values:
-                if actual:
-                    raise ValueError("An empty native parameter series was invented")
-                continue
-            if len(actual) != 1:
-                raise ValueError("Native parameter link missing or duplicated")
-            node = actual[0]
-            expect(node, KG.Parameter)
-            wanted.add(node)
-            if reader.scalar(node, KG.parameterName) not in {*names, field}:
-                raise ValueError("Native series linked to an unrelated parameter")
-            validate_series(node, KG.hasBaseValue, values)
+        for field, (prop, _, _) in NATIVE_PARAMETERS.items():
+            values = json.loads(row[field]) if field in row else []
+            indices, native = channel_plan(field, source, values, retain_zero=True)
+            relations[(owner, prop)]
+            for index in indices:
+                node = parameter_uri(table, row, index)
+                link(owner, prop, node)
+                relations[(owner, prop)].add(node)
+            if native is not None:
+                node = URIRef(str(owner) + f"/parameter/{native}")
+                link(owner, prop, node)
+                relations[(owner, prop)].add(node)
+                expect(node, KG.Parameter)
+                wanted.add(node)
+                validate_series(node, KG.hasBaseValue, values)
         wanted |= extra_relations.get((owner, KG.hasParameter), set())
         relations[(owner, KG.hasParameter)].update(wanted)
         if set(game.objects(owner, KG.hasParameter)) != wanted:

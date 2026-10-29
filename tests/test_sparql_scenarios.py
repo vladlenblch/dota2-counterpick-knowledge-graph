@@ -106,9 +106,44 @@ def check_scenarios(graph, root: Path):
 class DatasetSparqlScenarios(unittest.TestCase):
     def test_scenarios_match_saved_datasets(self):
         root = Path(__file__).resolve().parents[1]
-        result = check_scenarios(load_ontology(root / "ontology"), root)
+        graph = load_ontology(root / "ontology")
+        result = check_scenarios(graph, root)
         self.assertTrue(all(check["passed"] for check in result.values()))
         self.assertEqual(len(result), 4)
+        # Regression: generic Valve damages=[0, 0, 0, 0] hid the actual
+        # tooltip components behind an unrelated zero-filled damage link.
+        from dota_kg.ontology_domain_validation import DomainReader
+        reader = DomainReader(graph)
+        expected = {
+            5359: {"damage_per_stack": [12, 20, 28, 36]},  # Fury Swipes
+            5040: {"dragon_slave_damage": [65, 125, 185, 245]},
+            5450: {"damage": [85, 165, 245, 325]},  # Fade Bolt, not its damage reduction
+            5134: {"damage": [40, 80, 120, 160], "aoe_damage": [80, 120, 160, 200]},
+        }
+        for identifier, components in expected.items():
+            with self.subTest(ability=identifier):
+                actual = {str(graph.value(p, KG.parameterName)): reader.series(p, KG.hasBaseValue)
+                          for p in graph.objects(RES[f"ability/{identifier}"], KG.hasDamage)}
+                self.assertEqual(actual, components)
+
+        mechanics = [
+            ("item_black_king_bar", KG.hasDuration, {"duration": [9, 8, 7]}),
+            ("rubick_telekinesis", KG.hasDuration,
+             {"lift_duration": [.95, 1.2, 1.45, 1.7], "stun_duration": [.9, 1.1, 1.3, 1.5], "fall_duration": [.3]}),
+            ("morphling_morph_agi", KG.hasManaCost, {"mana_cost": [10]}),
+            ("huskar_inner_fire", KG.hasHealthCost, {"health_cost": [75, 100, 125, 150]}),
+            ("oracle_fortunes_end", KG.hasChannelTime, {"channel_time": [2.5]}),
+            ("primal_beast_pulverize", KG.hasChannelTime, {"channel_time": [2.3]}),
+            ("monkey_king_wukongs_command", KG.hasCastRange, {"cast_range": [625]}),
+            ("crystal_maiden_crystal_clone", KG.hasCastRange, {"AbilityCastRange": [-1]}),
+        ]
+        for internal_name, prop, components in mechanics:
+            with self.subTest(entity=internal_name, relation=prop):
+                owners = list(graph.subjects(KG.internalName, literal(internal_name)))
+                self.assertEqual(len(owners), 1)
+                actual = {str(graph.value(p, KG.parameterName)): reader.series(p, KG.hasBaseValue)
+                          for p in graph.objects(owners[0], prop)}
+                self.assertEqual(actual, components)
 
     def test_feature_query_compares_numeric_values_across_double_lexical_forms(self):
         movement_query = COMPETENCY_QUERIES["forced_movement"]

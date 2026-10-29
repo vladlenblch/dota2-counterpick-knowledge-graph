@@ -7,7 +7,7 @@
     "SHACL: типы, обязательные связи, мощности, количества и границы долей корректны"
   ],
   "errors": [],
-  "triples": 593480,
+  "triples": 570535,
   "package_structure": {
     "imports": [
       "data-entities.ttl",
@@ -100,24 +100,24 @@
   "source_tables": 8,
   "cells_checked": 254586,
   "game_model": {
-    "triples": 593480,
+    "triples": 570535,
     "classes": 17,
     "object_properties": 34,
     "data_properties": 107,
-    "records_verified": 81081,
+    "records_verified": 76114,
     "domain_only": true,
     "short_identifiers": true,
     "anonymous_data_nodes": 0,
     "informative_values": {
-      "scalar_values_verified": 146529,
-      "ordered_values_verified": 13973,
+      "scalar_values_verified": 141360,
+      "ordered_values_verified": 8296,
       "talent_parameters_verified": 110,
       "talents_verified": 1016,
       "notes_verified": 1173,
-      "channels_verified": 6079,
+      "channels_verified": 2744,
       "talent_effect_links_verified": 1069,
       "role_levels_verified": 1143,
-      "parameter_values_verified": 25709,
+      "parameter_values_verified": 22152,
       "source_parameters_verified": 8997,
       "bonus_modifiers_verified": 1160,
       "facet_modifiers_verified": 205,
@@ -127,8 +127,8 @@
     "class_counts": {
       "Hero": 127,
       "Ability": 734,
-      "Parameter": 13099,
-      "ParameterValue": 25512,
+      "Parameter": 11688,
+      "ParameterValue": 21956,
       "GameNote": 1173,
       "ParameterModifier": 1365,
       "Item": 507,
@@ -139,20 +139,20 @@
       "Feature": 76,
       "Talent": 1016,
       "Entity": 0,
-      "GameFact": 0,
+      "GameCharacteristic": 0,
       "Statistics": 0,
-      "GameCharacteristic": 0
+      "GameFact": 0
     }
   },
   "relation_types": {
-    "relation_endpoints_checked": 216164,
+    "relation_endpoints_checked": 211672,
     "disjoint_groups_checked": 2
   },
   "class_counts": {
     "Hero": 127,
     "Ability": 734,
-    "Parameter": 13099,
-    "ParameterValue": 25512,
+    "Parameter": 11688,
+    "ParameterValue": 21956,
     "GameNote": 1173,
     "ParameterModifier": 1365,
     "Item": 507,
@@ -163,9 +163,9 @@
     "Feature": 76,
     "Talent": 1016,
     "Entity": 0,
-    "GameFact": 0,
+    "GameCharacteristic": 0,
     "Statistics": 0,
-    "GameCharacteristic": 0
+    "GameFact": 0
   },
   "shacl_conforms": true,
   "shacl_report": "Validation Report\nConforms: True\n",
@@ -180,8 +180,8 @@
       "sha256": "d88185d59de9d61da49a003574b1c39632a18969bd066eedb52b3987219e7219"
     },
     "data-entities.ttl": {
-      "bytes": 18379841,
-      "sha256": "5b42f7f8a8ea5f857fc346164ad17a73a3fddaa85949668c01cba1254a9c2349"
+      "bytes": 16492449,
+      "sha256": "44f4c68b56a116335c69fcefeb6958c0f5539a843cdb5a2ebb27cecfbd0629f8"
     },
     "data-features.ttl": {
       "bytes": 6662574,
@@ -196,24 +196,24 @@
       "sha256": "4c853934cadc2934877628918de2d8f5b101c7d7a617fa71a10b8e5652b951f0"
     },
     "schema.ttl": {
-      "bytes": 26049,
-      "sha256": "01f46455e92d561bfe5b6dd047ee16d9f71a9e741e865b698ec228f0ee3f1df5"
+      "bytes": 27206,
+      "sha256": "40a70d93fc797fc7fa7ec41a76aeebf5c0283f8b693bc908c515809d2aade725"
     },
     "shapes.ttl": {
       "bytes": 8947,
       "sha256": "26aecb19dfca17c5902fd0317b3e84696836fcecb64c97b574541d3dc04fc857"
     }
   },
-  "package_sha256": "981c0a722d6e61b6d1e76675e35413b66e8a2f769467182ae4ea6b558618b2d9",
+  "package_sha256": "4d3aa75763bdd4e47db9e6dba8d8123bbfbeadf80f295b4f68ea671c78c32f52",
   "native_owl": {
     "conforms": true,
-    "package_sha256": "981c0a722d6e61b6d1e76675e35413b66e8a2f769467182ae4ea6b558618b2d9",
+    "package_sha256": "4d3aa75763bdd4e47db9e6dba8d8123bbfbeadf80f295b4f68ea671c78c32f52",
     "package_files_unchanged_during_check": true,
     "checks": {
       "game_owl2dl": true,
       "game_violations": 0,
       "game_classes": 17,
-      "game_individuals": 81081,
+      "game_individuals": 76114,
       "schema_owl2dl": true,
       "schema_violations": 0,
       "schema_classes": 17,

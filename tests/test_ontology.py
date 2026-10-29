@@ -15,6 +15,173 @@ from dota_kg.ontology_validation import _package_structure, check_scalar, make_s
 
 
 class OntologyTests(unittest.TestCase):
+    @staticmethod
+    def _spell_fixture(parameters, values):
+        return {"heroes": [{"hero_id": 1, "display_name": "Fixture", "internal_name": "fixture",
+                            "facets": "[]", "role_levels": "[]", "raw": "{}"}],
+                "abilities": [{"ability_id": 10, "hero_id": 1, "display_name": "Fixture Spell",
+                               "internal_name": "fixture_spell", "notes": "[]",
+                               "damage": json.dumps(values), "special_values": json.dumps(parameters),
+                               "raw": json.dumps({"damages": values, "special_values": parameters})}]}
+
+    @staticmethod
+    def _special(name, heading, values):
+        return {"name": name, "heading_loc": heading, "values_float": values,
+                "values_shard": [], "values_scepter": [], "bonuses": [],
+                "required_facet": "", "is_percentage": False}
+
+    def test_damage_uses_named_components_instead_of_generic_zero_defaults(self):
+        from dota_kg.ontology_domain import DomainBuilder
+        parameters = [self._special("damage_per_stack", "DAMAGE PER ATTACK:", [12, 20, 28, 36]),
+                      self._special("bonus_damage", "<b>BONUS DAMAGE:</b>", [0]),
+                      self._special("damage_reduction", "DAMAGE REDUCTION:", [50]),
+                      self._special("damage_interval", "CONTACT DAMAGE TICK:", [.5]),
+                      self._special("damage_tick", "DAMAGE RATE:", [.2]),
+                      self._special("heal_percent", "DAMAGE TO HEALING:", [20]),
+                      self._special("damage_absorb", "DAMAGE BARRIER:", [100])]
+        rows = self._spell_fixture(parameters, [0, 0, 0, 0])
+        graph = schema_graph()
+        for module in DomainBuilder(rows).build().values():
+            graph += module
+        validate_game(graph, rows)
+        owner = RES["ability/10"]
+        targets = {RES["ability/10/parameter/0"], RES["ability/10/parameter/1"]}
+        self.assertEqual(set(graph.objects(owner, KG.hasDamage)), targets)
+        self.assertEqual(len(set(graph.objects(owner, KG.hasParameter))), len(parameters))
+        self.assertFalse(list(graph.predicate_objects(RES["ability/10/parameter/damage"])))
+        reader = DomainReader(graph)
+        self.assertEqual(reader.series(RES["ability/10/parameter/0"], KG.hasBaseValue), [12, 20, 28, 36])
+        self.assertEqual(reader.series(RES["ability/10/parameter/1"], KG.hasBaseValue), [0])
+        for wrong_target in (RES["ability/10/parameter/2"], RES["ability/10/parameter/3"]):
+            graph.add((owner, KG.hasDamage, wrong_target))
+            with self.assertRaises(ValueError):
+                validate_game(graph, rows)
+            graph.remove((owner, KG.hasDamage, wrong_target))
+        graph.remove((owner, KG.hasDamage, RES["ability/10/parameter/0"]))
+        with self.assertRaises(ValueError):
+            validate_game(graph, rows)
+
+    def test_native_damage_is_preserved_with_other_components_and_without_duplicates(self):
+        from dota_kg.ontology_domain import DomainBuilder
+        parameters = [self._special("AbilityDamage", "", [75, 150, 225, 300]),
+                      self._special("extra_damage", "EXTRA DAMAGE:", [10, 20, 30, 40])]
+        for native, expected_count in (([75, 150, 225, 300], 2), ([50, 100], 3)):
+            with self.subTest(native=native):
+                rows = self._spell_fixture(parameters, native)
+                graph = schema_graph()
+                for module in DomainBuilder(rows).build().values():
+                    graph += module
+                validate_game(graph, rows)
+                self.assertEqual(len(set(graph.objects(RES["ability/10"], KG.hasDamage))), expected_count)
+                self.assertEqual(len(set(graph.objects(RES["ability/10"], KG.hasParameter))), expected_count)
+
+    def test_damage_defaults_do_not_assert_damage_but_explicit_float_zero_survives(self):
+        from dota_kg.ontology_domain import DomainBuilder
+        for values, expected in (([], []), ([0, 0, 0, 0], []), ([0.0, -0.0], [0.0, -0.0])):
+            with self.subTest(values=values):
+                rows = self._spell_fixture([], values)
+                graph = schema_graph()
+                for module in DomainBuilder(rows).build().values():
+                    graph += module
+                validate_game(graph, rows)
+                targets = list(graph.objects(RES["ability/10"], KG.hasDamage))
+                self.assertEqual(len(targets), bool(expected))
+                if targets:
+                    self.assertTrue(same_json(DomainReader(graph).series(targets[0], KG.hasBaseValue), expected))
+
+    @staticmethod
+    def _fixture_graph(rows):
+        from dota_kg.ontology_domain import DomainBuilder
+        graph = schema_graph()
+        for module in DomainBuilder(rows).build().values():
+            graph += module
+        validate_game(graph, rows)
+        return graph
+
+    def test_effect_durations_replace_zero_defaults_without_merging_mechanics(self):
+        parameters = [self._special("lift_duration", "LIFT DURATION:", [.95, 1.2, 1.45, 1.7]),
+                      self._special("stun_duration", "STUN DURATION:", [.9, 1.1, 1.3, 1.5]),
+                      self._special("fall_duration", "", [.3]),
+                      self._special("duration", "DURATION:", [0])]
+        rows = self._spell_fixture(parameters, [0, 0, 0, 0])
+        rows["abilities"][0]["duration"] = "[0]"
+        raw = json.loads(rows["abilities"][0]["raw"])
+        raw["durations"] = [0]
+        rows["abilities"][0]["raw"] = json.dumps(raw)
+        graph = self._fixture_graph(rows)
+        owner = RES["ability/10"]
+        self.assertEqual(set(graph.objects(owner, KG.hasDuration)),
+                         {RES[f"ability/10/parameter/{i}"] for i in range(4)})
+        self.assertFalse(list(graph.predicate_objects(RES["ability/10/parameter/duration"])))
+        self.assertEqual(DomainReader(graph).series(RES["ability/10/parameter/3"], KG.hasBaseValue), [0])
+        graph.remove((owner, KG.hasDuration, RES["ability/10/parameter/1"]))
+        with self.assertRaises(ValueError):
+            validate_game(graph, rows)
+
+    def test_zero_and_empty_native_fields_do_not_hide_resource_costs_or_channel_time(self):
+        parameters = [self._special("mana_cost", "MANA COST PER SECOND:", [10]),
+                      self._special("health_cost", "HEALTH COST:", [75, 100, 125, 150]),
+                      self._special("channel_time", "MAX CHANNEL TIME:", [2.5]),
+                      self._special("mana_cost_reduction", "MANA COST REDUCTION:", [15])]
+        rows = self._spell_fixture(parameters, [0, 0, 0, 0])
+        rows["abilities"][0].update(mana_cost="[0]", health_cost="[]")
+        raw = json.loads(rows["abilities"][0]["raw"])
+        raw.update(mana_costs=[0], health_costs=[], channel_times=[0])
+        rows["abilities"][0]["raw"] = json.dumps(raw)
+        graph = self._fixture_graph(rows)
+        for prop, index in ((KG.hasManaCost, 0), (KG.hasHealthCost, 1), (KG.hasChannelTime, 2)):
+            self.assertEqual(set(graph.objects(RES["ability/10"], prop)), {RES[f"ability/10/parameter/{index}"]})
+        graph.add((RES["ability/10"], KG.hasManaCost, RES["ability/10/parameter/3"]))
+        with self.assertRaises(ValueError):
+            validate_game(graph, rows)
+
+    def test_zero_instant_cast_free_spell_and_range_bonus_remain_distinct(self):
+        bonus = self._special("cast_range", "BURROW BONUS CAST RANGE:", [500])
+        rows = self._spell_fixture([bonus], [0, 0, 0, 0])
+        rows["abilities"][0].update(cast_range="[0]", cast_point="[0]", mana_cost="[0]", cooldown="[0]")
+        raw = json.loads(rows["abilities"][0]["raw"])
+        raw.update(cast_ranges=[0], cast_points=[0], mana_costs=[0], cooldowns=[0])
+        rows["abilities"][0]["raw"] = json.dumps(raw)
+        graph = self._fixture_graph(rows)
+        for prop in (KG.hasCastRange, KG.hasCastPoint, KG.hasManaCost, KG.hasCooldown):
+            targets = list(graph.objects(RES["ability/10"], prop))
+            self.assertEqual(len(targets), 1)
+            self.assertEqual(DomainReader(graph).series(targets[0], KG.hasBaseValue), [0])
+        self.assertNotIn((RES["ability/10"], KG.hasCastRange, RES["ability/10/parameter/0"]), graph)
+        self.assertIn((RES["ability/10"], KG.hasParameter, RES["ability/10/parameter/0"]), graph)
+
+    def test_unsigned_range_encoding_does_not_become_a_four_billion_cast_distance(self):
+        parameter = self._special("AbilityCastRange", "", [-1])
+        rows = self._spell_fixture([parameter], [0, 0, 0, 0])
+        rows["abilities"][0]["cast_range"] = "[4294967295]"
+        raw = json.loads(rows["abilities"][0]["raw"])
+        raw["cast_ranges"] = [4294967295]
+        rows["abilities"][0]["raw"] = json.dumps(raw)
+        graph = self._fixture_graph(rows)
+        self.assertEqual(set(graph.objects(RES["ability/10"], KG.hasCastRange)), {RES["ability/10/parameter/0"]})
+        self.assertEqual(DomainReader(graph).series(RES["ability/10/parameter/0"], KG.hasBaseValue), [-1])
+        self.assertFalse(list(graph.predicate_objects(RES["ability/10/parameter/cast_range"])))
+
+    def test_labelled_range_matching_the_native_distance_keeps_its_link(self):
+        parameters = [self._special("cast_range", "CAST RANGE:", [700]),
+                      self._special("AbilityCastRange", "", [700])]
+        rows = self._spell_fixture(parameters, [0, 0, 0, 0])
+        rows["abilities"][0]["cast_range"] = "[700]"
+        raw = json.loads(rows["abilities"][0]["raw"])
+        raw["cast_ranges"] = [700]
+        rows["abilities"][0]["raw"] = json.dumps(raw)
+        graph = self._fixture_graph(rows)
+        self.assertEqual(set(graph.objects(RES["ability/10"], KG.hasCastRange)),
+                         {RES["ability/10/parameter/0"], RES["ability/10/parameter/1"]})
+
+    def test_zero_match_trend_is_a_real_ordered_series(self):
+        rows = self._gameplay_fixture()
+        rows["hero_meta"][0]["raw"] = json.dumps({"pub_pick_trend": [0, 0, 0]})
+        graph = self._fixture_graph(rows)
+        parameter = graph.value(RES["record/hero_meta/86"], KG.hasPublicMatchTrend)
+        self.assertIsNotNone(parameter)
+        self.assertEqual(DomainReader(graph).series(parameter, KG.hasBaseValue), [0, 0, 0])
+
     def test_canonical_schema_edits_survive_loading_export_and_validation(self):
         source = Path(__file__).resolve().parents[1] / "ontology"
         with tempfile.TemporaryDirectory() as temporary:

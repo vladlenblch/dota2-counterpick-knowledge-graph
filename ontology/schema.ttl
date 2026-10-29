@@ -201,10 +201,12 @@ kg:hasCooldown a owl:ObjectProperty ;
 
 kg:hasDamage a owl:ObjectProperty ;
     rdfs:label "Параметр урона"@ru ;
+    rdfs:comment "Именованные компоненты урона, включая периодический урон и коэффициенты. Единицы и условия сохраняются в параметрах; компоненты не складываются в общий урон. Нулевое общее поле API не означает отсутствие урона."@ru ;
     rdfs:range kg:Parameter .
 
 kg:hasDuration a owl:ObjectProperty ;
     rdfs:label "Параметр длительности"@ru ;
+    rdfs:comment "Длительности отдельных эффектов способности или предмета. Подъем, оглушение, падение и другие эффекты сохраняются раздельно."@ru ;
     rdfs:range kg:Parameter .
 
 kg:hasFeatureValue a owl:ObjectProperty ;
@@ -214,6 +216,7 @@ kg:hasFeatureValue a owl:ObjectProperty ;
 
 kg:hasHealthCost a owl:ObjectProperty ;
     rdfs:label "Параметр расхода здоровья"@ru ;
+    rdfs:comment "Параметры разового или постоянного расхода здоровья с сохранением исходных значений и условий."@ru ;
     rdfs:range kg:Parameter .
 
 kg:hasItemUsage a owl:ObjectProperty ;
@@ -223,6 +226,7 @@ kg:hasItemUsage a owl:ObjectProperty ;
 
 kg:hasManaCost a owl:ObjectProperty ;
     rdfs:label "Параметр расхода маны"@ru ;
+    rdfs:comment "Параметры разового или постоянного расхода маны. Условия и способ расходования, включая расход в секунду, сохраняются в именованных параметрах."@ru ;
     rdfs:range kg:Parameter .
 
 kg:hasMatchup a owl:ObjectProperty ;

@@ -13,6 +13,7 @@ from rdflib import RDF, RDFS, URIRef
 
 from .common import clean_text
 from .ontology import entity, literal, record_uri
+from .ontology_domain import channel_plan
 from .ontology_schema import KG
 from .ontology_validation import same_json as _same
 
@@ -213,25 +214,12 @@ def _add_notes(builder, graph, owner, raw, title, *, ordinary):
             graph.add((node, KG.noteText, literal(text)))
 
 
-def _add_channel(builder, graph, owner, values, channel, title):
-    prop, code, caption = channel
+def _add_trend(builder, graph, owner, values, definition, title):
+    prop, code, caption = definition
     if not values:
         return
     if any(type(v) not in (int, float) for v in values):
-        raise ValueError("Nonnumeric gameplay channel value")
-    existing = list(graph.objects(owner, prop))
-    if existing:
-        return  # Existing domain channels are independently checked below.
-    if all(type(v) is int and v == 0 for v in values):
-        return  # API zero defaults do not describe an additional mechanic.
-    aliases = {code, "Ability" + "".join(x.capitalize() for x in code.split("_"))}
-    for parameter in graph.objects(owner, KG.hasParameter):
-        if str(next(graph.objects(parameter, KG.parameterName), "")) in aliases:
-            indexed = sorted((int(next(graph.objects(n, KG.position))), next(graph.objects(n, KG.numericValue)).toPython())
-                             for n in graph.objects(parameter, KG.hasBaseValue))
-            if _same(values, [value for _, value in indexed]):
-                graph.add((owner, prop, parameter))
-                return
+        raise ValueError("Nonnumeric gameplay trend value")
     parameter = URIRef(str(owner) + "/parameter/" + code)
     builder.node(graph, parameter, KG.Parameter, f"{title}: {caption}")
     graph.add((parameter, KG.parameterName, literal(code)))
@@ -264,12 +252,9 @@ def add_game_fields(builder):
             _add_scalars(graph, node, talent, TALENT_FIELDS)
             for p_index, parameter in enumerate(_array(talent, "special_values")):
                 builder.parameter(graph, node, "talents", {"talent_uri": node}, p_index, parameter, label)
-            for field, channel in CHANNELS.items():
-                values = _array(talent, field)
-                # A talent is passive. Valve's identical zero-filled spell
-                # defaults add no mechanics; retain any actual channel value.
-                if any(type(v) is not int or v != 0 for v in values):
-                    _add_channel(builder, graph, node, values, channel, label)
+            for field, (_, code, _) in CHANNELS.items():
+                builder.channel(graph, node, _array(talent, "special_values"), code,
+                                _array(talent, field), label)
             _add_notes(builder, graph, node, talent, label, ordinary=True)
             talent_names[talent["name"]].append(node)
     for table, kind, key, mapping in (("abilities", "ability", "ability_id", ABILITY_FIELDS),
@@ -278,8 +263,9 @@ def add_game_fields(builder):
             raw = _raw(row, SPELL_KNOWN, table)
             owner, title = entity(kind, row[key]), row["display_name"] or row["internal_name"]
             _add_scalars(graph, owner, raw, mapping)
-            for field, channel in CHANNELS.items():
-                _add_channel(builder, graph, owner, _array(raw, field), channel, title)
+            for field, (_, code, _) in CHANNELS.items():
+                builder.channel(graph, owner, json.loads(row["special_values"]), code,
+                                _array(raw, field), title)
             _add_notes(builder, graph, owner, raw, title, ordinary=table == "items")
     # Talent names are source-provided conditions. Resolve only known exact
     # names and the same hero; unresolved historical conditions remain strings.
@@ -302,7 +288,7 @@ def add_game_fields(builder):
                 raise ValueError("A hero role must have a string name")
             stats.add((owner, KG.roleName, literal(role)))
         for field, channel in TRENDS.items():
-            _add_channel(builder, stats, owner, _array(raw, field), channel, title)
+            _add_trend(builder, stats, owner, _array(raw, field), channel, title)
 
 
 def validate_game_fields(graph, rows):
@@ -352,22 +338,33 @@ def validate_game_fields(graph, rows):
             scalar(indexed[index], KG.numericValue, value)
         counts["ordered_values_verified"] += len(values)
 
-    def channel(owner, raw, field, definition, *, passive=False):
+    def channel(owner, raw, field, definition):
+        _, code, _ = definition
+        prop = definition[0]
         values = _array(raw, field)
-        if any(type(v) not in (int, float) for v in values):
-            raise ValueError("Nonnumeric gameplay channel value")
-        if not values or passive and all(type(v) is int and v == 0 for v in values):
+        indices, native = channel_plan(code, _array(raw, "special_values"), values)
+        # Register empty expectations as well, to reject spurious default links.
+        relations[(owner, prop)]
+        for index in indices:
+            link(owner, prop, URIRef(str(owner) + f"/parameter/{index}"))
+        if native is not None:
+            parameter = URIRef(str(owner) + f"/parameter/{native}")
+            node(parameter, KG.Parameter)
+            link(owner, prop, parameter)
+            link(owner, KG.hasParameter, parameter)
+            series(parameter, KG.hasBaseValue, values)
+            counts["channels_verified"] += 1
+
+    def trend(owner, raw, field, definition):
+        values = _array(raw, field)
+        if not values:
             return
-        prop, _, _ = definition
-        targets = list(graph.objects(owner, prop))
-        if not targets and all(type(v) is int and v == 0 for v in values):
-            return
-        if len(targets) != 1:
-            raise ValueError(f"Gameplay channel missing or repeated: {owner}/{field}")
-        parameter = targets[0]
+        prop, code, _ = definition
+        parameter = URIRef(str(owner) + "/parameter/" + code)
         node(parameter, KG.Parameter)
         link(owner, prop, parameter)
         link(owner, KG.hasParameter, parameter)
+        scalar(parameter, KG.parameterName, code)
         series(parameter, KG.hasBaseValue, values)
         counts["channels_verified"] += 1
 
@@ -418,7 +415,7 @@ def validate_game_fields(graph, rows):
                     raise ValueError("New talent modifiers need explicit validation")
                 counts["talent_parameters_verified"] += 1
             for field, definition in CHANNELS.items():
-                channel(uri, talent, field, definition, passive=True)
+                channel(uri, talent, field, definition)
             notes(uri, talent, ordinary=True)
             talent_names[talent["name"]].append(uri)
             counts["talents_verified"] += 1
@@ -448,5 +445,5 @@ def validate_game_fields(graph, rows):
         if {str(v) for v in graph.objects(owner, KG.roleName)} != set(_array(raw, "roles")):
             raise ValueError("Hero role names changed")
         for field, definition in TRENDS.items():
-            channel(owner, raw, field, definition)
+            trend(owner, raw, field, definition)
     return {"expected": dict(expected), "relations": dict(relations), "counts": dict(counts)}
