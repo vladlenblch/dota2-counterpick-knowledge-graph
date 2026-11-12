@@ -8,7 +8,7 @@ from collections import defaultdict
 from rdflib import BNode, RDF, RDFS, OWL, URIRef
 
 from .ontology import entity, literal, record_uri
-from .ontology_schema import KG, ROLE_PROPERTIES, JSON_COLUMNS, NON_DOMAIN_COLUMNS, IDENTITY_COLUMNS, FEATURE_LABELS, NUMERIC_FEATURES, column_predicate, evidence_text
+from .ontology_schema import KG, ROLE_PROPERTIES, POSITION_PROPERTIES, JSON_COLUMNS, NON_DOMAIN_COLUMNS, IDENTITY_COLUMNS, FEATURE_LABELS, NUMERIC_FEATURES, column_predicate, evidence_text
 from .ontology_domain import NATIVE_PARAMETERS, OBSERVATIONS, SERIES, parameter_uri, informative_parameter, channel_plan
 from .ontology_validation import one, check_scalar, same_json
 
@@ -226,6 +226,25 @@ def validate_game(game, rows):
                     expect(note, KG.GameNote)
                     scalar(note, KG.noteKind, "note")
                 counts["notes_verified"] += len(notes)
+
+    if "hero_roles" in rows:
+        heroes = {r["hero_id"]: r["display_name"] for r in rows.get("heroes", [])}
+        positions = rows["hero_roles"]
+        if len(positions) != len(heroes) or {r["hero_id"] for r in positions} != set(heroes):
+            raise ValueError("Hero position coverage differs from the hero roster")
+        for row in positions:
+            if (set(row) != {"hero_id", "hero_name", *POSITION_PROPERTIES}
+                    or row["hero_name"] != heroes[row["hero_id"]]):
+                raise ValueError("Hero position identity or columns changed")
+            values = [row[field] for field in POSITION_PROPERTIES]
+            primary, secondary = values
+            if (type(primary) is not int or not 1 <= primary <= 5
+                    or secondary is not None and (type(secondary) is not int or not 1 <= secondary <= 5 or primary == secondary)
+                    or primary == 1 and secondary is not None):
+                raise ValueError("Hero positions must be distinct integers from 1 to 5; primary carries have no secondary position")
+            for field, prop in POSITION_PROPERTIES.items():
+                scalar(entity("hero", row["hero_id"]), prop, row[field])
+                counts["popular_positions_verified"] += row[field] is not None
 
     features = {(r["hero_id"], r["feature"]): r
                 for r in rows.get("hero_features", [])}

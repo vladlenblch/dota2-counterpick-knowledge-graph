@@ -143,13 +143,13 @@ class InteractionTests(unittest.TestCase):
         item = self.item(145, "item_bfury", "Cleave (Melee Only)")
         self.graph.add((item, KG.isPurchasable, literal(True)))
         hero, opponent, ability, effect = (RES["hero/1"], RES["hero/12"], RES["ability/2"], RES["test/illusions"])
-        for s,p,o in ((hero,RDFS.label,literal("Fixture carry")), (hero,KG.carryLevel,literal(3)),
-                      (hero,KG.supportLevel,literal(0)), (opponent,RDFS.label,literal("Illusion hero")),
+        for s,p,o in ((hero,RDFS.label,literal("Fixture carry")), (hero,KG.mostPopularPosition,literal(1)),
+                      (opponent,RDFS.label,literal("Illusion hero")),
                       (opponent,KG.hasAbility,ability), (ability,KG.hasEffect,effect),
                       (effect,KG.effectMechanic,RES["mechanic/CREATES_ILLUSIONS"])):
             self.graph.add((s,p,o))
         self.graph += build_interactions(self.graph)
-        question = Question(9, hero=hero, enemy=opponent, role="carry", phase="mid")
+        question = Question(9, hero=hero, enemy=opponent, role=1, phase="mid")
         self.graph.set((hero, KG.attackType, literal("Ranged")))
         self.assertEqual(KnowledgeBase(self.graph).cq09(question), [])
         self.graph.set((hero, KG.attackType, literal("Melee")))

@@ -8,7 +8,7 @@ from rdflib import Graph, Literal, RDF, RDFS, URIRef
 
 from .common import clean_text
 from .ontology import entity, literal, record_uri
-from .ontology_schema import KG, ROLE_PROPERTIES, JSON_COLUMNS, NON_DOMAIN_COLUMNS, IDENTITY_COLUMNS, FEATURE_LABELS, NUMERIC_FEATURES, column_predicate, bind, evidence_text
+from .ontology_schema import KG, ROLE_PROPERTIES, POSITION_PROPERTIES, JSON_COLUMNS, NON_DOMAIN_COLUMNS, IDENTITY_COLUMNS, FEATURE_LABELS, NUMERIC_FEATURES, column_predicate, bind, evidence_text
 
 
 NATIVE_PARAMETERS = {
@@ -323,6 +323,27 @@ class DomainBuilder:
                         graph.add((note, KG.noteText, literal(text)))
                         graph.add((note, KG.noteKind, literal("note")))
 
+    def positions(self):
+        if "hero_roles" not in self.rows:
+            return
+        records = self.rows["hero_roles"]
+        if (len(records) != len(self.hero_names)
+                or {r["hero_id"] for r in records} != set(self.hero_names)):
+            raise ValueError("Hero position coverage differs from the hero roster")
+        for row in records:
+            if (set(row) != {"hero_id", "hero_name", *POSITION_PROPERTIES}
+                    or row["hero_name"] != self.hero_names[row["hero_id"]]):
+                raise ValueError("Hero position identity or columns changed")
+            values = [row[field] for field in POSITION_PROPERTIES]
+            primary, secondary = values
+            if (type(primary) is not int or not 1 <= primary <= 5
+                    or secondary is not None and (type(secondary) is not int or not 1 <= secondary <= 5 or primary == secondary)
+                    or primary == 1 and secondary is not None):
+                raise ValueError("Hero positions must be distinct integers from 1 to 5; primary carries have no secondary position")
+            for field, prop in POSITION_PROPERTIES.items():
+                if row[field] is not None:
+                    self.groups["entities"].add((entity("hero", row["hero_id"]), prop, literal(row[field])))
+
     def observations(self):
         for table, cls in OBSERVATIONS.items():
             graph = self.groups["statistics"]
@@ -380,6 +401,7 @@ class DomainBuilder:
 
     def build(self):
         self.entities()
+        self.positions()
         self.observations()
         self.feature_values()
         from .ontology_game_fields import add_game_fields

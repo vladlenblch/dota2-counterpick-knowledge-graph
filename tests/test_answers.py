@@ -1,12 +1,14 @@
 """Answers must follow graph mutations, not preselected example identities."""
+import io
+import json
 import unittest
 
 from rdflib import Graph, RDF, RDFS
 
-from dota_kg.answers import KnowledgeBase
+from dota_kg.answers import KnowledgeBase, print_answer
 from dota_kg.ontology import literal
 from dota_kg.ontology_schema import KG, RES
-from dota_kg.questions import QuestionParser
+from dota_kg.questions import Question, QuestionParser
 
 
 class AnswerTests(unittest.TestCase):
@@ -20,8 +22,7 @@ class AnswerTests(unittest.TestCase):
         self.target = self.node("ability/enemy", KG.Ability, "Target spell")
         self.add(self.hero, KG.hasAbility, self.spell)
         self.add(self.enemy, KG.hasAbility, self.target)
-        for prop, value in ((KG.carryLevel, 2), (KG.nukerLevel, 2),
-                            (KG.supportLevel, 2), (KG.durableLevel, 2), (KG.initiatorLevel, 2)):
+        for prop, value in ((KG.mostPopularPosition, 2), (KG.secondMostPopularPosition, 4)):
             self.add(self.hero, prop, literal(value))
         self.effect = self.effect_node(self.spell, "AOE_DAMAGE")
         self.target_effect = self.effect_node(self.target, "CREATES_ILLUSIONS")
@@ -53,21 +54,51 @@ class AnswerTests(unittest.TestCase):
         for name in ("ПЛ", "Фантом Лансера", "Phantom Lancer", "лансера"):
             result = self.ask(f"кто контрит {name} на миде")
             self.assertEqual(result["parameters"]["enemy"], str(self.enemy))
-            self.assertEqual({r["role"] for r in result["answers"]}, {"carry"})
+            self.assertEqual({r["role"] for r in result["answers"]}, {2})
             self.assertEqual(result["answers"][0]["hero"], str(self.hero))
         parser = QuestionParser(self.graph)
         self.assertEqual(parser.parse("кто контрит фантомку").enemy, self.pa)
-        self.assertEqual(parser.parse("кто контрит ПЛ на хард саппорте").role, "support")
-        self.assertEqual(parser.parse("кто контрит ПЛ на тройке").role, "nuker")
+        self.assertEqual(parser.parse("кто контрит ПЛ на хард саппорте").role, 5)
+        self.assertEqual(parser.parse("кто контрит ПЛ на тройке").role, 3)
 
-    def test_no_position_returns_three_graph_roles(self):
+    def test_no_position_uses_only_two_popular_positions_without_legacy_fallback(self):
         result = self.ask("кто контрит ПЛ")
-        self.assertEqual({r["role"] for r in result["answers"]}, {"carry", "nuker", "support"})
-        self.graph.set((self.hero, KG.carryLevel, literal(0)))
-        self.graph.set((self.hero, KG.nukerLevel, literal(0)))
+        self.assertEqual({r["role"] for r in result["answers"]}, {2, 4})
+        self.assertEqual(result["missing_roles"], [1, 3, 5])
+        self.graph.set((self.hero, KG.mostPopularPosition, literal(5)))
         result = self.ask("кто контрит ПЛ")
-        self.assertEqual([r["role"] for r in result["answers"]], ["support"])
-        self.assertEqual(len(result["missing_roles"]), 2)
+        self.assertEqual([r["role"] for r in result["answers"]], [4, 5])
+        self.graph.remove((self.hero, KG.mostPopularPosition, None))
+        self.graph.remove((self.hero, KG.secondMostPopularPosition, None))
+        for prop in (KG.carryLevel, KG.nukerLevel, KG.supportLevel):
+            self.graph.set((self.hero, prop, literal(3)))
+        self.assertEqual(self.ask("кто контрит ПЛ")["answers"], [])
+
+    def test_five_positions_and_specific_support_phrases_are_distinct(self):
+        parser = QuestionParser(self.graph)
+        for position, phrases in {1: ("на керри", "на позиции 1", "pos1"),
+                                  2: ("на миде", "на 2-й позиции", "mid"),
+                                  3: ("на тройке", "offlane", "на харде"),
+                                  4: ("на четверке", "soft support", "на саппорте"),
+                                  5: ("на пятерке", "hard support", "на полной поддержке")}.items():
+            for phrase in phrases:
+                with self.subTest(position=position, phrase=phrase):
+                    self.assertEqual(parser.parse("кто контрит ПЛ " + phrase).role, position)
+        for question in ("кто контрит ПЛ на позиции 6", "кто контрит ПЛ на керри и на миде"):
+            with self.subTest(question=question), self.assertRaises(ValueError):
+                parser.parse(question)
+        self.assertIsNone(parser.parse("кто контрит ПЛ на 10 минуте").role)
+
+    def test_carry_and_mid_and_the_two_support_positions_filter_separately(self):
+        for primary, secondary in ((1, None), (2, 4), (4, 5)):
+            self.graph.set((self.hero, KG.mostPopularPosition, literal(primary)))
+            self.graph.remove((self.hero, KG.secondMostPopularPosition, None))
+            if secondary is not None:
+                self.graph.set((self.hero, KG.secondMostPopularPosition, literal(secondary)))
+            for position in range(1, 6):
+                with self.subTest(primary=primary, secondary=secondary, position=position):
+                    result = self.ask(f"кто контрит ПЛ на позиции {position}")
+                    self.assertEqual(bool(result['answers']), position in (primary, secondary))
 
     def test_explanation_names_target_ability_and_omits_footer(self):
         self.graph.set((self.target, RDFS.label, literal("Conjure Image")))
@@ -75,6 +106,38 @@ class AnswerTests(unittest.TestCase):
         self.assertIn("против «Conjure Image»", result["answers"][0]["answer"])
         self.assertEqual(result["answers"][0]["target_abilities"], [str(self.target)])
         self.assertEqual(result["notes"], [])
+
+    def test_rule_review_messages_are_hidden_but_gameplay_conditions_and_graph_facts_remain(self):
+        boilerplate = 'Урон по области — кандидат; достаточность урона и стойкость иллюзий не оценены.'
+        review = self.node('condition/review', KG.InteractionCondition, 'Review')
+        self.add(self.rule, KG.requiresCondition, review)
+        self.add(review, KG.conditionKind, literal('review'))
+        self.add(review, KG.conditionText, literal(boilerplate))
+        item = self.node('condition/item', KG.InteractionCondition, 'Upgrade required')
+        self.add(self.effect, KG.requiresCondition, item)
+        self.add(item, KG.conditionKind, literal('has-item'))
+        self.add(item, KG.conditionText, literal('Требуется Aghanim\'s Shard.'))
+        gameplay = self.node('condition/gameplay', KG.InteractionCondition, 'Positioning')
+        self.add(self.effect, KG.requiresCondition, gameplay)
+        self.add(gameplay, KG.conditionKind, literal('review'))
+        self.add(gameplay, KG.conditionText, literal('За целью должно быть дерево.'))
+        result = self.ask('кто контрит ПЛ на миде')
+        self.assertNotIn(boilerplate, json.dumps(result, ensure_ascii=False))
+        self.assertIn('Требуется Aghanim\'s Shard.', result['answers'][0]['answer'])
+        self.assertIn('За целью должно быть дерево.', result['answers'][0]['answer'])
+        self.assertEqual(self.graph.value(review, KG.conditionText), literal(boilerplate))
+
+    def test_parameter_answer_omits_unmapped_condition_message(self):
+        parameter = self.node('parameter/test', KG.Parameter, 'Damage')
+        value = self.node('value/test', KG.ParameterValue, 'Damage value')
+        self.add(self.spell, KG.hasParameter, parameter)
+        self.add(parameter, KG.parameterName, literal('damage'))
+        self.add(parameter, KG.hasBaseValue, value)
+        self.add(value, KG.position, literal(0))
+        self.add(value, KG.numericValue, literal(100))
+        answer = self.ask('при каких условиях работает Test spell')['answers'][0]['answer']
+        self.assertIn('damage=[100]', answer)
+        self.assertNotIn('не размечены', answer)
 
     def test_removing_rule_or_target_effect_removes_answer(self):
         self.assertTrue(self.ask("кто контрит ПЛ")["answers"])
@@ -102,7 +165,7 @@ class AnswerTests(unittest.TestCase):
     def test_statistic_sorts_only_graph_supported_candidates(self):
         other_spell = self.node("ability/other", KG.Ability, "Other spell")
         self.add(self.other, KG.hasAbility, other_spell)
-        self.add(self.other, KG.carryLevel, literal(1))
+        self.add(self.other, KG.mostPopularPosition, literal(2))
         self.effect_node(other_spell, "AOE_DAMAGE")
         for hero, rate in ((self.hero, .5), (self.other, .7), (self.pa, 1.0)):
             obs = RES[str(hero) + "/observation"]
@@ -112,6 +175,25 @@ class AnswerTests(unittest.TestCase):
             self.add(obs, KG.matches, literal(100))
         rows = self.ask("кто контрит ПЛ на миде")["answers"]
         self.assertEqual([r["hero"] for r in rows], [str(self.other), str(self.hero)])
+        result = self.ask("кто контрит ПЛ на миде")
+        output = io.StringIO()
+        print_answer(result, output)
+        self.assertNotIn('%', output.getvalue())
+        self.assertNotIn('Доля побед', output.getvalue())
+        self.assertNotIn('win_rate', json.dumps(result))
+        self.assertNotIn('matches', json.dumps(result))
+
+    def test_item_priorities_use_core_for_mid_and_offlane_and_support_for_both_support_positions(self):
+        item = self.node('item/test', KG.Item, 'Test item')
+        for group, rank in (('carry', 1), ('core', 2), ('support', 3)):
+            pref = self.node('preference/' + group, KG.ItemRolePreference, group)
+            self.add(pref, KG.item, item)
+            self.add(pref, KG.roleName, literal(group))
+            self.add(pref, KG.preferenceRank, literal(rank))
+        kb = KnowledgeBase(self.graph)
+        for position, expected in ((1, 1), (2, 2), (3, 2), (4, 3), (5, 3)):
+            with self.subTest(position=position):
+                self.assertEqual(kb.item_priority(item, Question(9, hero=self.hero, role=position)), expected)
 
     def test_unknown_and_ambiguous_names_and_tasks_are_rejected(self):
         for question in ("кто контрит несуществующего героя", "какая сегодня погода", "почему ПЛ"):

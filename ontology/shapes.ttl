@@ -144,6 +144,10 @@ kg:HeroContextShape a sh:NodeShape ;
     sh:targetClass kg:HeroContext .
 
 kg:HeroShape a sh:NodeShape ;
+    sh:not [ sh:property [ sh:hasValue 1 ;
+                    sh:path kg:mostPopularPosition ],
+                [ sh:minCount 1 ;
+                    sh:path kg:secondMostPopularPosition ] ] ;
     sh:property [ sh:datatype xsd:integer ;
             sh:maxCount 1 ;
             sh:minCount 1 ;
@@ -154,6 +158,19 @@ kg:HeroShape a sh:NodeShape ;
             sh:minCount 0 ;
             sh:minInclusive 0 ;
             sh:path kg:carryLevel ],
+        [ sh:datatype xsd:integer ;
+            sh:disjoint kg:secondMostPopularPosition ;
+            sh:maxCount 1 ;
+            sh:maxInclusive 5 ;
+            sh:minCount 0 ;
+            sh:minInclusive 1 ;
+            sh:path kg:mostPopularPosition ],
+        [ sh:datatype xsd:integer ;
+            sh:maxCount 1 ;
+            sh:maxInclusive 5 ;
+            sh:minCount 0 ;
+            sh:minInclusive 1 ;
+            sh:path kg:secondMostPopularPosition ],
         [ sh:class kg:FeatureValue ;
             sh:minCount 0 ;
             sh:path kg:hasFeatureValue ],

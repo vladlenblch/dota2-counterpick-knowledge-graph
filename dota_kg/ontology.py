@@ -17,7 +17,7 @@ from rdflib import BNode, Graph, Literal, RDF, RDFS, OWL, XSD, URIRef
 from rdflib.plugins.serializers.turtle import TurtleSerializer
 
 from .common import ROOT
-from .ontology_schema import RES, TABLES, bind, schema_graph
+from .ontology_schema import RES, TABLES, TABLE_PATHS, bind, schema_graph
 
 
 class ExactTurtleSerializer(TurtleSerializer):
@@ -69,9 +69,10 @@ def read_tables(root: Path) -> dict:
     import pyarrow.parquet as pq
 
     paths = sorted((Path(root) / "data/final").glob("*.parquet"))
-    if {p.stem for p in paths} != set(TABLES):
+    expected = {name for name, path in TABLE_PATHS.items() if path.parent == Path("data/final")}
+    if {p.stem for p in paths} != expected:
         raise ValueError("Input tables differ from the explicit ontology mapping")
-    rows = {p.stem: pq.read_table(p).to_pylist() for p in paths}
+    rows = {name: pq.read_table(Path(root) / path).to_pylist() for name, path in TABLE_PATHS.items()}
     for table, records in rows.items():
         keys = [tuple(r[k] for k in TABLES[table][1]) for r in records]
         if len(set(keys)) != len(keys):

@@ -12,7 +12,7 @@ from rdflib import BNode, Graph, Literal, RDF, RDFS, OWL, XSD, URIRef
 from rdflib.collection import Collection
 from pyshacl import validate
 
-from .ontology_schema import KG, SH, TABLES, ROLE_PROPERTIES, bind, schema_graph
+from .ontology_schema import KG, SH, TABLES, TABLE_PATHS, ROLE_PROPERTIES, POSITION_PROPERTIES, bind, schema_graph
 
 
 def one(graph, subject, predicate, *, optional=False):
@@ -58,6 +58,7 @@ def make_shapes():
     for cls in ("Hero", "Ability", "Item"):
         rules[cls] = [prop(KG.identifier, XSD.integer)]
     rules["Hero"] += [prop(p, XSD.integer, lo=0, lower=0, upper=3) for p in ROLE_PROPERTIES]
+    rules["Hero"] += [prop(p, XSD.integer, lo=0, lower=1, upper=5) for p in POSITION_PROPERTIES.values()]
     rules["Ability"] += [prop(KG.hero, KG.Hero)]
     rules["Feature"] = [prop(KG.identifier, XSD.string), prop(KG.valueKind, XSD.string), prop(KG.unit, XSD.string)]
     rules["MatchupObservation"] += [
@@ -119,6 +120,8 @@ def make_shapes():
             constraint = BNode(cls + "-shape-" + str(index))
             graph.add((node, SH.property, constraint))
             graph.add((constraint, SH.path, path))
+            if path == KG.mostPopularPosition:
+                graph.add((constraint, SH.disjoint, KG.secondMostPopularPosition))
             graph.add((constraint, SH.minCount, Literal(minimum)))
             if maximum is not None:
                 graph.add((constraint, SH.maxCount, Literal(maximum)))
@@ -135,6 +138,14 @@ def make_shapes():
                 values = BNode(cls + "-choices-" + str(index))
                 Collection(graph, values, [Literal(v, datatype=XSD.string) for v in choices[path]])
                 graph.add((constraint, SH["in"], values))
+    carry_with_secondary = BNode("carry-with-secondary-position")
+    graph.add((KG.HeroShape, SH["not"], carry_with_secondary))
+    for path, predicate, value in ((KG.mostPopularPosition, SH.hasValue, 1),
+                                   (KG.secondMostPopularPosition, SH.minCount, 1)):
+        constraint = BNode("carry-position-" + str(path).rsplit("#", 1)[-1])
+        graph.add((carry_with_secondary, SH.property, constraint))
+        graph.add((constraint, SH.path, path))
+        graph.add((constraint, predicate, Literal(value)))
     alternatives = []
     for kind, target in (("review", None), ("has-item", KG.conditionItem),
                          ("has-mechanic", KG.conditionMechanic), ("has-talent", KG.conditionTalent)):
@@ -288,7 +299,7 @@ def validate_export(root: Path, output: Path):
         report["tables"] = {}
         cells = 0
         for name in TABLES:
-            table = pq.read_table(root / f"data/final/{name}.parquet")
+            table = pq.read_table(root / TABLE_PATHS[name])
             report["tables"][name] = {"rows": table.num_rows, "columns": table.num_columns}
             cells += table.num_rows * table.num_columns
         report["source_tables"] = len(rows)

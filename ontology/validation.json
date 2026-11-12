@@ -7,7 +7,7 @@
     "SHACL: типы, обязательные связи, мощности, количества и границы долей корректны"
   ],
   "errors": [],
-  "triples": 575726,
+  "triples": 575962,
   "package_structure": {
     "imports": [
       "data-entities.ttl",
@@ -113,15 +113,19 @@
     "hero_meta": {
       "rows": 127,
       "columns": 11
+    },
+    "hero_roles": {
+      "rows": 127,
+      "columns": 4
     }
   },
-  "source_tables": 8,
-  "cells_checked": 254586,
+  "source_tables": 9,
+  "cells_checked": 255094,
   "game_model": {
-    "triples": 575726,
+    "triples": 575962,
     "classes": 23,
     "object_properties": 47,
-    "data_properties": 118,
+    "data_properties": 120,
     "records_verified": 76875,
     "domain_only": true,
     "short_identifiers": true,
@@ -139,6 +143,7 @@
       "source_parameters_verified": 8997,
       "bonus_modifiers_verified": 1160,
       "facet_modifiers_verified": 205,
+      "popular_positions_verified": 226,
       "matrix_values_verified": 9652,
       "observed_feature_values_verified": 2104
     },
@@ -156,20 +161,20 @@
       "FeatureValue": 9652,
       "Feature": 76,
       "Talent": 1016,
-      "Mechanic": 49,
-      "InteractionCondition": 76,
-      "ItemRolePreference": 12,
       "Effect": 605,
-      "CounterRule": 19,
       "HeroContext": 0,
-      "Statistics": 0,
+      "Mechanic": 49,
+      "CounterRule": 19,
+      "ItemRolePreference": 12,
+      "InteractionCondition": 76,
       "GameCharacteristic": 0,
       "GameFact": 0,
-      "Entity": 0
+      "Entity": 0,
+      "Statistics": 0
     }
   },
   "relation_types": {
-    "relation_endpoints_checked": 214573,
+    "relation_endpoints_checked": 214799,
     "disjoint_groups_checked": 2
   },
   "class_counts": {
@@ -186,16 +191,16 @@
     "FeatureValue": 9652,
     "Feature": 76,
     "Talent": 1016,
-    "Mechanic": 49,
-    "InteractionCondition": 76,
-    "ItemRolePreference": 12,
     "Effect": 605,
-    "CounterRule": 19,
     "HeroContext": 0,
-    "Statistics": 0,
+    "Mechanic": 49,
+    "CounterRule": 19,
+    "ItemRolePreference": 12,
+    "InteractionCondition": 76,
     "GameCharacteristic": 0,
     "GameFact": 0,
-    "Entity": 0
+    "Entity": 0,
+    "Statistics": 0
   },
   "shacl_conforms": true,
   "shacl_report": "Validation Report\nConforms: True\n",
@@ -206,12 +211,12 @@
   },
   "package_files": {
     "catalog-v001.xml": {
-      "bytes": 769,
-      "sha256": "acc2855628b8339eb63f523e4127d9dd0212cfd9de055f309807e87a27d6759f"
+      "bytes": 762,
+      "sha256": "d88185d59de9d61da49a003574b1c39632a18969bd066eedb52b3987219e7219"
     },
     "data-entities.ttl": {
-      "bytes": 17138596,
-      "sha256": "6fe37197f969bee3b5e039da057d299a1f86af13493e20ed7b2f76e31c2bfe7b"
+      "bytes": 17146196,
+      "sha256": "8035c2ee90020bc6f41fe19ced24582c4ef2c17e426b92c2bb7ca165ba675146"
     },
     "data-features.ttl": {
       "bytes": 6662574,
@@ -226,13 +231,13 @@
       "sha256": "4c853934cadc2934877628918de2d8f5b101c7d7a617fa71a10b8e5652b951f0"
     },
     "schema.ttl": {
-      "bytes": 34126,
-      "sha256": "7a44279f905977305b85deacd1d2d5b4d9dd51ed31a114ac14c3b165b38a2209"
+      "bytes": 34315,
+      "sha256": "8b717c3b8cfab136087836c031c43a273590244246b89b45a369ff3247c3d398"
     },
     "shapes.ttl": {
-      "bytes": 14331,
-      "sha256": "1f41787b4eab9dcb44d59ecacc158078c7a7b44fb4921d50814db1c9b2348483"
+      "bytes": 14990,
+      "sha256": "0684325a31d8305e1311be69edd32ba2768da588feb9e1a17147f30bdba8f567"
     }
   },
-  "package_sha256": "564961d98335d46317fae495c771567d074d512c5adcf6c2ffae241dd8955545"
+  "package_sha256": "773b4f5633cc119cac2ce826e739bb0510e32246c3c6205aaaeff199bd135d77"
 }

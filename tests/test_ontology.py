@@ -419,6 +419,74 @@ class OntologyTests(unittest.TestCase):
         validate_game(partial, rows)
         self.assertIsNone(partial.value(hero, KG.supportLevel))
 
+    def test_popular_positions_are_typed_hero_properties_and_source_values_are_verified(self):
+        rows = self._spell_fixture([], [])
+        rows["hero_roles"] = [{"hero_id": 1, "hero_name": "Fixture",
+                               "most_popular_position": 4, "second_most_popular_position": 5}]
+        graph = self._fixture_graph(rows)
+        hero = RES["hero/1"]
+        self.assertEqual(graph.value(hero, KG.mostPopularPosition), literal(4))
+        self.assertEqual(graph.value(hero, KG.secondMostPopularPosition), literal(5))
+        self.assertEqual(validate_game(graph, rows)["informative_values"]["popular_positions_verified"], 2)
+        for value in (None, 3):
+            with self.subTest(value=value):
+                graph.remove((hero, KG.mostPopularPosition, None))
+                if value is not None:
+                    graph.add((hero, KG.mostPopularPosition, literal(value)))
+                with self.assertRaises(ValueError):
+                    validate_game(graph, rows)
+
+    def test_carry_secondary_position_is_absent_and_cannot_be_invented(self):
+        from dota_kg.ontology_domain import DomainBuilder
+        rows = self._spell_fixture([], [])
+        rows["hero_roles"] = [{"hero_id": 1, "hero_name": "Fixture",
+                               "most_popular_position": 1, "second_most_popular_position": None}]
+        hero = RES["hero/1"]
+        graph = self._fixture_graph(rows)
+        self.assertEqual(graph.value(hero, KG.mostPopularPosition), literal(1))
+        self.assertIsNone(graph.value(hero, KG.secondMostPopularPosition))
+        self.assertEqual(validate_game(graph, rows)["informative_values"]["popular_positions_verified"], 1)
+        graph.add((hero, KG.secondMostPopularPosition, literal(2)))
+        with self.assertRaises(ValueError):
+            validate_game(graph, rows)
+        rows["hero_roles"][0]["second_most_popular_position"] = 2
+        with self.assertRaises(ValueError):
+            DomainBuilder(rows).build()
+
+    def test_popular_positions_reject_missing_duplicate_unknown_heroes_and_invalid_positions(self):
+        from dota_kg.ontology_domain import DomainBuilder
+        valid = {"hero_id": 1, "hero_name": "Fixture", "most_popular_position": 4,
+                 "second_most_popular_position": 5}
+        invalid = [[], [valid, valid], [dict(valid, hero_id=2)], [dict(valid, hero_name="Wrong")],
+                   *[[dict(valid, most_popular_position=value)] for value in (0, 6, True, 4.0, "4", None, 5)]]
+        for records in invalid:
+            with self.subTest(records=records):
+                rows = self._spell_fixture([], [])
+                rows["hero_roles"] = records
+                with self.assertRaises(ValueError):
+                    DomainBuilder(rows).build()
+
+    def test_position_shapes_reject_invalid_ranges_duplicates_and_multiple_values(self):
+        graph = schema_graph()
+        hero = RES["hero/1"]
+        graph.add((hero, RDF.type, KG.Hero))
+        graph.add((hero, KG.identifier, literal(1)))
+        graph.add((hero, KG.mostPopularPosition, literal(4)))
+        graph.add((hero, KG.secondMostPopularPosition, literal(5)))
+        shapes = make_shapes()
+        self.assertTrue(validate(graph, shacl_graph=shapes, inference="none")[0])
+        for value in (0, 6, True, 4.0, "4", 5):
+            with self.subTest(value=value):
+                graph.set((hero, KG.mostPopularPosition, literal(value)))
+                self.assertFalse(validate(graph, shacl_graph=shapes, inference="none")[0])
+        graph.set((hero, KG.mostPopularPosition, literal(4)))
+        graph.add((hero, KG.mostPopularPosition, literal(3)))
+        self.assertFalse(validate(graph, shacl_graph=shapes, inference="none")[0])
+        graph.set((hero, KG.mostPopularPosition, literal(1)))
+        self.assertFalse(validate(graph, shacl_graph=shapes, inference="none")[0])
+        graph.remove((hero, KG.secondMostPopularPosition, None))
+        self.assertTrue(validate(graph, shacl_graph=shapes, inference="none")[0])
+
     def test_rank_detail_stays_outside_rdf_and_aggregate_statistics_remain(self):
         from dota_kg.ontology_domain import DomainBuilder
         from rdflib.compare import isomorphic

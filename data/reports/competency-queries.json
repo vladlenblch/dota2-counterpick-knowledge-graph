@@ -1,5 +1,5 @@
 {
-  "triples": 575726,
+  "triples": 575962,
   "scope": "12 text examples, not complete game coverage",
   "queries": {
     "cq01": {
@@ -8,11 +8,11 @@
       "parameters": {
         "cq": 1,
         "enemy": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/hero/12",
-        "role": "carry"
+        "role": 2
       },
       "answers": [
         {
-          "answer": "Carry (керри / мид) против Phantom Lancer: Meepo — Earthbind: Обездвиживание против «Высокая мобильность». Проверить, блокирует ли обездвиживание конкретную способность перемещения. Невосприимчивость цели: проверить, проходит ли конкретный эффект сквозь неё. Доля побед: 100.0% (4 матчей; общая, не по позиции).",
+          "answer": "Позиция 2 (мид) против Phantom Lancer: Meepo — Earthbind: Обездвиживание против «Phantom Rush». Невосприимчивость цели: проверить, проходит ли конкретный эффект сквозь неё.",
           "source": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/5430",
           "effect": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/5430/effect/ROOT",
           "kind": "ability",
@@ -23,61 +23,57 @@
             "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/1221/effect/HIGH_MOBILITY",
             "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/record/hero_feature_matrix/12/value/HIGH_MOBILITY"
           ],
+          "target_abilities": [
+            "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/1221"
+          ],
           "conditions": [
-            "Проверить, блокирует ли обездвиживание конкретную способность перемещения.",
             "Невосприимчивость цели: проверить, проходит ли конкретный эффект сквозь неё."
           ],
           "hero": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/hero/82",
-          "role": "carry",
-          "win_rate": 1.0,
-          "matches": 4
+          "role": 2
         },
         {
-          "answer": "Carry (керри / мид) против Phantom Lancer: Abaddon — Aphotic Shield: Урон по области против «Создание иллюзий». Урон по области — кандидат; достаточность урона и стойкость иллюзий не оценены. Доля побед: 90.5% (21 матчей; общая, не по позиции).",
-          "source": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/5586",
-          "effect": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/5586/effect/AOE_DAMAGE",
+          "answer": "Позиция 2 (мид) против Phantom Lancer: Dark Seer — Vacuum: Урон по области против «Juxtapose».",
+          "source": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/5255",
+          "effect": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/5255/effect/AOE_DAMAGE",
           "kind": "ability",
           "rule": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/counter-rule/AOE_DAMAGE/CREATES_ILLUSIONS",
           "rule_status": "heuristic",
-          "evidence": "ability Aphotic Shield: Summons dark energies around an ally unit, dispelling them and creating an all damage barrier that absorbs a set amount of damage before expiring. When the barrier is destroyed it will burst and deal damage equal to the amount it could absorb to an area around it. DISPEL TYPE: Strong Dispel; radius = 675.0; damage code = 2",
+          "evidence": "ability Vacuum: Dark Seer creates a vacuum over the target area that sucks in enemy units, disrupting them and dealing damage.; radius = 550.0; damage code = 2",
           "target_facts": [
             "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/5067/effect/CREATES_ILLUSIONS",
             "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/record/hero_feature_matrix/12/value/CREATES_ILLUSIONS"
           ],
-          "conditions": [
-            "Урон по области — кандидат; достаточность урона и стойкость иллюзий не оценены."
+          "target_abilities": [
+            "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/5067"
           ],
-          "hero": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/hero/102",
-          "role": "carry",
-          "win_rate": 0.9047619047619048,
-          "matches": 21
+          "conditions": [],
+          "hero": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/hero/55",
+          "role": 2
         },
         {
-          "answer": "Carry (керри / мид) против Phantom Lancer: Naga Siren — Eelskin: Уклонение против «Ближний бой». Evasion can avoid physical attacks while active; accuracy effects can bypass it. Доля побед: 80.0% (5 матчей; общая, не по позиции).",
-          "source": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/1370",
-          "effect": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/1370/effect/EVASION",
+          "answer": "Позиция 2 (мид) против Phantom Lancer: Brewmaster — Thunder Clap: Урон по области против «Juxtapose».",
+          "source": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/5400",
+          "effect": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/5400/effect/AOE_DAMAGE",
           "kind": "ability",
-          "rule": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/counter-rule/EVASION/MELEE",
+          "rule": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/counter-rule/AOE_DAMAGE/CREATES_ILLUSIONS",
           "rule_status": "heuristic",
-          "evidence": "ability Eelskin: Naga Siren has bonus evasion, increased per every other Naga Siren within %radius% radius.",
+          "evidence": "ability Thunder Clap: Slams the ground, dealing damage and slowing the movement speed and attack rate of nearby enemy units.; radius = 400.0; damage code = 2",
           "target_facts": [
-            "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/record/hero_feature_matrix/12/value/MELEE"
+            "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/5067/effect/CREATES_ILLUSIONS",
+            "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/record/hero_feature_matrix/12/value/CREATES_ILLUSIONS"
           ],
-          "conditions": [
-            "Evasion can avoid physical attacks while active; accuracy effects can bypass it."
+          "target_abilities": [
+            "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/5067"
           ],
-          "hero": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/hero/89",
-          "role": "carry",
-          "win_rate": 0.8,
-          "matches": 5
+          "conditions": [],
+          "hero": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/hero/78",
+          "role": 2
         }
       ],
       "missing_roles": [],
       "status": "answered",
-      "notes": [
-        "Ответы ограничены фактами и правилами локального графа. Правила контрпика — кандидаты, а не гарантия победы.",
-        "Принятое соответствие: Carry — керри/мид, Nuker — тройка, Support — позиции 4/5; внутри групп линии не различаются."
-      ],
+      "notes": [],
       "example_check_passed": true
     },
     "cq02": {
@@ -90,7 +86,7 @@
       },
       "answers": [
         {
-          "answer": "Lion — Earth Spike: Оглушение против «Поддерживаемая способность». Контроль должен попасть во время применения; проверить невосприимчивость и исключения способности. Невосприимчивость цели: проверить, проходит ли конкретный эффект сквозь неё.",
+          "answer": "Lion — Earth Spike: Оглушение против «Freezing Field». Невосприимчивость цели: проверить, проходит ли конкретный эффект сквозь неё.",
           "source": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/5044",
           "effect": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/5044/effect/STUN",
           "kind": "ability",
@@ -101,15 +97,17 @@
             "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/5129/effect/CHANNELING",
             "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/record/hero_feature_matrix/5/value/CHANNELING"
           ],
+          "target_abilities": [
+            "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/5129"
+          ],
           "conditions": [
-            "Контроль должен попасть во время применения; проверить невосприимчивость и исключения способности.",
             "Невосприимчивость цели: проверить, проходит ли конкретный эффект сквозь неё."
           ],
           "hero": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/hero/26",
           "enemy": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/hero/5"
         },
         {
-          "answer": "Lion — Hex: Превращение против «Поддерживаемая способность». Превращение должно примениться во время применения; проверить невосприимчивость. Невосприимчивость цели: проверить, проходит ли конкретный эффект сквозь неё.",
+          "answer": "Lion — Hex: Превращение против «Freezing Field». Невосприимчивость цели: проверить, проходит ли конкретный эффект сквозь неё.",
           "source": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/5045",
           "effect": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/5045/effect/HEX",
           "kind": "ability",
@@ -120,8 +118,10 @@
             "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/5129/effect/CHANNELING",
             "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/record/hero_feature_matrix/5/value/CHANNELING"
           ],
+          "target_abilities": [
+            "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/5129"
+          ],
           "conditions": [
-            "Превращение должно примениться во время применения; проверить невосприимчивость.",
             "Невосприимчивость цели: проверить, проходит ли конкретный эффект сквозь неё."
           ],
           "hero": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/hero/26",
@@ -130,9 +130,7 @@
       ],
       "missing_roles": [],
       "status": "answered",
-      "notes": [
-        "Ответы ограничены фактами и правилами локального графа. Правила контрпика — кандидаты, а не гарантия победы."
-      ],
+      "notes": [],
       "example_check_passed": true
     },
     "cq03": {
@@ -147,11 +145,10 @@
           "source": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/5130",
           "conditions": [
             "A unit or tree behind the target enables the full stun; otherwise only the short stun applies.",
-            "Контроль должен попасть во время применения; проверить невосприимчивость и исключения способности.",
             "Невосприимчивость цели: проверить, проходит ли конкретный эффект сквозь неё.",
-            "Shackleshot can be disjointed.",
-            "Can shackle the target to an enemy unit or tree at most %shackle_distance% behind the target.",
             "This spell can shackle two enemies together, stunning them both.",
+            "Can shackle the target to an enemy unit or tree at most %shackle_distance% behind the target.",
+            "Shackleshot can be disjointed.",
             "Shackleshot applies to all units and trees behind the target unit and grants Windranger bonus attack damage for each additional shackled unit and tree. Creeps and trees grant less bonus damage."
           ],
           "parameters": [
@@ -272,14 +269,12 @@
               "required_facet": null
             }
           ],
-          "answer": "Shackleshot: A unit or tree behind the target enables the full stun; otherwise only the short stun applies. Контроль должен попасть во время применения; проверить невосприимчивость и исключения способности. Невосприимчивость цели: проверить, проходит ли конкретный эффект сквозь неё. Shackleshot can be disjointed. Can shackle the target to an enemy unit or tree at most %shackle_distance% behind the target. This spell can shackle two enemies together, stunning them both. Shackleshot applies to all units and trees behind the target unit and grants Windranger bonus attack damage for each additional shackled unit and tree. Creeps and trees grant less bonus damage. Параметры: fail_stun_duration=[0.6]; stun_duration=[1.75, 2.25, 2.75, 3.25]; AbilityCastPoint=[0.15]; AbilityManaCost=[70, 80, 90, 100]; AbilityCooldown=[16, 14, 12, 10]; shackle_distance=[575]; arrow_speed=[1650]; shackle_count=[1]; shackle_angle=[23]; bonus_damage_per_hero=[0]; bonus_damage_per_other_pct=[0]; damage_buff_duration=[0, 0, 0, 0]; AbilityCastRange=[800]"
+          "answer": "Shackleshot: A unit or tree behind the target enables the full stun; otherwise only the short stun applies. Невосприимчивость цели: проверить, проходит ли конкретный эффект сквозь неё. This spell can shackle two enemies together, stunning them both. Can shackle the target to an enemy unit or tree at most %shackle_distance% behind the target. Shackleshot can be disjointed. Shackleshot applies to all units and trees behind the target unit and grants Windranger bonus attack damage for each additional shackled unit and tree. Creeps and trees grant less bonus damage. Параметры: fail_stun_duration=[0.6]; stun_duration=[1.75, 2.25, 2.75, 3.25]; AbilityCastPoint=[0.15]; AbilityManaCost=[70, 80, 90, 100]; AbilityCooldown=[16, 14, 12, 10]; shackle_distance=[575]; arrow_speed=[1650]; shackle_count=[1]; shackle_angle=[23]; bonus_damage_per_hero=[0]; bonus_damage_per_other_pct=[0]; damage_buff_duration=[0, 0, 0, 0]; AbilityCastRange=[800]"
         }
       ],
       "missing_roles": [],
       "status": "answered",
-      "notes": [
-        "Ответы ограничены фактами и правилами локального графа. Правила контрпика — кандидаты, а не гарантия победы."
-      ],
+      "notes": [],
       "example_check_passed": true
     },
     "cq04": {
@@ -291,7 +286,7 @@
       },
       "answers": [
         {
-          "answer": "Kez — Talon Toss: Безмолвие против «Поддерживаемая способность». Проверить, прерывает ли безмолвие именно эту поддерживаемую способность. Невосприимчивость цели: проверить, проходит ли конкретный эффект сквозь неё.",
+          "answer": "Kez — Talon Toss: Безмолвие против «Freezing Field». Невосприимчивость цели: проверить, проходит ли конкретный эффект сквозь неё.",
           "source": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/1503",
           "effect": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/1503/effect/SILENCE",
           "kind": "ability",
@@ -301,13 +296,15 @@
           "target_facts": [
             "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/5129/effect/CHANNELING"
           ],
+          "target_abilities": [
+            "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/5129"
+          ],
           "conditions": [
-            "Проверить, прерывает ли безмолвие именно эту поддерживаемую способность.",
             "Невосприимчивость цели: проверить, проходит ли конкретный эффект сквозь неё."
           ]
         },
         {
-          "answer": "Kez — Shodo Sai: Оглушение против «Поддерживаемая способность». Контроль должен попасть во время применения; проверить невосприимчивость и исключения способности. Невосприимчивость цели: проверить, проходит ли конкретный эффект сквозь неё.",
+          "answer": "Kez — Shodo Sai: Оглушение против «Freezing Field». Невосприимчивость цели: проверить, проходит ли конкретный эффект сквозь неё.",
           "source": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/1504",
           "effect": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/1504/effect/STUN",
           "kind": "ability",
@@ -317,13 +314,15 @@
           "target_facts": [
             "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/5129/effect/CHANNELING"
           ],
+          "target_abilities": [
+            "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/5129"
+          ],
           "conditions": [
-            "Контроль должен попасть во время применения; проверить невосприимчивость и исключения способности.",
             "Невосприимчивость цели: проверить, проходит ли конкретный эффект сквозь неё."
           ]
         },
         {
-          "answer": "Dazzle — Nothl Projection: Превращение против «Поддерживаемая способность». Превращение должно примениться во время применения; проверить невосприимчивость. Невосприимчивость цели: проверить, проходит ли конкретный эффект сквозь неё.",
+          "answer": "Dazzle — Nothl Projection: Превращение против «Freezing Field». Невосприимчивость цели: проверить, проходит ли конкретный эффект сквозь неё.",
           "source": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/1550",
           "effect": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/1550/effect/HEX",
           "kind": "ability",
@@ -333,13 +332,15 @@
           "target_facts": [
             "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/5129/effect/CHANNELING"
           ],
+          "target_abilities": [
+            "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/5129"
+          ],
           "conditions": [
-            "Превращение должно примениться во время применения; проверить невосприимчивость.",
             "Невосприимчивость цели: проверить, проходит ли конкретный эффект сквозь неё."
           ]
         },
         {
-          "answer": "Bloodthorn: Безмолвие против «Поддерживаемая способность». Проверить, прерывает ли безмолвие именно эту поддерживаемую способность. Невосприимчивость цели: проверить, проходит ли конкретный эффект сквозь неё.",
+          "answer": "Bloodthorn: Безмолвие против «Freezing Field». Невосприимчивость цели: проверить, проходит ли конкретный эффект сквозь неё.",
           "source": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/250",
           "effect": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/250/effect/SILENCE",
           "kind": "item",
@@ -349,13 +350,15 @@
           "target_facts": [
             "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/5129/effect/CHANNELING"
           ],
+          "target_abilities": [
+            "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/5129"
+          ],
           "conditions": [
-            "Проверить, прерывает ли безмолвие именно эту поддерживаемую способность.",
             "Невосприимчивость цели: проверить, проходит ли конкретный эффект сквозь неё."
           ]
         },
         {
-          "answer": "Scythe of Vyse: Превращение против «Поддерживаемая способность». Превращение должно примениться во время применения; проверить невосприимчивость. Невосприимчивость цели: проверить, проходит ли конкретный эффект сквозь неё.",
+          "answer": "Scythe of Vyse: Превращение против «Freezing Field». Невосприимчивость цели: проверить, проходит ли конкретный эффект сквозь неё.",
           "source": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/96",
           "effect": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/96/effect/HEX",
           "kind": "item",
@@ -365,13 +368,15 @@
           "target_facts": [
             "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/5129/effect/CHANNELING"
           ],
+          "target_abilities": [
+            "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/5129"
+          ],
           "conditions": [
-            "Превращение должно примениться во время применения; проверить невосприимчивость.",
             "Невосприимчивость цели: проверить, проходит ли конкретный эффект сквозь неё."
           ]
         },
         {
-          "answer": "Orchid Malevolence: Безмолвие против «Поддерживаемая способность». Проверить, прерывает ли безмолвие именно эту поддерживаемую способность. Невосприимчивость цели: проверить, проходит ли конкретный эффект сквозь неё.",
+          "answer": "Orchid Malevolence: Безмолвие против «Freezing Field». Невосприимчивость цели: проверить, проходит ли конкретный эффект сквозь неё.",
           "source": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/98",
           "effect": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/98/effect/SILENCE",
           "kind": "item",
@@ -381,17 +386,17 @@
           "target_facts": [
             "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/5129/effect/CHANNELING"
           ],
+          "target_abilities": [
+            "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/5129"
+          ],
           "conditions": [
-            "Проверить, прерывает ли безмолвие именно эту поддерживаемую способность.",
             "Невосприимчивость цели: проверить, проходит ли конкретный эффект сквозь неё."
           ]
         }
       ],
       "missing_roles": [],
       "status": "answered",
-      "notes": [
-        "Ответы ограничены фактами и правилами локального графа. Правила контрпика — кандидаты, а не гарантия победы."
-      ],
+      "notes": [],
       "example_check_passed": true
     },
     "cq05": {
@@ -403,7 +408,7 @@
       },
       "answers": [
         {
-          "answer": "Hoodwink — Hunter's Boomerang: Урон по области против «Создание иллюзий». Требуется item_aghanims_shard Урон по области — кандидат; достаточность урона и стойкость иллюзий не оценены.",
+          "answer": "Hoodwink — Hunter's Boomerang: Урон по области против «Juxtapose». Требуется item_aghanims_shard",
           "source": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/1422",
           "effect": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/1422/effect/AOE_DAMAGE",
           "kind": "ability",
@@ -414,13 +419,15 @@
             "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/5067/effect/CREATES_ILLUSIONS",
             "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/record/hero_feature_matrix/12/value/CREATES_ILLUSIONS"
           ],
+          "target_abilities": [
+            "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/5067"
+          ],
           "conditions": [
-            "Требуется item_aghanims_shard",
-            "Урон по области — кандидат; достаточность урона и стойкость иллюзий не оценены."
+            "Требуется item_aghanims_shard"
           ]
         },
         {
-          "answer": "Kez — Raptor Dance: Урон по области против «Создание иллюзий». Урон по области — кандидат; достаточность урона и стойкость иллюзий не оценены.",
+          "answer": "Kez — Raptor Dance: Урон по области против «Juxtapose».",
           "source": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/1501",
           "effect": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/1501/effect/AOE_DAMAGE",
           "kind": "ability",
@@ -431,12 +438,13 @@
             "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/5067/effect/CREATES_ILLUSIONS",
             "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/record/hero_feature_matrix/12/value/CREATES_ILLUSIONS"
           ],
-          "conditions": [
-            "Урон по области — кандидат; достаточность урона и стойкость иллюзий не оценены."
-          ]
+          "target_abilities": [
+            "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/5067"
+          ],
+          "conditions": []
         },
         {
-          "answer": "Largo — Frogstomp: Урон по области против «Создание иллюзий». Урон по области — кандидат; достаточность урона и стойкость иллюзий не оценены.",
+          "answer": "Largo — Frogstomp: Урон по области против «Juxtapose».",
           "source": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/1660",
           "effect": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/1660/effect/AOE_DAMAGE",
           "kind": "ability",
@@ -447,12 +455,13 @@
             "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/5067/effect/CREATES_ILLUSIONS",
             "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/record/hero_feature_matrix/12/value/CREATES_ILLUSIONS"
           ],
-          "conditions": [
-            "Урон по области — кандидат; достаточность урона и стойкость иллюзий не оценены."
-          ]
+          "target_abilities": [
+            "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/5067"
+          ],
+          "conditions": []
         },
         {
-          "answer": "Battle Fury: Рассекающий урон от атак ближнего боя против «Создание иллюзий». Cleave требует атак ближнего боя. Требуются атаки ближнего боя; иллюзии должны попадать в область cleave.",
+          "answer": "Battle Fury: Рассекающий урон от атак ближнего боя против «Juxtapose». Cleave требует атак ближнего боя.",
           "source": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/145",
           "effect": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/145/effect/CLEAVE_DAMAGE",
           "kind": "item",
@@ -463,13 +472,15 @@
             "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/5067/effect/CREATES_ILLUSIONS",
             "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/record/hero_feature_matrix/12/value/CREATES_ILLUSIONS"
           ],
+          "target_abilities": [
+            "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/5067"
+          ],
           "conditions": [
-            "Cleave требует атак ближнего боя.",
-            "Требуются атаки ближнего боя; иллюзии должны попадать в область cleave."
+            "Cleave требует атак ближнего боя."
           ]
         },
         {
-          "answer": "Mjollnir: CHAIN_LIGHTNING против «Создание иллюзий». Chain Lightning procs can damage multiple illusions; it is not an instant-kill effect.",
+          "answer": "Mjollnir: CHAIN_LIGHTNING против «Juxtapose».",
           "source": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/158",
           "effect": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/158/effect/CHAIN_LIGHTNING",
           "kind": "item",
@@ -480,12 +491,13 @@
             "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/5067/effect/CREATES_ILLUSIONS",
             "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/record/hero_feature_matrix/12/value/CREATES_ILLUSIONS"
           ],
-          "conditions": [
-            "Chain Lightning procs can damage multiple illusions; it is not an instant-kill effect."
-          ]
+          "target_abilities": [
+            "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/5067"
+          ],
+          "conditions": []
         },
         {
-          "answer": "Mjollnir: Ответные молнии при получении атак против «Создание иллюзий». Наложить Static Charge на атакуемую цель; ответные молнии срабатывают с вероятностью. Наложить Static Charge на атакуемую цель; молнии срабатывают с вероятностью при получении атак.",
+          "answer": "Mjollnir: Ответные молнии при получении атак против «Juxtapose». Наложить Static Charge на атакуемую цель; ответные молнии срабатывают с вероятностью.",
           "source": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/158",
           "effect": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/158/effect/RETALIATORY_LIGHTNING",
           "kind": "item",
@@ -496,17 +508,17 @@
             "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/5067/effect/CREATES_ILLUSIONS",
             "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/record/hero_feature_matrix/12/value/CREATES_ILLUSIONS"
           ],
+          "target_abilities": [
+            "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/5067"
+          ],
           "conditions": [
-            "Наложить Static Charge на атакуемую цель; ответные молнии срабатывают с вероятностью.",
-            "Наложить Static Charge на атакуемую цель; молнии срабатывают с вероятностью при получении атак."
+            "Наложить Static Charge на атакуемую цель; ответные молнии срабатывают с вероятностью."
           ]
         }
       ],
       "missing_roles": [],
       "status": "answered",
-      "notes": [
-        "Ответы ограничены фактами и правилами локального графа. Правила контрпика — кандидаты, а не гарантия победы."
-      ],
+      "notes": [],
       "example_check_passed": true
     },
     "cq06": {
@@ -517,7 +529,7 @@
       },
       "answers": [
         {
-          "answer": "Bloodseeker — Thirst: Обнаружение невидимости против «Невидимость». Цель должна попадать в область обнаружения; отдельные виды скрытия могут быть исключением.",
+          "answer": "Bloodseeker — Thirst: Обнаружение невидимости против «Невидимость».",
           "source": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/5017",
           "effect": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/5017/effect/DETECTION",
           "kind": "ability",
@@ -525,12 +537,11 @@
           "rule_status": "heuristic",
           "evidence": "Bloodseeker is invigorated by the wounds of his enemies, gaining bonus movement speed when an enemy hero's health falls below %min_bonus_pct%%%, with the bonuses increasing as their health falls further. If an enemy hero's health falls below %invis_threshold_pct%%%, he will also gain vision and True Sight of that hero. Bonuses stack per hero. Unlocks max movement speed for Bloodseeker.",
           "target_facts": [],
-          "conditions": [
-            "Цель должна попадать в область обнаружения; отдельные виды скрытия могут быть исключением."
-          ]
+          "target_abilities": [],
+          "conditions": []
         },
         {
-          "answer": "Zeus — Lightning Bolt: Обнаружение невидимости против «Невидимость». Цель должна попадать в область обнаружения; отдельные виды скрытия могут быть исключением.",
+          "answer": "Zeus — Lightning Bolt: Обнаружение невидимости против «Невидимость».",
           "source": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/5111",
           "effect": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/5111/effect/DETECTION",
           "kind": "ability",
@@ -538,12 +549,11 @@
           "rule_status": "heuristic",
           "evidence": "Calls down a bolt of lightning to strike an enemy unit, causing damage and a mini-stun. When cast, Lightning Bolt briefly provides unobstructed vision and True Sight around the target in a %sight_radius_night% radius. Can be cast on the ground, affecting the closest enemy hero in %spread_aoe% range.",
           "target_facts": [],
-          "conditions": [
-            "Цель должна попадать в область обнаружения; отдельные виды скрытия могут быть исключением."
-          ]
+          "target_abilities": [],
+          "conditions": []
         },
         {
-          "answer": "Zeus — Thundergod's Wrath: Обнаружение невидимости против «Невидимость». Цель должна попадать в область обнаружения; отдельные виды скрытия могут быть исключением.",
+          "answer": "Zeus — Thundergod's Wrath: Обнаружение невидимости против «Невидимость».",
           "source": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/5113",
           "effect": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/5113/effect/DETECTION",
           "kind": "ability",
@@ -551,12 +561,11 @@
           "rule_status": "heuristic",
           "evidence": "Strikes all enemy heroes with a bolt of lightning, dealing damage no matter where they may be. Provides True Sight around each hero before they are struck.",
           "target_facts": [],
-          "conditions": [
-            "Цель должна попадать в область обнаружения; отдельные виды скрытия могут быть исключением."
-          ]
+          "target_abilities": [],
+          "conditions": []
         },
         {
-          "answer": "Gem of True Sight: Обнаружение невидимости против «Невидимость». Цель должна попадать в область обнаружения; отдельные виды скрытия могут быть исключением.",
+          "answer": "Gem of True Sight: Обнаружение невидимости против «Невидимость».",
           "source": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/30",
           "effect": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/30/effect/DETECTION",
           "kind": "item",
@@ -564,12 +573,11 @@
           "rule_status": "heuristic",
           "evidence": "Active: Reveal Gives True Sight over a %active_radius% radius revealing wards and units even in Fog of War. Passive: True Sight Grants the ability to see invisible units and wards to any allied vision within %radius% range of its carrier. Passive: Everlasting Dropped on death, and cannot be destroyed.",
           "target_facts": [],
-          "conditions": [
-            "Цель должна попадать в область обнаружения; отдельные виды скрытия могут быть исключением."
-          ]
+          "target_abilities": [],
+          "conditions": []
         },
         {
-          "answer": "Dust of Appearance: Обнаружение невидимости против «Невидимость». Цель должна попадать в область обнаружения; отдельные виды скрытия могут быть исключением.",
+          "answer": "Dust of Appearance: Обнаружение невидимости против «Невидимость».",
           "source": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/40",
           "effect": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/40/effect/DETECTION",
           "kind": "item",
@@ -577,12 +585,11 @@
           "rule_status": "heuristic",
           "evidence": "Use: Reveal For %duration% seconds, creates an area that reveals and slows invisible heroes by %movespeed%%% in a %radius% radius where the caster was standing. Invisible units revealed by dust take %damage% damage. The debuff effect on enemies lingers for %linger_duration%s after leaving the area of effect.",
           "target_facts": [],
-          "conditions": [
-            "Цель должна попадать в область обнаружения; отдельные виды скрытия могут быть исключением."
-          ]
+          "target_abilities": [],
+          "conditions": []
         },
         {
-          "answer": "Sentry Ward: Обнаружение невидимости против «Невидимость». Цель должна попадать в область обнаружения; отдельные виды скрытия могут быть исключением.",
+          "answer": "Sentry Ward: Обнаружение невидимости против «Невидимость».",
           "source": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/43",
           "effect": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/43/effect/DETECTION",
           "kind": "item",
@@ -590,16 +597,13 @@
           "rule_status": "heuristic",
           "evidence": "Use: Plant Plants a Sentry Ward, an invisible watcher that grants True Sight, the ability to see invisible enemy units and wards, to any existing allied vision within a %true_sight_range% radius. Lasts %duration_minutes_tooltip% minutes. Does not grant ground vision. Hold Control to give one Sentry Ward to an allied hero.",
           "target_facts": [],
-          "conditions": [
-            "Цель должна попадать в область обнаружения; отдельные виды скрытия могут быть исключением."
-          ]
+          "target_abilities": [],
+          "conditions": []
         }
       ],
       "missing_roles": [],
       "status": "answered",
-      "notes": [
-        "Ответы ограничены фактами и правилами локального графа. Правила контрпика — кандидаты, а не гарантия победы."
-      ],
+      "notes": [],
       "example_check_passed": true
     },
     "cq07": {
@@ -677,9 +681,7 @@
       ],
       "missing_roles": [],
       "status": "answered",
-      "notes": [
-        "Ответы ограничены фактами и правилами локального графа. Правила контрпика — кандидаты, а не гарантия победы."
-      ],
+      "notes": [],
       "example_check_passed": true
     },
     "cq08": {
@@ -699,9 +701,7 @@
       ],
       "missing_roles": [],
       "status": "answered",
-      "notes": [
-        "Ответы ограничены фактами и правилами локального графа. Правила контрпика — кандидаты, а не гарантия победы."
-      ],
+      "notes": [],
       "example_check_passed": true
     },
     "cq09": {
@@ -711,12 +711,12 @@
         "cq": 9,
         "hero": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/hero/1",
         "enemy": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/hero/12",
-        "role": "carry",
+        "role": 1,
         "phase": "mid"
       },
       "answers": [
         {
-          "answer": "Для Anti-Mage: Battle Fury: Рассекающий урон от атак ближнего боя против «Создание иллюзий». Cleave требует атак ближнего боя. Требуются атаки ближнего боя; иллюзии должны попадать в область cleave.",
+          "answer": "Для Anti-Mage: Battle Fury: Рассекающий урон от атак ближнего боя против «Juxtapose». Cleave требует атак ближнего боя.",
           "source": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/145",
           "effect": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/145/effect/CLEAVE_DAMAGE",
           "kind": "item",
@@ -727,9 +727,11 @@
             "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/5067/effect/CREATES_ILLUSIONS",
             "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/record/hero_feature_matrix/12/value/CREATES_ILLUSIONS"
           ],
+          "target_abilities": [
+            "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/5067"
+          ],
           "conditions": [
-            "Cleave требует атак ближнего боя.",
-            "Требуются атаки ближнего боя; иллюзии должны попадать в область cleave."
+            "Cleave требует атак ближнего боя."
           ],
           "item": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/145",
           "priority": 3
@@ -737,9 +739,7 @@
       ],
       "missing_roles": [],
       "status": "answered",
-      "notes": [
-        "Ответы ограничены фактами и правилами локального графа. Правила контрпика — кандидаты, а не гарантия победы."
-      ],
+      "notes": [],
       "example_check_passed": true
     },
     "cq10": {
@@ -752,7 +752,7 @@
       },
       "answers": [
         {
-          "answer": "Для Lion: Buckler: Повышение брони против «Низкая броня». Повышение брони компенсирует низкую броню; проверить величину бонуса, стадию игры и условия применения.",
+          "answer": "Для Lion: Buckler: Повышение брони против «Низкая броня».",
           "source": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/86",
           "effect": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/86/effect/ARMOR_BUFF",
           "kind": "item",
@@ -762,18 +762,15 @@
           "target_facts": [
             "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/record/hero_feature_matrix/26/value/LOW_ARMOR"
           ],
-          "conditions": [
-            "Повышение брони компенсирует низкую броню; проверить величину бонуса, стадию игры и условия применения."
-          ],
+          "target_abilities": [],
+          "conditions": [],
           "item": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/86",
           "priority": 3
         }
       ],
       "missing_roles": [],
       "status": "answered",
-      "notes": [
-        "Ответы ограничены фактами и правилами локального графа. Правила контрпика — кандидаты, а не гарантия победы."
-      ],
+      "notes": [],
       "example_check_passed": true
     },
     "cq11": {
@@ -793,7 +790,7 @@
           "rule": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/counter-rule/STUN/CHANNELING",
           "active": true,
           "pierces": false,
-          "answer": "Earth Spike против Black King Bar: Активный эффект предмета ограничивает это противодействие; явного обхода в графе нет. Контроль должен попасть во время применения; проверить невосприимчивость и исключения способности. Невосприимчивость цели: проверить, проходит ли конкретный эффект сквозь неё."
+          "answer": "Earth Spike против Black King Bar: Активный эффект предмета ограничивает это противодействие; явного обхода в графе нет. Невосприимчивость цели: проверить, проходит ли конкретный эффект сквозь неё."
         },
         {
           "source": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/5045",
@@ -801,14 +798,12 @@
           "rule": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/counter-rule/HEX/CHANNELING",
           "active": true,
           "pierces": false,
-          "answer": "Hex против Black King Bar: Активный эффект предмета ограничивает это противодействие; явного обхода в графе нет. Превращение должно примениться во время применения; проверить невосприимчивость. Невосприимчивость цели: проверить, проходит ли конкретный эффект сквозь неё."
+          "answer": "Hex против Black King Bar: Активный эффект предмета ограничивает это противодействие; явного обхода в графе нет. Невосприимчивость цели: проверить, проходит ли конкретный эффект сквозь неё."
         }
       ],
       "missing_roles": [],
       "status": "answered",
-      "notes": [
-        "Ответы ограничены фактами и правилами локального графа. Правила контрпика — кандидаты, а не гарантия победы."
-      ],
+      "notes": [],
       "example_check_passed": true
     },
     "cq12": {
@@ -882,9 +877,7 @@
       ],
       "missing_roles": [],
       "status": "answered",
-      "notes": [
-        "Ответы ограничены фактами и правилами локального графа. Правила контрпика — кандидаты, а не гарантия победы."
-      ],
+      "notes": [],
       "example_check_passed": true
     }
   }

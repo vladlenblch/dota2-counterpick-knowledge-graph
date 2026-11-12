@@ -19,6 +19,15 @@ TABLES = {
     "matchups": ("MatchupObservation", ("hero_id", "opponent_hero_id")),
     "hero_items": ("ItemUsageObservation", ("hero_id", "item_id", "phase")),
     "hero_meta": ("HeroStatisticsObservation", ("hero_id",)),
+    "hero_roles": ("Hero", ("hero_id",)),
+}
+
+TABLE_PATHS = {name: Path("data/final") / f"{name}.parquet" for name in TABLES}
+TABLE_PATHS["hero_roles"] = Path("data/hero_roles.parquet")
+
+POSITION_PROPERTIES = {
+    "most_popular_position": KG.mostPopularPosition,
+    "second_most_popular_position": KG.secondMostPopularPosition,
 }
 
 JSON_COLUMNS = {

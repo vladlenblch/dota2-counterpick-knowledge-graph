@@ -46,13 +46,38 @@ ALIASES = {
     "Aghanim's Shard": "шард|shard",
 }
 
-ROLES = {"carry": "Carry (керри / мид)", "nuker": "Nuker (тройка)",
-         "support": "Support (позиции 4 / 5)"}
+ROLES = {1: "Позиция 1 (керри)", 2: "Позиция 2 (мид)", 3: "Позиция 3 (офлейн)",
+         4: "Позиция 4 (поддержка)", 5: "Позиция 5 (полная поддержка)"}
 ROLE_PATTERNS = {
-    "support": r"хард\s+саппорт\w*|полн\w*\s+поддерж\w*|саппорт\w*|поддерж\w*|четверк\w*|пятерк\w*|support|позиц\w*\s*[45]",
-    "carry": r"керри|кэрри|carry|мид|миде|миду|мидер\w*|mid|позиц\w*\s*[12]",
-    "nuker": r"нюкер\w*|nuker|офф?ле[йи]н\w*|хард[еау]?(?!\s+саппорт)|тройк\w*|позиц\w*\s*3",
+    1: r"керри|кэрри|carry|safelane|единиц\w*",
+    2: r"мид|миде|миду|мидер\w*|mid|midlane|двойк\w*",
+    3: r"офф?ле[йи]н\w*|offlane|хард[еау]?|тройк\w*",
+    4: r"софт\s+саппорт\w*|частичн\w*\s+поддерж\w*|soft\s+support|саппорт\w*|поддерж\w*|четверк\w*|support",
+    5: r"хард\s+саппорт\w*|полн\w*\s+поддерж\w*|hard\s+support|пятерк\w*",
 }
+
+
+def parse_role(text):
+    matches = [(match.start(), match.end(), role)
+               for role, pattern in ROLE_PATTERNS.items()
+               for match in re.finditer(r"(?<!\w)(?:" + pattern + r")(?!\w)", text)]
+    for pattern in (r"(?<!\w)(?:позиц\w*|поз|pos(?:ition)?)\s*(\d+)(?!\w)",
+                    r"(?<!\w)(\d+)\s*(?:й|я|ю|ой|ую)?\s*позиц\w*(?!\w)",
+                    r"(?<!\w)на\s+([1-5])(?=\s*(?:$|против\b))"):
+        for match in re.finditer(pattern, text):
+            role = int(match.group(1))
+            if role not in ROLES:
+                raise ValueError("Номер позиции должен быть от 1 до 5.")
+            matches.append((match.start(), match.end(), role))
+    # Prefer complete phrases such as 'hard support' over their 'support' substring.
+    selected = []
+    for start, end, role in sorted(matches, key=lambda m: (-(m[1] - m[0]), m[0])):
+        if not any(start < b and end > a for a, b, _ in selected):
+            selected.append((start, end, role))
+    roles = {role for _, _, role in selected}
+    if len(roles) > 1:
+        raise ValueError("Укажите одну позицию или уберите ограничение для поиска по всем пяти позициям.")
+    return next(iter(roles), None)
 
 
 def normalize(text):
@@ -78,7 +103,7 @@ class Question:
     enemy: URIRef | None = None
     subject: URIRef | None = None
     item: URIRef | None = None
-    role: str | None = None
+    role: int | None = None
     phase: str | None = None
     active: bool | None = None
     ally: bool | None = None
@@ -156,11 +181,7 @@ class QuestionParser:
         if len(heroes) > 2 or len(set(items)) > 1 or len(set(abilities)) > 1:
             raise ValueError("Уточните вопрос: поддерживаются до двух героев, одна способность и один предмет.")
         q = Question(cq)
-        roles = [role for role, pattern in ROLE_PATTERNS.items()
-                 if re.search(r"(?<!\w)(?:" + pattern + r")(?!\w)", text)]
-        if len(roles) > 1:
-            raise ValueError("Укажите одну группу ролей или уберите ограничение для поиска по всем группам.")
-        q.role = roles[0] if roles else None
+        q.role = parse_role(text)
         for phase, pattern in (("early", r"начал|ранн"), ("late", r"поздн|лейт|late"),
                                ("mid", r"середин|средн\w* стади|мидгейм")):
             if re.search(pattern, text):

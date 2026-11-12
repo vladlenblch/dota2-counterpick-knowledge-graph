@@ -403,6 +403,18 @@ kg:movementSpeed a owl:DatatypeProperty ;
     rdfs:label "Скорость передвижения"@ru ;
     rdfs:range xsd:double .
 
+kg:mostPopularPosition a owl:DatatypeProperty ;
+    rdfs:label "Самая популярная позиция"@ru ;
+    rdfs:comment "Позиция с наибольшим числом матчей в выборке. 1 = керри, 2 = мид, 3 = офлейн, 4 = поддержка, 5 = полная поддержка. Популярность не означает эффективность."@ru ;
+    rdfs:domain kg:Hero ;
+    rdfs:range xsd:integer .
+
+kg:secondMostPopularPosition a owl:DatatypeProperty ;
+    rdfs:label "Вторая по популярности позиция"@ru ;
+    rdfs:comment "Вторая позиция по числу матчей в той же выборке, что и mostPopularPosition. Коды позиций от 1 до 5; позиции различаются. Для героев с основной позицией 1 не указывается."@ru ;
+    rdfs:domain kg:Hero ;
+    rdfs:range xsd:integer .
+
 kg:neutralTier a owl:DatatypeProperty ;
     rdfs:label "Уровень нейтрального предмета"@ru ;
     rdfs:range xsd:integer .

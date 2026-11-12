@@ -49,6 +49,9 @@ class KnowledgeBase:
         for node in nodes:
             for prop in (KG.requiresCondition, KG.blockedByCondition):
                 for condition in sorted(self.graph.objects(node, prop), key=str):
+                    if ((node, RDF.type, KG.CounterRule) in self.graph
+                            and self.value(condition, KG.conditionKind) == "review"):
+                        continue
                     text = self.value(condition, KG.conditionText)
                     if text:
                         result.append(text)
@@ -99,7 +102,7 @@ class KnowledgeBase:
                                     if (ability, RDF.type, KG.Ability) in self.graph)
         target_name = ", ".join(self.label(ability) for ability in sorted(target_abilities, key=str)) or self.label(target)
         answer = (f"{self.label(owner)}: {self.label(source)} против «{target_name}». "
-                  + " ".join(conditions))
+                  + " ".join(conditions)).rstrip()
         source_hero = self.graph.value(owner, KG.hero)
         if source_hero is None:
             source_hero = next(self.graph.subjects(KG.hasAbility, owner), None)
@@ -112,36 +115,34 @@ class KnowledgeBase:
                 "target_abilities": [str(a) for a in sorted(target_abilities, key=str)],
                 "conditions": conditions, **extra}
 
-    def matchup(self, hero, enemy):
+    def matchup_rate(self, hero, enemy):
         for observation in self.graph.objects(hero, KG.hasMatchup):
             if self.graph.value(observation, KG.opponent) == enemy:
-                return self.value(observation, KG.winRate), self.value(observation, KG.matches)
-        return None, None
+                return self.value(observation, KG.winRate)
+        return None
 
     def roles(self, hero):
-        return [role for role, predicate in (("carry", KG.carryLevel),
-                ("nuker", KG.nukerLevel), ("support", KG.supportLevel))
-                if self.value(hero, predicate, 0) > 0]
+        positions = {self.value(hero, predicate) for predicate in
+                     (KG.mostPopularPosition, KG.secondMostPopularPosition)}
+        return [role for role in ROLES if role in positions]
 
     def cq01(self, q):
         rows = []
+        rates = {}
         for hero in self.heroes:
             if hero == q.enemy or q.hero and hero != q.hero:
                 continue
             roles = self.roles(hero)
             if q.role:
                 roles = [q.role] if q.role in roles else []
-            win_rate, matches = self.matchup(hero, q.enemy)
+            rates[str(hero)] = self.matchup_rate(hero, q.enemy)
             for owner, effect, rule, facts in self.candidates(self.traits(q.enemy), hero=hero):
                 for role in roles:
-                    row = self.candidate_row(owner, effect, rule, facts, hero=str(hero), role=role,
-                                             win_rate=win_rate, matches=matches)
+                    row = self.candidate_row(owner, effect, rule, facts, hero=str(hero), role=role)
                     row["answer"] = f"{ROLES[role]} против {self.label(q.enemy)}: {row['answer']}"
-                    if win_rate is not None:
-                        row["answer"] += f" Доля побед: {win_rate:.1%} ({matches} матчей; общая, не по позиции)."
                     rows.append(row)
-        return sorted(rows, key=lambda r: (list(ROLES).index(r["role"]),
-                      -(r["win_rate"] if r["win_rate"] is not None else -1), r["hero"], r["source"]))
+        return sorted(rows, key=lambda r: (r["role"],
+                      -(rates[r["hero"]] if rates[r["hero"]] is not None else -1), r["hero"], r["source"]))
 
     def cq02(self, q):
         return [self.candidate_row(*candidate, hero=str(q.hero), enemy=str(q.enemy))
@@ -168,8 +169,12 @@ class KnowledgeBase:
             details = list(dict.fromkeys(conditions + [n for n in notes if n]))
             if not details and not parameters:
                 continue
-            text = " ".join(details) or "Явные условия в графе не размечены."
-            text += " Параметры: " + "; ".join(f"{p['name']}={p['values']}" for p in parameters if p["values"])
+            text = " ".join(details)
+            values = "; ".join(f"{p['name']}={p['values']}" for p in parameters if p["values"])
+            if values:
+                text = (text + " Параметры: " + values).strip()
+            if not text:
+                continue
             rows.append({"source": str(owner), "conditions": details, "parameters": parameters,
                          "answer": f"{self.label(owner)}: {text}"})
         return rows
@@ -239,7 +244,7 @@ class KnowledgeBase:
                 for owner in owners if q.subject or self.value(owner, KG.piercesDebuffImmunity) is True]
 
     def item_priority(self, item, q):
-        role = "core" if q.role == "nuker" else q.role
+        role = {1: "carry", 2: "core", 3: "core", 4: "support", 5: "support"}.get(q.role)
         preferences = []
         phase_known = not q.phase
         for pref in self.graph.subjects(KG.item, item):
@@ -338,7 +343,7 @@ class KnowledgeBase:
                     rows.append({"ability": str(owner), "modifier": str(modifier), "upgrade": kind,
                                  "talent": str(talent) if talent else None, "value": value,
                                  "operation": self.value(modifier, KG.operation),
-                                 "answer": f"{self.label(owner)}: {name}; параметр {self.value(parameter, KG.parameterName)}, значение модификатора {value}, код операции {self.value(modifier, KG.operation)}. Итоговое значение автоматически не вычислено."})
+                                 "answer": f"{self.label(owner)}: {name}; параметр {self.value(parameter, KG.parameterName)}, значение модификатора {value}, код операции {self.value(modifier, KG.operation)}."})
         return rows
 
     def ask(self, text, limit=3):
