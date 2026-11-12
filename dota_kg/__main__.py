@@ -7,19 +7,19 @@ import sys
 from pathlib import Path
 
 def main():
-    parser = argparse.ArgumentParser(description="Current Dota 2 knowledge graph datasets")
+    parser = argparse.ArgumentParser(description="Граф знаний Dota 2")
     sub = parser.add_subparsers(dest="command", required=True)
-    collection = sub.add_parser("collect", help="Collect one source independently")
+    collection = sub.add_parser("collect", help="Собрать данные выбранного источника")
     collection.add_argument("source", choices=("valve", "opendota"))
-    sub.add_parser("build", help="Build current Parquet datasets from raw snapshots")
-    for name, help_text in (("ontology", "Export game datasets into OWL/RDF and verify their values"),
-                            ("validate-ontology", "Recheck the saved ontology against the game datasets")):
+    sub.add_parser("build", help="Собрать датасеты Parquet из сохраненных ответов API")
+    for name, help_text in (("ontology", "Выгрузить игровые данные в OWL/RDF и проверить значения"),
+                            ("validate-ontology", "Проверить сохраненную онтологию по датасетам")):
         command = sub.add_parser(name, help=help_text)
-        command.add_argument("--output", type=Path, help="Ontology directory, default: ontology/")
+        command.add_argument("--output", type=Path, help="Папка онтологии, по умолчанию ontology/")
     query = sub.add_parser("query", help="Выполнить локальный SPARQL-запрос из файла")
     query.add_argument("file", type=Path, help="Файл .rq или .sparql")
-    query.add_argument("--format", choices=("text", "table", "json", "csv", "turtle"), default="table",
-                       help="Формат результата; по умолчанию таблица, для графа Turtle")
+    query.add_argument("--format", choices=("text", "json", "csv", "turtle"), default="text",
+                       help="Формат результата; по умолчанию текст без таблиц, для графа Turtle")
     ask = sub.add_parser("ask", help="Задать вопрос локальному графу обычным текстом")
     ask.add_argument("question", help="Например: кто контрит ПЛ на миде")
     ask.add_argument("--format", choices=("text", "json"), default="text")
@@ -64,7 +64,7 @@ def main():
                 from .ontology_validation import validate_export
                 report = validate_export(ROOT, args.output or ROOT / "ontology")
                 if not report["conforms"]:
-                    raise RuntimeError(f"Ontology validation failed: {report['errors']}")
+                    raise RuntimeError(f"Онтология не прошла проверку: {report['errors']}")
             result = {key: report[key] for key in ("conforms", "triples", "source_tables",
                                                    "cells_checked", "class_counts")}
             result["report"] = str((args.output or ROOT / "ontology") / "validation.json")

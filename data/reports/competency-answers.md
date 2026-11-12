@@ -17,7 +17,7 @@
 
 ## cq03: При каких условиях работает Shackleshot?
 
-- Shackleshot: A unit or tree behind the target enables the full stun; otherwise only the short stun applies. This spell can shackle two enemies together, stunning them both. Can shackle the target to an enemy unit or tree at most 575 behind the target. Shackleshot can be disjointed.
+- Shackleshot: Для полного оглушения позади цели нужен другой юнит или дерево; иначе оглушение будет коротким. Может связать двух противников, оглушая обоих. Связывает цель с вражеским существом или деревом на расстоянии до 575. Снаряд этой способности можно сбить с цели.
 
 
 ## cq04: Чем прервать Freezing Field?
@@ -42,7 +42,7 @@
 
 ## cq06: Чем обнаруживать невидимых противников?
 
-- Bloodseeker — Thirst: Обнаружение невидимых целей против «Невидимость». Здоровье врага ниже порога True Sight у Thirst.
+- Bloodseeker — Thirst: Обнаружение невидимых целей против «Невидимость». Здоровье врага ниже порога истинного зрения у Thirst.
 - Zeus — Lightning Bolt: Обнаружение невидимых целей против «Невидимость».
 - Slardar — Corrosive Haze: Обнаружение невидимых целей против «Невидимость».
 - Gem of True Sight: Обнаружение невидимых целей против «Невидимость».
@@ -71,7 +71,7 @@
 
 ## cq09: Что купить Anti-Mage на керри против ПЛ в середине игры?
 
-- Для Anti-Mage: Battle Fury: Рассекающий урон от атак против «Doppelganger, Juxtapose». Cleave требует атак ближнего боя.
+- Для Anti-Mage: Battle Fury: Рассекающий урон от атак против «Doppelganger, Juxtapose». Рассекающий урон требует атак ближнего боя.
 - Для Anti-Mage: Manta Style: Обычное развеивание против «Spirit Lance». После активации эффекта предмета.
 - Для Anti-Mage: Monkey King Bar: Вероятностное попадание сквозь уклонение против «Phantom Rush». У противника: Во время сближения с целью через Phantom Rush.
 
@@ -89,5 +89,5 @@
 
 ## cq12: Что Shard меняет у Morphling?
 
-- Attribute Shift (Agility Gain), Aghanim's Shard: Morphling can shift attributes while stunned. Reduces mana cost.
-- Attribute Shift (Strength Gain), Aghanim's Shard: Morphling can shift attributes while stunned. Reduces mana cost.
+- Attribute Shift (Agility Gain), Aghanim's Shard: Позволяет применять эту способность во время оглушения. Уменьшает расход маны.
+- Attribute Shift (Strength Gain), Aghanim's Shard: Позволяет применять эту способность во время оглушения. Уменьшает расход маны.

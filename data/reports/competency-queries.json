@@ -533,7 +533,7 @@
         {
           "source": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/5130",
           "conditions": [
-            "A unit or tree behind the target enables the full stun; otherwise only the short stun applies."
+            "Для полного оглушения позади цели нужен другой юнит или дерево; иначе оглушение будет коротким."
           ],
           "parameters": [
             {
@@ -653,7 +653,7 @@
               "required_facet": null
             }
           ],
-          "answer": "Shackleshot: A unit or tree behind the target enables the full stun; otherwise only the short stun applies. This spell can shackle two enemies together, stunning them both. Can shackle the target to an enemy unit or tree at most 575 behind the target. Shackleshot can be disjointed."
+          "answer": "Shackleshot: Для полного оглушения позади цели нужен другой юнит или дерево; иначе оглушение будет коротким. Может связать двух противников, оглушая обоих. Связывает цель с вражеским существом или деревом на расстоянии до 575. Снаряд этой способности можно сбить с цели."
         }
       ],
       "missing_roles": [],
@@ -935,7 +935,7 @@
       },
       "answers": [
         {
-          "answer": "Bloodseeker — Thirst: Обнаружение невидимых целей против «Невидимость». Здоровье врага ниже порога True Sight у Thirst.",
+          "answer": "Bloodseeker — Thirst: Обнаружение невидимых целей против «Невидимость». Здоровье врага ниже порога истинного зрения у Thirst.",
           "source": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/5017",
           "effect": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/5017/effect/DETECTION/enemy/base",
           "kind": "ability",
@@ -944,7 +944,7 @@
           "target_facts": [],
           "target_abilities": [],
           "conditions": [
-            "Здоровье врага ниже порога True Sight у Thirst."
+            "Здоровье врага ниже порога истинного зрения у Thirst."
           ],
           "mechanic_score": 3.5,
           "family": "vision"
@@ -1224,7 +1224,7 @@
       },
       "answers": [
         {
-          "answer": "Для Anti-Mage: Battle Fury: Рассекающий урон от атак против «Doppelganger, Juxtapose». Cleave требует атак ближнего боя.",
+          "answer": "Для Anti-Mage: Battle Fury: Рассекающий урон от атак против «Doppelganger, Juxtapose». Рассекающий урон требует атак ближнего боя.",
           "source": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/145",
           "effect": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/145/effect/CLEAVE_DAMAGE/enemy/reviewed-passive",
           "kind": "item",
@@ -1240,7 +1240,7 @@
             "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/5067"
           ],
           "conditions": [
-            "Cleave требует атак ближнего боя."
+            "Рассекающий урон требует атак ближнего боя."
           ],
           "item": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/145",
           "mechanic_score": 3.4272,
@@ -1251,7 +1251,7 @@
           "timing": 1.0,
           "reasons": [
             {
-              "answer": "Battle Fury: Рассекающий урон от атак против «Doppelganger, Juxtapose». Cleave требует атак ближнего боя.",
+              "answer": "Battle Fury: Рассекающий урон от атак против «Doppelganger, Juxtapose». Рассекающий урон требует атак ближнего боя.",
               "source": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/145",
               "effect": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/145/effect/CLEAVE_DAMAGE/enemy/reviewed-passive",
               "kind": "item",
@@ -1267,7 +1267,7 @@
                 "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/5067"
               ],
               "conditions": [
-                "Cleave требует атак ближнего боя."
+                "Рассекающий урон требует атак ближнего боя."
               ],
               "mechanic_score": 3.4272,
               "family": "units"
@@ -1496,7 +1496,7 @@
             }
           ],
           "grants_ability": false,
-          "answer": "Attribute Shift (Agility Gain), Aghanim's Shard: Morphling can shift attributes while stunned. Reduces mana cost."
+          "answer": "Attribute Shift (Agility Gain), Aghanim's Shard: Позволяет применять эту способность во время оглушения. Уменьшает расход маны."
         },
         {
           "ability": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/5056",
@@ -1525,7 +1525,7 @@
             }
           ],
           "grants_ability": false,
-          "answer": "Attribute Shift (Strength Gain), Aghanim's Shard: Morphling can shift attributes while stunned. Reduces mana cost."
+          "answer": "Attribute Shift (Strength Gain), Aghanim's Shard: Позволяет применять эту способность во время оглушения. Уменьшает расход маны."
         }
       ],
       "missing_roles": [],

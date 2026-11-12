@@ -4,7 +4,7 @@ import unittest
 
 from rdflib import Graph, Literal, RDF, RDFS, URIRef
 
-from dota_kg.game_text import render_game_text, talent_text, facet_text
+from dota_kg.game_text import render_game_text, render_russian_game_text, talent_text, facet_text
 from dota_kg.ontology_schema import KG, RES
 
 
@@ -80,6 +80,28 @@ class GameTextTests(unittest.TestCase):
         self.assertEqual(render_game_text(self.graph,self.owner,text,
                          values={'damage':20,'bonus_damage':99}),'+20 damage')
 
+    def test_upgrade_bonus_aliases_use_only_explicit_upgrade_values(self):
+        self.parameter('AbilityCooldown',[120])
+        text='Reduces cooldown by %bonus_AbilityCooldown%.'
+        self.assertEqual(render_game_text(self.graph,self.owner,text),text)
+        self.assertEqual(render_game_text(self.graph,self.owner,text,values={'AbilityCooldown':40}),
+                         'Reduces cooldown by 40.')
+        self.assertEqual(render_game_text(self.graph,self.owner,'%bonus_damage%',
+                         values={'bonus_damage':99,'damage':20}),'99')
+
+    def test_missing_numbers_do_not_trigger_personal_paraphrases(self):
+        text=("Every %tick_rate%s that enemy heroes stay under the effect of Natural Order, "
+              "their armor is reduced by %armor_per_tick%, and magic resistance is reduced by "
+              "%magic_resistance_per_tick%%%. Stacks up to %max_stacks% times.")
+        result=render_russian_game_text(self.graph,self.owner,text)
+        self.assertIn('%tick_rate%',result)
+        self.assertNotIn('постепенно снижает броню',result)
+        result=render_russian_game_text(self.graph,self.owner,text,
+            values={'tick_rate':1,'armor_per_tick':2,'magic_resistance_per_tick':3,'max_stacks':4})
+        self.assertIn('2',result)
+        self.assertIn('3%',result)
+        self.assertNotIn('постепенно снижает броню',result)
+
     def test_all_talent_parameters_are_matched_by_name_not_current_modifier(self):
         talent = RES['talent/execute']
         self.graph.add((talent,RDFS.label,Literal('Execute below {s:bonus_max_execute_threshold}%; minimum {s:bonus_min_execute_threshold}%.')))
@@ -121,7 +143,7 @@ class GameTextTests(unittest.TestCase):
         self.note('Unrelated immunity from one facet.',0)
         self.note('Different movement from another facet.',1)
         rendered = facet_text(self.graph,self.owner,'facet_damage')
-        self.assertEqual(rendered,'Значения аспекта: DAMAGE: 30')
+        self.assertEqual(rendered,'Значения аспекта: УРОН: 30')
         self.assertNotIn('facet_damage',rendered)
         self.assertNotIn('immunity',rendered)
         self.assertNotIn('movement',rendered)
@@ -131,8 +153,8 @@ class GameTextTests(unittest.TestCase):
         self.modifier(damage,'first',[10])
         self.modifier(damage,'second',[20])
         self.note('One unspecified facet changes %damage%.',0)
-        self.assertEqual(facet_text(self.graph,self.owner,'first'),'Значения аспекта: DAMAGE: 10')
-        self.assertEqual(facet_text(self.graph,self.owner,'second'),'Значения аспекта: DAMAGE: 20')
+        self.assertEqual(facet_text(self.graph,self.owner,'first'),'Значения аспекта: УРОН: 10')
+        self.assertEqual(facet_text(self.graph,self.owner,'second'),'Значения аспекта: УРОН: 20')
 
     def test_unselected_facet_parameter_is_not_used_as_a_base_value(self):
         self.parameter('duration',[8],required_facet='alternative')
@@ -151,7 +173,7 @@ class GameTextTests(unittest.TestCase):
         self.graph.add((talent,RDFS.label,Literal('+{s:bonus_unknown} damage')))
         damage = self.parameter('damage',[100],heading='DAMAGE:')
         self.modifier(damage,'known',[30],talent=talent)
-        self.assertEqual(talent_text(self.graph,self.owner,talent),'Бонусы таланта: DAMAGE: 30')
+        self.assertEqual(talent_text(self.graph,self.owner,talent),'Бонусы таланта: УРОН: 30')
         self.assertEqual(facet_text(self.graph,self.owner,'unknown_facet'),'')
 
 
@@ -175,7 +197,7 @@ class SavedGameTextScenarios(unittest.TestCase):
                 talent = self.graph.value(modifier,KG.requiresTalent)
                 if talent is not None:
                     rendered = talent_text(self.graph,powershot,talent)
-                    if 'Execute' in rendered:
+                    if 'добива' in rendered.lower():
                         candidates.append(rendered)
         self.assertTrue(candidates)
         self.assertTrue(all('16' in text and '{s:' not in text for text in candidates))
@@ -193,7 +215,7 @@ class SavedGameTextScenarios(unittest.TestCase):
         self.assertNotIn('phantom_lancer_',convergence)
         self.assertTrue(divergence)
         self.assertNotIn('phantom_lancer_',divergence)
-        self.assertIn("can't be controlled",divergence)
+        self.assertIn("нельзя управлять",divergence)
 
 
 if __name__ == '__main__':

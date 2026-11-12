@@ -28,7 +28,7 @@ class CompetencyQualityTests(unittest.TestCase):
                 self.assertTrue(result['answers'])
                 base=[r for r in result['answers'] if not r.get('conditional')]
                 self.assertTrue(base)
-                self.assertTrue(all(upgrade not in r['answer'] or 'not blocked' in r['answer'] for r in base))
+                self.assertTrue(all(upgrade not in r['answer'] or 'не блокируется' in r['answer'] for r in base))
                 self.assertTrue(any(r.get('conditional') and upgrade in r['answer'] for r in result['answers']))
 
     def test_named_hero_disambiguates_duplicate_spell_labels(self):
@@ -128,7 +128,7 @@ class CompetencyQualityTests(unittest.TestCase):
         result=self.ask('какие аспекты у Phantom Lancer',limit=30)
         text=' '.join(r['answer'] for r in result['answers'])
         self.assertIn('25%',text)
-        self.assertIn("can't be controlled",text)
+        self.assertIn("нельзя управлять",text)
         self.assertNotIn('phantom_lancer_',text)
 
     def test_slow_resistance_is_not_hostile_slow_and_ally_armor_is_not_self_cast(self):

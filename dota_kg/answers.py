@@ -5,6 +5,7 @@ from rdflib import RDF, RDFS, URIRef
 
 from .ontology_schema import KG, RES, DISPELLABLE_BUFFS, DISPELLABLE_DEBUFFS
 from .questions import ROLES, QuestionParser
+from .localization import russian_text
 
 
 class KnowledgeBase:
@@ -86,7 +87,7 @@ class KnowledgeBase:
                         continue
                     text = self.value(condition, KG.conditionText)
                     if text:
-                        result.append(text)
+                        result.append(russian_text(text))
         return list(dict.fromkeys(result))
 
     def candidate_row(self, owner, effect, rule, targets, **extra):
@@ -165,7 +166,7 @@ class KnowledgeBase:
                 if self.ranking.conditions_available(effect, held, other)]
 
     def cq03(self, q):
-        from .game_text import render_game_text
+        from .game_text import render_russian_game_text
         owners = self.abilities(q.subject) if (q.subject, RDF.type, KG.Hero) in self.graph else [q.subject]
         rows = []
         for owner in owners:
@@ -179,9 +180,9 @@ class KnowledgeBase:
             notes = [self.value(note, KG.noteText) for note in self.graph.objects(owner, KG.hasNote)
                      if self.value(note, KG.noteKind) != 'facet']
             details = list(dict.fromkeys(conditions + [note for note in notes if note]))
-            text = ' '.join(render_game_text(self.graph, owner, line) for line in details)
+            text = ' '.join(render_russian_game_text(self.graph, owner, line) for line in details)
             if not text:
-                text = render_game_text(self.graph, owner, self.value(owner, KG.description, ''))
+                text = render_russian_game_text(self.graph, owner, self.value(owner, KG.description, ''))
             if text:
                 rows.append({"source": str(owner), "conditions": conditions, "parameters": parameters,
                              "answer": f"{self.label(owner)}: {text}"})
@@ -249,7 +250,7 @@ class KnowledgeBase:
             witness = next(f for f in facts if f.owner == owner and f.code == 'DETECTION_IMMUNITY')
             rows.append({'source': str(owner), 'effect': str(witness.uri), 'evidence': witness.evidence,
                          'kind': 'item' if self.is_item(owner) else 'ability', 'counterable': False,
-                         'answer': f'{self.label(owner)}: этот эффект не раскрывается обычным True Sight.'})
+                         'answer': f'{self.label(owner)}: этот эффект не раскрывается обычным истинным зрением.'})
         if needs:
             rows.extend(self.mechanic_task(q, {'INVISIBILITY'}, needs=needs))
         return rows
@@ -428,7 +429,7 @@ class KnowledgeBase:
         return rows
 
     def cq12(self, q):
-        from .game_text import talent_text, facet_text, render_game_text
+        from .game_text import talent_text, facet_text, render_russian_game_text
         owners = [q.subject] if q.subject else self.abilities(q.hero)
         rows = []
         for owner in owners:
@@ -445,7 +446,7 @@ class KnowledgeBase:
                 if text or parameters or granted is True:
                     if not text and granted is not True:
                         continue
-                    description = render_game_text(self.graph, owner, text,
+                    description = render_russian_game_text(self.graph, owner, text,
                         values={p["name"]: p["upgraded"] for p in parameters}) if text else "Добавляет способность."
                     upgrade_name = "Aghanim's Scepter" if kind == "scepter" else "Aghanim's Shard"
                     rows.append({"ability": str(owner), "upgrade": kind, "evidence": text,

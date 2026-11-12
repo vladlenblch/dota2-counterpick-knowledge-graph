@@ -57,7 +57,7 @@ class SparqlRunnerTests(unittest.TestCase):
         self.assertNotIn("missing", row)
         self.assertEqual(row["text"]["value"], "SERVICE and FROM are literal text")
 
-    def test_table_uses_labels_and_short_names_without_changing_exported_uris(self):
+    def test_text_uses_labels_and_short_names_without_changing_exported_uris(self):
         unknown = URIRef("https://example.invalid/resource/unlabeled")
         fragment = URIRef("https://example.invalid/schema#Mechanic")
         self.graph.add((EX.rubick, EX.related, unknown))
@@ -70,7 +70,7 @@ class SparqlRunnerTests(unittest.TestCase):
                 ?other ex:kind ?kind .
             }
         ''')
-        for output_format in ("table", "json", "csv"):
+        for output_format in ("text", "json", "csv"):
             with self.subTest(output_format=output_format):
                 output = io.StringIO()
                 with patch("dota_kg.ontology.load_ontology", return_value=self.graph):
@@ -78,9 +78,10 @@ class SparqlRunnerTests(unittest.TestCase):
                                       output=output, progress=io.StringIO())
                 self.assertEqual(count, 1)
                 text = output.getvalue()
-                if output_format == "table":
-                    cells = [cell.strip() for cell in text.splitlines()[2].split(" | ")]
-                    self.assertEqual(cells, ["Рубик", "unlabeled", "Mechanic", "0"])
+                if output_format == "text":
+                    for cell in ('Герой: Рубик','other: unlabeled','Тип условия: Mechanic','value: 0'):
+                        self.assertIn(cell, text)
+                    self.assertNotIn(' | ',text)
                     self.assertNotIn("https://", text)
                     self.assertNotIn(str(EX.rubick), text)
                 else:
@@ -88,7 +89,7 @@ class SparqlRunnerTests(unittest.TestCase):
                     self.assertIn(str(unknown), text)
                     self.assertIn(str(fragment), text)
 
-    def test_table_keeps_literal_urls_and_escapes_multiline_labels(self):
+    def test_text_keeps_literal_urls_and_wraps_multiline_labels(self):
         self.graph.set((EX.rubick, RDFS.label, Literal("Рубик\nTelekinesis", lang="ru")))
         path = self.query_file('''
             PREFIX ex: <urn:stat:>
@@ -100,8 +101,7 @@ class SparqlRunnerTests(unittest.TestCase):
         output = io.StringIO()
         with patch("dota_kg.ontology.load_ontology", return_value=self.graph):
             run_query(path, directory=self.ontology, output=output, progress=io.StringIO())
-        self.assertEqual(len(output.getvalue().splitlines()), 3)
-        self.assertIn("Рубик\\nTelekinesis", output.getvalue())
+        self.assertIn("Рубик Telekinesis", output.getvalue())
         self.assertIn("https://example.invalid/literal", output.getvalue())
 
     def test_ask_json_preserves_both_boolean_outcomes(self):
@@ -134,15 +134,26 @@ class SparqlRunnerTests(unittest.TestCase):
             "- Beastmaster может прервать применение через Primal Roar.",
             "- Lion может прервать применение через Earth Spike."])
 
-    def test_text_requires_answer_select_before_loading(self):
-        for query in ("ASK {}", "SELECT ?value WHERE {}", "CONSTRUCT {} WHERE {}"):
+    def test_default_text_supports_select_without_answer_and_boolean_queries(self):
+        for query, expected in (("SELECT ?value WHERE { BIND(0 AS ?value) }", 'value: 0'),
+                                ("ASK {}", 'Да.'), ("ASK { <urn:missing> <urn:missing> ?o }", 'Нет.')):
             with self.subTest(query=query):
-                path = self.query_file(query)
-                with patch("dota_kg.ontology.load_ontology") as load:
-                    with self.assertRaises(RuntimeError):
-                        run_query(path, directory=self.ontology, output_format="text",
-                                  output=io.StringIO(), progress=io.StringIO())
-                    load.assert_not_called()
+                output=io.StringIO()
+                with patch('dota_kg.ontology.load_ontology',return_value=self.graph):
+                    run_query(self.query_file(query),directory=self.ontology,
+                              output=output,progress=io.StringIO())
+                self.assertIn(expected,output.getvalue())
+
+    def test_long_explanations_are_wrapped_into_separate_records(self):
+        explanation='Длинное объяснение взаимодействия. '*20
+        self.graph.add((EX.rubick,EX.long,Literal(explanation)))
+        path=self.query_file('SELECT ?evidence WHERE { <urn:stat:rubick> <urn:stat:long> ?evidence }')
+        output=io.StringIO()
+        with patch('dota_kg.ontology.load_ontology',return_value=self.graph):
+            run_query(path,directory=self.ontology,output=output,progress=io.StringIO())
+        self.assertTrue(all(len(line)<=88 for line in output.getvalue().splitlines()))
+        self.assertEqual(' '.join(output.getvalue().split())[len('1. Объяснение: '):],explanation.strip())
+        self.assertNotIn('-+-',output.getvalue())
 
     def test_text_rejects_missing_answers_without_printing_partial_results(self):
         path = self.query_file('SELECT ?answer WHERE { VALUES ?answer { "Known" UNDEF } }')
@@ -162,7 +173,7 @@ class SparqlRunnerTests(unittest.TestCase):
         self.assertEqual(count, 0)
         self.assertEqual(output.getvalue(), "В размеченных данных подходящих вариантов не найдено.\n")
 
-    def test_unbound_rows_are_preserved_in_table_and_csv(self):
+    def test_unbound_rows_are_preserved_in_text_and_csv(self):
         path = self.query_file('''
             PREFIX ex: <urn:stat:>
             SELECT ?missing WHERE {
@@ -170,7 +181,7 @@ class SparqlRunnerTests(unittest.TestCase):
                 OPTIONAL { ex:rubick ex:missing ?missing }
             }
         ''')
-        for output_format in ("table", "csv"):
+        for output_format in ("text", "csv"):
             with self.subTest(output_format=output_format):
                 output = io.StringIO()
                 with patch("dota_kg.ontology.load_ontology", return_value=self.graph):
@@ -181,7 +192,7 @@ class SparqlRunnerTests(unittest.TestCase):
                     self.assertEqual(list(csv.reader(io.StringIO(output.getvalue()))),
                                      [["missing"], [""]])
                 else:
-                    self.assertEqual(len(output.getvalue().splitlines()), 3)
+                    self.assertIn("missing: Нет значения",output.getvalue())
 
     def test_construct_exports_precise_turtle(self):
         precise = Literal(0.12345678901234566, datatype=XSD.double)
@@ -220,6 +231,21 @@ class SparqlRunnerTests(unittest.TestCase):
                         run_query(path, directory=self.ontology, output=io.StringIO(),
                                   progress=io.StringIO())
                 load.assert_not_called()
+
+    def test_custom_description_column_is_localized_without_changing_json_export(self):
+        source='Shackleshot can be disjointed.'
+        self.graph.add((EX.rubick,EX.description,Literal(source)))
+        path=self.query_file('SELECT ?description WHERE { <urn:stat:rubick> <urn:stat:description> ?description }')
+        for fmt in ('text','json'):
+            output=io.StringIO()
+            with patch('dota_kg.ontology.load_ontology',return_value=self.graph):
+                run_query(path,directory=self.ontology,output_format=fmt,
+                          output=output,progress=io.StringIO())
+            if fmt=='text':
+                self.assertIn('Снаряд этой способности можно сбить с цели.',output.getvalue())
+                self.assertNotIn('can be disjointed',output.getvalue())
+            else:
+                self.assertIn(source,output.getvalue())
 
     def test_csv_preserves_russian_evidence_quotes_newlines_and_zero(self):
         path = self.query_file('''

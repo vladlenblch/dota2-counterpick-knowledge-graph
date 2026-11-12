@@ -7,6 +7,7 @@ import re
 from rdflib import RDFS
 
 from .ontology_schema import KG
+from .localization import russian_text
 
 _TOKEN = re.compile(r'\{s:([A-Za-z_][A-Za-z0-9_]*)\}|%([A-Za-z_][A-Za-z0-9_]*)%')
 
@@ -84,12 +85,21 @@ def render_game_text(graph, owner, text, *, values=None):
             return overrides.get(_key(name[6:]), match.group(0))
         if key in overrides:
             return overrides[key]
+        if name.casefold().startswith('bonus_'):
+            bonus = overrides.get(_key(name[6:]))
+            if bonus is not None:
+                return bonus
         return base.get(key, match.group(0))
 
     rendered = _TOKEN.sub(substitute, html.unescape(str(text or '')))
     rendered = re.sub(r'<br\s*/?>|</(?:h[1-6]|p|div)>', ' ', rendered, flags=re.I)
     rendered = re.sub(r'</?[A-Za-z][^>]*>', '', rendered)
     return re.sub(r'\s+', ' ', rendered.replace('%%', '%')).strip()
+
+
+def render_russian_game_text(graph, owner, text, *, values=None):
+    """Render the official translation, retaining the original if it is absent."""
+    return render_game_text(graph, owner, russian_text(text), values=values)
 
 
 def _modifier_records(graph, owner, *, talent=None, facet=None):
@@ -120,8 +130,8 @@ def _fallback(graph, records, prefix):
         if rendered is None:
             continue
         heading = _value(graph, parameter, KG.parameterHeading, '')
-        label = re.sub(r'<[^>]+>|\$', '', heading).strip(' :')
-        label = label or re.sub(r'[_\s]+', ' ', name).strip()
+        label = re.sub(r'<[^>]+>|\$', '', russian_text(heading)).strip(' :')
+        label = label or russian_text(name)
         if label:
             rows.append(f'{label}: {rendered}')
     return prefix + '; '.join(dict.fromkeys(rows)) if rows else ''
@@ -131,7 +141,7 @@ def talent_text(graph, owner, talent):
     """Resolve all bonus placeholders from this ability and this talent together."""
     labels = sorted(graph.objects(talent, RDFS.label), key=lambda label: (
         not (getattr(label, 'language', None) or '').lower().startswith('ru'), str(label)))
-    text = str(labels[0]) if labels else ''
+    text = russian_text(labels[0]) if labels else ''
     records = _modifier_records(graph, owner, talent=talent)
     values = _known_values(records)
     rendered = render_game_text(graph, owner, text, values=values)
@@ -167,13 +177,13 @@ def facet_text(graph, owner, facet_name):
              if _value(graph, note, KG.noteKind) == 'facet' and _value(graph, note, KG.noteText, '')]
     # A single named facet and single prose note form an unambiguous pairing.
     if set(facets) == {facet_name} and len(notes) == 1:
-        text = _value(graph, notes[0], KG.noteText, '')
+        text = russian_text(_value(graph, notes[0], KG.noteText, ''))
         if not _TOKEN.search(text):
             return render_game_text(graph, owner, text, values=values)
     for note in notes:
         if _value(graph, note, KG.noteKind) != 'facet':
             continue
-        text = _value(graph, note, KG.noteText, '')
+        text = russian_text(_value(graph, note, KG.noteText, ''))
         tokens = set()
         for match in _TOKEN.finditer(text):
             name = match.group(1) or match.group(2)
