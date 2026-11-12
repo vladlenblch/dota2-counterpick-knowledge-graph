@@ -9,6 +9,7 @@ from pathlib import Path
 
 import pyarrow.parquet as pq
 from rdflib import BNode, Graph, Literal, RDF, RDFS, OWL, XSD, URIRef
+from rdflib.collection import Collection
 from pyshacl import validate
 
 from .ontology_schema import KG, SH, TABLES, ROLE_PROPERTIES, bind, schema_graph
@@ -85,6 +86,31 @@ def make_shapes():
         prop(KG.numericValue, None, lo=0), prop(KG.hasBaseValue, KG.ParameterValue, lo=0, hi=None)]
     rules["GameNote"] = [prop(KG.noteText, XSD.string), prop(KG.noteKind, XSD.string),
                          prop(KG.position, XSD.integer, lower=0)]
+    rules["Mechanic"] = []
+    rules["Effect"] = [prop(KG.effectMechanic, KG.Mechanic), prop(KG.evidence, XSD.string),
+        prop(KG.effectStatus, XSD.string), prop(KG.derivedFromFeatureValue, KG.FeatureValue, lo=0),
+        prop(KG.requiresCondition, KG.InteractionCondition, lo=0, hi=None),
+        prop(KG.requiredDispel, XSD.string, lo=0)]
+    rules["CounterRule"] = [prop(KG.sourceMechanic, KG.Mechanic), prop(KG.targetMechanic, KG.Mechanic),
+        prop(KG.ruleStatus, XSD.string), prop(KG.evidence, XSD.string),
+        prop(KG.requiresCondition, KG.InteractionCondition, hi=None),
+        prop(KG.blockedByCondition, KG.InteractionCondition, lo=0, hi=None)]
+    rules["InteractionCondition"] = [prop(KG.conditionKind, XSD.string), prop(KG.conditionScope, XSD.string),
+        prop(KG.conditionText, XSD.string), prop(KG.conditionItem, KG.Item, lo=0),
+        prop(KG.conditionMechanic, KG.Mechanic, lo=0), prop(KG.conditionTalent, KG.Talent, lo=0)]
+    rules["HeroContext"] = [prop(KG.hero, KG.Hero), prop(KG.contextComplete, XSD.boolean),
+        prop(KG.heldItem, KG.Item, lo=0, hi=None), prop(KG.selectedTalent, KG.Talent, lo=0, hi=None)]
+    rules["ItemRolePreference"] = [prop(KG.item, KG.Item), prop(KG.roleName, XSD.string),
+        prop(KG.purchasePhase, XSD.string), prop(KG.preferenceRank, XSD.integer, lower=1, upper=3),
+        prop(KG.attackType, XSD.string, lo=0), prop(KG.evidence, XSD.string)]
+    choices = {
+        KG.conditionScope: ("source", "target"),
+        KG.conditionKind: ("review", "has-item", "has-mechanic", "has-talent"),
+        KG.ruleStatus: ("heuristic",),
+        KG.effectStatus: ("feature-derived", "curated-description", "structured-description"),
+        KG.requiredDispel: ("Basic", "Strong", "None"),
+        KG.purchasePhase: ("early", "mid", "late"),
+    }
     for cls, properties in rules.items():
         node = KG[cls + "Shape"]
         graph.add((node, RDF.type, SH.NodeShape))
@@ -105,6 +131,27 @@ def make_shapes():
                 graph.add((constraint, SH.minInclusive, Literal(lower)))
             if upper is not None:
                 graph.add((constraint, SH.maxInclusive, Literal(upper)))
+            if path in choices:
+                values = BNode(cls + "-choices-" + str(index))
+                Collection(graph, values, [Literal(v, datatype=XSD.string) for v in choices[path]])
+                graph.add((constraint, SH["in"], values))
+    alternatives = []
+    for kind, target in (("review", None), ("has-item", KG.conditionItem),
+                         ("has-mechanic", KG.conditionMechanic), ("has-talent", KG.conditionTalent)):
+        branch = BNode("condition-" + kind)
+        constraint = BNode("condition-kind-" + kind)
+        graph.add((branch, SH.property, constraint))
+        graph.add((constraint, SH.path, KG.conditionKind))
+        graph.add((constraint, SH.hasValue, Literal(kind, datatype=XSD.string)))
+        if target:
+            required = BNode("condition-target-" + kind)
+            graph.add((branch, SH.property, required))
+            graph.add((required, SH.path, target))
+            graph.add((required, SH.minCount, Literal(1)))
+        alternatives.append(branch)
+    branches = BNode("condition-alternatives")
+    Collection(graph, branches, alternatives)
+    graph.add((KG.InteractionConditionShape, SH["or"], branches))
     return graph
 
 
@@ -161,8 +208,9 @@ def validate_hierarchy(graph):
     """Enforce homogeneous sibling groups: entities, characteristics, facts, statistics."""
     groups = {
         "Entity": {"Hero", "Ability", "Item"},
-        "GameCharacteristic": {"Feature", "Parameter"},
-        "GameFact": {"FeatureValue", "ParameterValue", "ParameterModifier", "GameNote"},
+        "GameCharacteristic": {"Feature", "Parameter", "Mechanic"},
+        "GameFact": {"FeatureValue", "ParameterValue", "ParameterModifier", "GameNote",
+                     "Effect", "CounterRule", "InteractionCondition", "HeroContext", "ItemRolePreference"},
         "Statistics": {"HeroStatisticsObservation", "MatchupObservation", "ItemUsageObservation"},
     }
     expected = {KG[root]: set() for root in groups}

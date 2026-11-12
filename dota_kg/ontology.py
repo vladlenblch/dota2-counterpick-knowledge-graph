@@ -4,6 +4,7 @@ from __future__ import annotations
 import gc
 import hashlib
 import io
+import json
 import math
 import os
 from pathlib import Path
@@ -12,8 +13,7 @@ import tempfile
 from urllib.parse import quote
 import xml.etree.ElementTree as ET
 
-import pyarrow.parquet as pq
-from rdflib import Graph, Literal, RDF, RDFS, OWL, XSD, URIRef
+from rdflib import BNode, Graph, Literal, RDF, RDFS, OWL, XSD, URIRef
 from rdflib.plugins.serializers.turtle import TurtleSerializer
 
 from .common import ROOT
@@ -66,6 +66,8 @@ def entity(kind: str, identifier) -> URIRef:
 
 
 def read_tables(root: Path) -> dict:
+    import pyarrow.parquet as pq
+
     paths = sorted((Path(root) / "data/final").glob("*.parquet"))
     if {p.stem for p in paths} != set(TABLES):
         raise ValueError("Input tables differ from the explicit ontology mapping")
@@ -114,12 +116,70 @@ def write_package(root: Path, rows: dict, output: Path):
     ET.ElementTree(catalog).write(output / "catalog-v001.xml", encoding="utf-8", xml_declaration=True)
 
 
-def load_ontology(directory: Path) -> Graph:
+def _read_graph_cache(source):
+    payload = json.load(source)
+    terms = []
+    for kind, value, datatype, language in payload["terms"]:
+        if kind == "uri":
+            term = URIRef(value)
+        elif kind == "blank":
+            term = BNode(value)
+        elif kind == "literal":
+            term = Literal(value, datatype=URIRef(datatype) if datatype else None,
+                           lang=language, normalize=False)
+        else:
+            raise ValueError("Unknown cached RDF term")
+        terms.append(term)
+    graph = bind(Graph())
+    graph.addN((terms[s], terms[p], terms[o], graph) for s, p, o in payload["triples"])
+    return graph
+
+
+def _write_graph_cache(graph, stream):
+    indexes, terms, triples = {}, [], []
+    for triple in graph:
+        row = []
+        for term in triple:
+            if term not in indexes:
+                indexes[term] = len(terms)
+                if isinstance(term, Literal):
+                    terms.append(["literal", str(term), str(term.datatype) if term.datatype else None, term.language])
+                else:
+                    terms.append(["blank" if isinstance(term, BNode) else "uri", str(term), None, None])
+            row.append(indexes[term])
+        triples.append(row)
+    json.dump({"terms": terms, "triples": triples}, stream, ensure_ascii=False, separators=(",", ":"))
+
+
+def load_ontology(directory: Path, *, progress=None, cache=False) -> Graph:
     """Resolve all imports from the local catalog without network requests."""
     directory = Path(directory).resolve()
     ns = {"c": "urn:oasis:names:tc:entity:xmlns:xml:catalog"}
-    catalog = ET.parse(directory / "catalog-v001.xml")
+    catalog_path = directory / "catalog-v001.xml"
+    catalog = ET.parse(catalog_path)
     mapping = {e.attrib["name"]: e.attrib["uri"] for e in catalog.findall("c:uri", ns)}
+    fingerprint = None
+    cache_path = directory / ".cache" / "game.json"
+    if cache:
+        sources = {(directory / name).resolve() for name in (*mapping.values(), "game.ttl")}
+        digest = hashlib.sha256(catalog_path.read_bytes())
+        for path in sorted(sources):
+            if not path.is_relative_to(directory) or not path.is_file():
+                raise ValueError("Import must be a bundled local ontology file")
+            digest.update(str(path.relative_to(directory)).encode("utf-8"))
+            digest.update(path.read_bytes())
+        fingerprint = "# source-sha256: " + digest.hexdigest() + "\n"
+        try:
+            with cache_path.open(encoding="utf-8") as source:
+                if source.readline() == fingerprint:
+                    if progress:
+                        progress("Чтение кэша графа...")
+                    return _read_graph_cache(source)
+        except FileNotFoundError:
+            pass
+        except (OSError, ValueError, KeyError, IndexError, TypeError):
+            if progress:
+                progress("Кэш недоступен или повреждён; читаю исходный RDF...")
     graph, seen, pending = bind(Graph()), set(), [directory / "game.ttl"]
     while pending:
         path = pending.pop()
@@ -128,12 +188,31 @@ def load_ontology(directory: Path) -> Graph:
         if not path.is_relative_to(directory) or not path.is_file():
             raise ValueError("Import must be a bundled local ontology file")
         seen.add(path)
-        module = Graph().parse(path, format="turtle")
-        graph += module
-        for identifier in module.objects(None, OWL.imports):
+        if progress:
+            progress(f"Чтение {path.name}...")
+        graph.parse(path, format="turtle")
+        for identifier in graph.objects(None, OWL.imports):
             if str(identifier) not in mapping:
                 raise ValueError(f"Unmapped ontology import: {identifier}")
             pending.append((directory / mapping[str(identifier)]).resolve())
+    if cache:
+        temporary = None
+        try:
+            if progress:
+                progress("Сохранение кэша для следующих запусков...")
+            cache_path.parent.mkdir(exist_ok=True)
+            with tempfile.NamedTemporaryFile(mode="w", encoding="utf-8", dir=cache_path.parent,
+                                             suffix=".json", delete=False) as stream:
+                temporary = Path(stream.name)
+                stream.write(fingerprint)
+                _write_graph_cache(graph, stream)
+            os.replace(temporary, cache_path)
+        except OSError:
+            if progress:
+                progress("Не удалось сохранить кэш; граф загружен из RDF.")
+        finally:
+            if temporary is not None:
+                temporary.unlink(missing_ok=True)
     return graph
 
 

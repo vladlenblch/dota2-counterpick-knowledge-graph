@@ -384,4 +384,9 @@ class DomainBuilder:
         self.feature_values()
         from .ontology_game_fields import add_game_fields
         add_game_fields(self)
+        from .ontology_interactions import build_interactions
+        source = Graph()
+        source += self.groups["entities"]
+        source += self.groups["features"]
+        self.groups["entities"] += build_interactions(source)
         return self.groups

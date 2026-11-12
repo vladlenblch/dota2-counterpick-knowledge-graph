@@ -5,3 +5,4 @@ __pycache__/
 data/raw/.*-*/
 .env
 /.ontology-*/
+/ontology/.cache/

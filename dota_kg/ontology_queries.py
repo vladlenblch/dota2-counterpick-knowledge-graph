@@ -10,8 +10,6 @@ from rdflib.plugins.sparql import prepareQuery
 
 
 
-# Internal competency checks stay available without bundled query files.
-
 def _check_local_query(value):
     """Reject clauses that would fetch data outside the loaded local graph."""
     if isinstance(value, dict):
@@ -54,7 +52,7 @@ def run_query(query_file: Path, *, directory: Path,
     path = Path(query_file).expanduser()
     if path.suffix.lower() not in (".rq", ".sparql"):
         raise RuntimeError("Откройте и сохраните SPARQL-файл с расширением .rq или .sparql")
-    if output_format not in ("table", "json", "csv", "turtle"):
+    if output_format not in ("text", "table", "json", "csv", "turtle"):
         raise RuntimeError(f"Неизвестный формат результата: {output_format}")
     try:
         text = path.read_text(encoding="utf-8-sig")
@@ -71,6 +69,10 @@ def run_query(query_file: Path, *, directory: Path,
         raise RuntimeError("Формат turtle предназначен для CONSTRUCT и DESCRIBE")
     if prepared.algebra.name == "AskQuery" and output_format == "csv":
         raise RuntimeError("Для ASK используйте формат table или json")
+    if output_format == "text" and (
+            prepared.algebra.name != "SelectQuery"
+            or "answer" not in {str(v) for v in prepared.algebra.PV}):
+        raise RuntimeError("Для формата text нужен SELECT с переменной ?answer")
     started = time.perf_counter()
     print("Загрузка игровой модели...", file=progress, flush=True)
     try:
@@ -80,6 +82,16 @@ def run_query(query_file: Path, *, directory: Path,
         if graph_query:
             output.write(turtle_bytes(result.graph).decode("utf-8"))
             count = len(result.graph)
+        elif output_format == "text":
+            answer_variable = next(v for v in result.vars if str(v) == "answer")
+            answers = [row.get(answer_variable) for row in result.bindings]
+            if any(value is None for value in answers):
+                raise RuntimeError("Запрос оставил ?answer без значения")
+            if not answers:
+                print("В размеченных данных подходящих вариантов не найдено.", file=output)
+            for answer in answers:
+                print(f"- {answer}", file=output)
+            count = len(answers)
         elif output_format == "json":
             output.write(result.serialize(format="json").decode("utf-8"))
             count = 1 if result.type == "ASK" else len(result)

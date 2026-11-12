@@ -324,7 +324,8 @@ def ontology_hierarchy(graph):
         ax.text(x + .015, .735, str(root).split("#")[-1], fontsize=8.5, color=MUTED)
         ax.plot([x + .015, x + width - .015], [.70, .70], color=GRID, linewidth=1)
         nodes = descendants(root)
-        positions = [(.62 - index * .09, depth, node) for index, (depth, node) in enumerate(nodes)]
+        step = min(.09, .57 / max(1, len(nodes) - 1))
+        positions = [(.62 - index * step, depth, node) for index, (depth, node) in enumerate(nodes)]
         first_level = [y for y, depth, _ in positions if depth == 1]
         if first_level:
             ax.plot([x + .018] * 2, [.68, min(first_level)], color=BLUE, linewidth=1.2)
@@ -460,15 +461,16 @@ def ontology_example(graph):
 
 
 def ontology_graph(graph):
-    """Collapse actual object assertions to class pairs; show all OWL classes."""
+    """Draw the base model; the conditional interaction extension is in the guide."""
     import math
     import textwrap
     from matplotlib.path import Path as MplPath
     from matplotlib.patches import FancyArrowPatch
 
     schema = schema_graph(ROOT)
-    classes = set(schema.subjects(RDF.type, OWL.Class))
-    properties = set(schema.subjects(RDF.type, OWL.ObjectProperty))
+    from dota_kg.ontology_interactions import NEW_CLASSES, NEW_PROPERTIES
+    classes = set(schema.subjects(RDF.type, OWL.Class)) - NEW_CLASSES
+    properties = set(schema.subjects(RDF.type, OWL.ObjectProperty)) - NEW_PROPERTIES
     types = defaultdict(set)
     for node, kind in graph.subject_objects(RDF.type):
         if kind in classes:
@@ -534,8 +536,8 @@ def ontology_graph(graph):
     if set(routes) != set(pairs):
         raise ValueError("Update the ontology graph routes for the changed class connections")
 
-    fig = figure("Классы и связи онтологии",
-                 f"{len(classes)} классов и {len(properties)} типов объектных свойств; связи данных свернуты до классов", (17, 15))
+    fig = figure("Базовые классы и связи онтологии",
+                 f"{len(classes)} базовых классов; расширение эффектов и правил описано в docs/interactions.md", (17, 15))
     ax = fig.add_axes([.07, .255, .87, .585])
     ax.set_xlim(-.115, 1.055)
     ax.set_ylim(-.025, .96)

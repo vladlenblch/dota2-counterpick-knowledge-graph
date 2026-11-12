@@ -69,6 +69,52 @@ class SparqlRunnerTests(unittest.TestCase):
                 self.assertEqual(count, 1)
                 self.assertIs(json.loads(output.getvalue())["boolean"], expected)
 
+    def test_text_outputs_only_short_answers_with_multiple_candidates(self):
+        path = self.query_file('''
+            SELECT ?hero ?answer WHERE {
+              VALUES (?hero ?answer) {
+                ("Lion" "Lion может прервать применение через Earth Spike.")
+                ("Beastmaster" "Beastmaster может прервать применение через Primal Roar.")
+              }
+            } ORDER BY ?hero
+        ''')
+        output = io.StringIO()
+        with patch("dota_kg.ontology.load_ontology", return_value=self.graph):
+            count = run_query(path, directory=self.ontology, output_format="text",
+                              output=output, progress=io.StringIO())
+        self.assertEqual(count, 2)
+        self.assertEqual(output.getvalue().splitlines(), [
+            "- Beastmaster может прервать применение через Primal Roar.",
+            "- Lion может прервать применение через Earth Spike."])
+
+    def test_text_requires_answer_select_before_loading(self):
+        for query in ("ASK {}", "SELECT ?value WHERE {}", "CONSTRUCT {} WHERE {}"):
+            with self.subTest(query=query):
+                path = self.query_file(query)
+                with patch("dota_kg.ontology.load_ontology") as load:
+                    with self.assertRaises(RuntimeError):
+                        run_query(path, directory=self.ontology, output_format="text",
+                                  output=io.StringIO(), progress=io.StringIO())
+                    load.assert_not_called()
+
+    def test_text_rejects_missing_answers_without_printing_partial_results(self):
+        path = self.query_file('SELECT ?answer WHERE { VALUES ?answer { "Known" UNDEF } }')
+        output = io.StringIO()
+        with patch("dota_kg.ontology.load_ontology", return_value=self.graph):
+            with self.assertRaisesRegex(RuntimeError, "без значения"):
+                run_query(path, directory=self.ontology, output_format="text",
+                          output=output, progress=io.StringIO())
+        self.assertEqual(output.getvalue(), "")
+
+    def test_text_empty_result_reports_missing_candidates(self):
+        path = self.query_file('SELECT ?answer WHERE { <urn:missing> <urn:missing> ?answer }')
+        output = io.StringIO()
+        with patch("dota_kg.ontology.load_ontology", return_value=self.graph):
+            count = run_query(path, directory=self.ontology, output_format="text",
+                              output=output, progress=io.StringIO())
+        self.assertEqual(count, 0)
+        self.assertEqual(output.getvalue(), "В размеченных данных подходящих вариантов не найдено.\n")
+
     def test_unbound_rows_are_preserved_in_table_and_csv(self):
         path = self.query_file('''
             PREFIX ex: <urn:stat:>

@@ -685,6 +685,86 @@ kg:Parameter a owl:Class ;
     rdfs:comment "Именованная характеристика способности или предмета: урон, радиус, длительность, бонус или стоимость применения."@ru ;
     rdfs:subClassOf kg:GameCharacteristic .
 
+kg:Mechanic a owl:Class ;
+    rdfs:label "Игровая механика"@ru ;
+    rdfs:subClassOf kg:GameCharacteristic .
+
+kg:ItemRolePreference a owl:Class ;
+    rdfs:label "Приоритет покупки предмета по роли"@ru ;
+    rdfs:comment "Рекомендательный приоритет для роли и стадии игры; не запрет покупки другими героями."@ru ;
+    rdfs:subClassOf kg:GameFact .
+kg:purchasePhase a owl:DatatypeProperty ; rdfs:label "Стадия рекомендуемой покупки"@ru ;
+    rdfs:domain kg:ItemRolePreference ; rdfs:range xsd:string .
+kg:preferenceRank a owl:DatatypeProperty ; rdfs:label "Приоритет покупки: 1–3"@ru ;
+    rdfs:domain kg:ItemRolePreference ; rdfs:range xsd:integer .
+kg:dispelTarget a owl:DatatypeProperty ; rdfs:label "Цель развеивания: self или ally"@ru ;
+    rdfs:domain kg:Entity ; rdfs:range xsd:string .
+
+kg:Effect a owl:Class ;
+    rdfs:label "Эффект способности или предмета"@ru ;
+    rdfs:comment "Подтверждённая описанием или признаком механика конкретного источника; не гарантирует применимость в любом контексте."@ru ;
+    rdfs:subClassOf kg:GameFact .
+
+kg:CounterRule a owl:Class ;
+    rdfs:label "Условное правило противодействия"@ru ;
+    rdfs:comment "Направленное правило подбора кандидатов с условиями и ограничениями. Не является статистикой или доказательством преимущества."@ru ;
+    rdfs:subClassOf kg:GameFact .
+
+kg:InteractionCondition a owl:Class ;
+    rdfs:label "Условие взаимодействия"@ru ;
+    rdfs:subClassOf kg:GameFact .
+
+kg:HeroContext a owl:Class ;
+    rdfs:label "Контекст героя"@ru ;
+    rdfs:comment "Заданный пользователем набор предметов и талантов. contextComplete означает полноту только этого набора; отсутствие контекста не означает отсутствие предметов."@ru ;
+    rdfs:subClassOf kg:GameFact .
+
+kg:hasEffect a owl:ObjectProperty ; rdfs:label "Имеет эффект"@ru ;
+    rdfs:domain kg:Entity ; rdfs:range kg:Effect .
+kg:effectMechanic a owl:ObjectProperty ; rdfs:label "Механика эффекта"@ru ;
+    rdfs:domain kg:Effect ; rdfs:range kg:Mechanic .
+kg:featureMechanic a owl:ObjectProperty ; rdfs:label "Механика, представленная признаком героя"@ru ;
+    rdfs:domain kg:Feature ; rdfs:range kg:Mechanic .
+kg:derivedFromFeatureValue a owl:ObjectProperty ; rdfs:label "Основание эффекта в признаках"@ru ;
+    rdfs:domain kg:Effect ; rdfs:range kg:FeatureValue .
+kg:sourceMechanic a owl:ObjectProperty ; rdfs:label "Противодействующая механика"@ru ;
+    rdfs:domain kg:CounterRule ; rdfs:range kg:Mechanic .
+kg:targetMechanic a owl:ObjectProperty ; rdfs:label "Целевая механика"@ru ;
+    rdfs:domain kg:CounterRule ; rdfs:range kg:Mechanic .
+kg:requiresCondition a owl:ObjectProperty ; rdfs:label "Требует условия"@ru ;
+    rdfs:domain kg:GameFact ; rdfs:range kg:InteractionCondition .
+kg:blockedByCondition a owl:ObjectProperty ; rdfs:label "Ограничено условием"@ru ;
+    rdfs:domain kg:GameFact ; rdfs:range kg:InteractionCondition .
+kg:conditionItem a owl:ObjectProperty ; rdfs:label "Предмет в условии"@ru ;
+    rdfs:domain kg:InteractionCondition ; rdfs:range kg:Item .
+kg:conditionMechanic a owl:ObjectProperty ; rdfs:label "Механика в условии"@ru ;
+    rdfs:domain kg:InteractionCondition ; rdfs:range kg:Mechanic .
+kg:rulePurpose a owl:DatatypeProperty ;
+    rdfs:label "Назначение правила: counter или compensate"@ru ;
+    rdfs:domain kg:CounterRule ; rdfs:range xsd:string .
+
+kg:conditionTalent a owl:ObjectProperty ; rdfs:label "Талант в условии"@ru ;
+    rdfs:domain kg:InteractionCondition ; rdfs:range kg:Talent .
+kg:heldItem a owl:ObjectProperty ; rdfs:label "Предмет в заданном наборе"@ru ;
+    rdfs:domain kg:HeroContext ; rdfs:range kg:Item .
+kg:selectedTalent a owl:ObjectProperty ; rdfs:label "Выбранный талант"@ru ;
+    rdfs:domain kg:HeroContext ; rdfs:range kg:Talent .
+kg:conditionScope a owl:DatatypeProperty ; rdfs:label "Сторона условия: source или target"@ru ;
+    rdfs:domain kg:InteractionCondition ; rdfs:range xsd:string .
+kg:conditionKind a owl:DatatypeProperty ; rdfs:label "Вид условия: review, has-item, has-mechanic, has-talent"@ru ;
+    rdfs:domain kg:InteractionCondition ; rdfs:range xsd:string .
+kg:conditionText a owl:DatatypeProperty ; rdfs:label "Пояснение условия"@ru ;
+    rdfs:domain kg:InteractionCondition ; rdfs:range xsd:string .
+kg:ruleStatus a owl:DatatypeProperty ; rdfs:label "Статус правила"@ru ;
+    rdfs:domain kg:CounterRule ; rdfs:range xsd:string .
+kg:effectStatus a owl:DatatypeProperty ; rdfs:label "Основание разметки эффекта"@ru ;
+    rdfs:domain kg:Effect ; rdfs:range xsd:string .
+kg:requiredDispel a owl:DatatypeProperty ; rdfs:label "Необходимое развеивание: Basic, Strong или None"@ru ;
+    rdfs:comment "Для проверенных отрицательных эффектов расшифровывается из кода Valve: 1 — Strong, 2 — Basic, 3 — None. Код 0 не задаёт снимаемость. Код способности не копируется на несвязанные эффекты."@ru ;
+    rdfs:domain kg:Effect ; rdfs:range xsd:string .
+kg:contextComplete a owl:DatatypeProperty ; rdfs:label "Набор предметов и талантов указан полностью"@ru ;
+    rdfs:domain kg:HeroContext ; rdfs:range xsd:boolean .
+
 [] a owl:AllDisjointClasses ;
     owl:members ( kg:Entity kg:GameCharacteristic kg:GameFact kg:Statistics ) .
 

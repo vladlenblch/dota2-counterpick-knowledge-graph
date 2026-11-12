@@ -101,6 +101,9 @@ def validate_game(game, rows):
     supplemental = validate_game_fields(game, rows)
     extra_expected = supplemental["expected"]
     extra_relations = supplemental["relations"]
+    from .ontology_interactions import validate_interactions
+    for cls, nodes in validate_interactions(game).items():
+        extra_expected.setdefault(cls, set()).update(nodes)
     expected = defaultdict(set)
     relations = defaultdict(set)
     counts = defaultdict(int)

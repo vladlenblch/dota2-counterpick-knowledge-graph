@@ -110,6 +110,10 @@ class DatasetSparqlScenarios(unittest.TestCase):
         result = check_scenarios(graph, root)
         self.assertTrue(all(check["passed"] for check in result.values()))
         self.assertEqual(len(result), 4)
+        from scripts.check_competency_queries import check_queries
+        answers = check_queries(graph, root)
+        self.assertEqual(len(answers), 12)
+        self.assertTrue(all(check["example_check_passed"] for check in answers.values()))
         # Regression: generic Valve damages=[0, 0, 0, 0] hid the actual
         # tooltip components behind an unrelated zero-filled damage link.
         from dota_kg.ontology_domain_validation import DomainReader

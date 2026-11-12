@@ -3,11 +3,9 @@ from __future__ import annotations
 
 import argparse
 import json
+import sys
+import time
 from pathlib import Path
-
-from . import opendota, valve
-from .build import build
-
 
 def main():
     parser = argparse.ArgumentParser(description="Current Dota 2 knowledge graph datasets")
@@ -21,10 +19,32 @@ def main():
         command.add_argument("--output", type=Path, help="Ontology directory, default: ontology/")
     query = sub.add_parser("query", help="Выполнить локальный SPARQL-запрос из файла")
     query.add_argument("file", type=Path, help="Файл .rq или .sparql")
-    query.add_argument("--format", choices=("table", "json", "csv", "turtle"), default="table",
+    query.add_argument("--format", choices=("text", "table", "json", "csv", "turtle"), default="table",
                        help="Формат результата; по умолчанию таблица, для графа Turtle")
+    ask = sub.add_parser("ask", help="Задать вопрос локальному графу обычным текстом")
+    ask.add_argument("question", help="Например: кто контрит ПЛ на миде")
+    ask.add_argument("--format", choices=("text", "json"), default="text")
+    ask.add_argument("--limit", type=int, default=3, help="Вариантов на группу/вопрос, по умолчанию 3")
     args = parser.parse_args()
     try:
+        if args.command == "ask":
+            from .common import ROOT
+            started = time.perf_counter()
+            progress = lambda message: print(message, file=sys.stderr, flush=True)
+            progress("Загрузка графа знаний...")
+            from .ontology import load_ontology
+            from .answers import KnowledgeBase, print_answer
+            if args.limit < 1:
+                raise ValueError("Число вариантов должно быть положительным.")
+            graph = load_ontology(ROOT / "ontology", progress=progress, cache=True)
+            progress(f"Загружено {len(graph):,} троек за {time.perf_counter() - started:.1f} с. Поиск ответа...")
+            result = KnowledgeBase(graph).ask(args.question, limit=args.limit)
+            if args.format == "json":
+                print(json.dumps(result, ensure_ascii=False, indent=2))
+            else:
+                print_answer(result, sys.stdout)
+            progress(f"Готово за {time.perf_counter() - started:.1f} с.")
+            return
         if args.command == "query":
             from .common import ROOT
             from .ontology_queries import run_query
@@ -32,6 +52,7 @@ def main():
                       output_format=args.format)
             return
         elif args.command == "build":
+            from .build import build
             result = build()
         elif args.command in ("ontology", "validate-ontology"):
             from .common import ROOT
@@ -47,10 +68,16 @@ def main():
                                                    "cells_checked", "class_counts")}
             result["report"] = str((args.output or ROOT / "ontology") / "validation.json")
         elif args.source == "valve":
+            from . import valve
             result = valve.collect()
         elif args.source == "opendota":
+            from . import opendota
             result = opendota.collect()
-    except RuntimeError as error:
+    except ModuleNotFoundError as error:
+        parser.exit(1, f"В этом Python нет зависимости {error.name}. Запустите команду через .\\.venv\\Scripts\\python.exe или активируйте .venv.\n")
+    except KeyboardInterrupt:
+        parser.exit(130, "\nВыполнение отменено.\n")
+    except (RuntimeError, ValueError) as error:
         parser.exit(1, f"{error}\n")
     print(json.dumps(result, ensure_ascii=False, indent=2))
 
