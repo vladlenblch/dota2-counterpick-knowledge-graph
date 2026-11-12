@@ -133,6 +133,8 @@ class QuestionParser:
     def entities(self, text, preferred_type=None):
         matches = [(m.start(), m.end(), entities) for pattern, entities in self.aliases
                    for m in pattern.finditer(text)]
+        mentioned_heroes = {next(iter(entities)) for _, _, entities in matches
+                            if len(entities) == 1 and (next(iter(entities)), RDF.type, KG.Hero) in self.graph}
         selected = []
         for start, end, entities in sorted(matches, key=lambda m: (-(m[1]-m[0]), m[0])):
             if any(start < b and end > a for a, b, _ in selected):
@@ -141,8 +143,17 @@ class QuestionParser:
                 preferred = {e for e in entities if (e, RDF.type, preferred_type) in self.graph}
                 if preferred:
                     entities = preferred
+            if len(entities) > 1 and mentioned_heroes:
+                contextual = {e for e in entities if set(self.graph.objects(e, KG.hero)) & mentioned_heroes
+                              or set(self.graph.subjects(KG.hasAbility, e)) & mentioned_heroes}
+                if len(contextual) == 1:
+                    entities = contextual
             if len(entities) != 1:
-                names = sorted(str(self.graph.value(e, RDFS.label)) for e in entities)
+                names = []
+                for entity in sorted(entities, key=str):
+                    owner = self.graph.value(entity, KG.hero) or next(self.graph.subjects(KG.hasAbility, entity), None)
+                    label = str(self.graph.value(entity, RDFS.label))
+                    names.append(label + (f" ({self.graph.value(owner, RDFS.label)})" if owner else ''))
                 raise ValueError(f"Неоднозначное название «{text[start:end]}»: {', '.join(names)}. Укажите полное имя.")
             selected.append((start, end, next(iter(entities))))
         return sorted(selected)
@@ -164,7 +175,7 @@ class QuestionParser:
         text = normalize(text)
         if not text:
             raise ValueError("Введите вопрос о героях, способностях или предметах.")
-        preferred_type = KG.Ability if re.search(r"способност|заклинани|умени", text) else KG.Hero
+        preferred_type = KG.Ability if re.search(r"способност|заклинани|умени|можно ли снять|проходит ли|условиях работает", text) else KG.Hero
         found = self.entities(text, preferred_type)
         has_item = any((entity, RDF.type, KG.Item) in self.graph for _, _, entity in found)
         # Routing order prevents e.g. an enemy BKB question being treated as CQ08.
@@ -222,7 +233,7 @@ class QuestionParser:
                 q.enemy = unique_heroes[0]
             else:
                 q.hero = unique_heroes[0]
-        if cq in (3, 7) and q.subject is None and q.item:
+        if q.subject is None and q.item and (cq == 3 or cq in (6, 7) and not (q.hero or q.enemy)):
             q.subject, q.item = q.item, None
         if cq == 4 and q.enemy and re.search(r"может ли|сможет ли", text):
             q.hero, q.enemy = q.enemy, None

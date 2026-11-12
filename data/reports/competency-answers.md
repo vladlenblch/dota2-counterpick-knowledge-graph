@@ -17,14 +17,14 @@
 
 ## cq03: При каких условиях работает Shackleshot?
 
-- Shackleshot: A unit or tree behind the target enables the full stun; otherwise only the short stun applies. This spell can shackle two enemies together, stunning them both. Can shackle the target to an enemy unit or tree at most %shackle_distance% behind the target. Shackleshot can be disjointed. Shackleshot applies to all units and trees behind the target unit and grants Windranger bonus attack damage for each additional shackled unit and tree. Creeps and trees grant less bonus damage.
+- Shackleshot: A unit or tree behind the target enables the full stun; otherwise only the short stun applies. This spell can shackle two enemies together, stunning them both. Can shackle the target to an enemy unit or tree at most 575 behind the target. Shackleshot can be disjointed.
 
 
 ## cq04: Чем прервать Freezing Field?
 
-- Riki — Smoke Screen: Безмолвие против «Freezing Field».
-- Doom — Doom: Безмолвие против «Freezing Field».
-- Medusa — Stone Gaze: Оглушение против «Freezing Field».
+- Lion — Hex: Превращение против «Freezing Field».
+- Shadow Shaman — Hex: Превращение против «Freezing Field».
+- Tusk — Snowball: Оглушение против «Freezing Field».
 - Scythe of Vyse: Превращение против «Freezing Field». После активации эффекта предмета.
 - Abyssal Blade: Оглушение против «Freezing Field». После активации эффекта предмета.
 - Bloodthorn: Безмолвие против «Freezing Field». После активации эффекта предмета.
@@ -33,29 +33,35 @@
 ## cq05: Что помогает против иллюзий ПЛ?
 
 - Axe — Counter Helix: Урон по области в ответ на атаки против «Doppelganger, Juxtapose».
-- Sven — Great Cleave: Рассекающий урон от атак ближнего боя против «Doppelganger, Juxtapose».
+- Sven — Great Cleave: Рассекающий урон от атак против «Doppelganger, Juxtapose».
 - Leshrac — Pulse Nova: Продолжительный урон по области против «Doppelganger, Juxtapose».
 - Radiance: Продолжительный урон по области против «Doppelganger, Juxtapose».
-- Maelstrom: CHAIN_LIGHTNING против «Doppelganger, Juxtapose».
+- Maelstrom: Цепной урон против «Doppelganger, Juxtapose».
 - Mjollnir: Ответные молнии при получении атак против «Doppelganger, Juxtapose». После активации эффекта предмета. Цель Static Charge должна получать атаки; молнии срабатывают с вероятностью. Наложить Static Charge на атакуемую цель; ответные молнии срабатывают с вероятностью.
 
 
 ## cq06: Чем обнаруживать невидимых противников?
 
-- Bloodseeker — Thirst: Обнаружение невидимости против «Невидимость». Здоровье врага ниже порога True Sight у Thirst.
-- Zeus — Lightning Bolt: Обнаружение невидимости против «Невидимость».
-- Slardar — Corrosive Haze: Обнаружение невидимости против «Невидимость».
-- Essence Distiller: Обнаружение невидимости против «Невидимость». После активации эффекта предмета.
+- Bloodseeker — Thirst: Обнаружение невидимых целей против «Невидимость». Здоровье врага ниже порога True Sight у Thirst.
+- Zeus — Lightning Bolt: Обнаружение невидимых целей против «Невидимость».
+- Slardar — Corrosive Haze: Обнаружение невидимых целей против «Невидимость».
+- Gem of True Sight: Обнаружение невидимых целей против «Невидимость».
+- Sentry Ward: Обнаружение невидимых целей против «Невидимость».
+- Dust of Appearance: Обнаружение невидимых целей против «Невидимость». Во время действия эффекта.
 
 
 ## cq07: Какие эффекты Lion можно снять развеиванием?
 
-- Earth Spike: Dark Pact — сильное развеивание (на себе).
+- To Hell and Back: Усиление урона заклинаний не снимается развеиванием.
 - Earth Spike: Aphotic Shield — сильное развеивание (на союзнике).
 - Earth Spike: Press The Attack — сильное развеивание (на союзнике).
-- Hex: Dark Pact — сильное развеивание (на себе).
+- Earth Spike: False Promise — сильное развеивание (на союзнике).
+- Earth Spike: Aeon Disk — сильное развеивание (на себе).
 - Hex: Aphotic Shield — сильное развеивание (на союзнике).
 - Hex: Press The Attack — сильное развеивание (на союзнике).
+- Hex: False Promise — сильное развеивание (на союзнике).
+- Hex: Aeon Disk — сильное развеивание (на себе).
+- Mana Drain: Замедление передвижения не снимается развеиванием.
 
 
 ## cq08: Какие способности Beastmaster проходят сквозь BKB?
@@ -65,9 +71,9 @@
 
 ## cq09: Что купить Anti-Mage на керри против ПЛ в середине игры?
 
-- Для Anti-Mage: Battle Fury: Рассекающий урон от атак ближнего боя против «Doppelganger, Juxtapose». Cleave требует атак ближнего боя.
+- Для Anti-Mage: Battle Fury: Рассекающий урон от атак против «Doppelganger, Juxtapose». Cleave требует атак ближнего боя.
 - Для Anti-Mage: Manta Style: Обычное развеивание против «Spirit Lance». После активации эффекта предмета.
-- Для Anti-Mage: Monkey King Bar: ACCURACY_PROC против «Phantom Rush». У противника: Во время сближения с целью через Phantom Rush.
+- Для Anti-Mage: Monkey King Bar: Вероятностное попадание сквозь уклонение против «Phantom Rush». У противника: Во время сближения с целью через Phantom Rush.
 
 
 ## cq10: Какие уязвимости Lion компенсировать предметами в начале игры?
@@ -77,8 +83,8 @@
 
 ## cq11: Как Lion контрит Crystal Maiden, если у противника активный BKB?
 
-- Earth Spike против Black King Bar: Активный эффект предмета ограничивает это противодействие.
-- Hex против Black King Bar: Активный эффект предмета ограничивает это противодействие.
+- Earth Spike против Black King Bar: контроль блокируется невосприимчивостью.
+- Hex против Black King Bar: контроль блокируется невосприимчивостью.
 
 
 ## cq12: Что Shard меняет у Morphling?

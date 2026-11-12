@@ -9,7 +9,7 @@ from .ontology_schema import KG
 
 # Rare situational counters may pass through role evidence; generic farming
 # alternatives must have evidence of use by the actual hero.
-SITUATIONAL_FAMILIES = {'passive', 'healing', 'accuracy', 'control', 'attack-denial', 'spell-defense', 'mana'}
+SITUATIONAL_FAMILIES = {'passive', 'healing', 'accuracy', 'control', 'attack-denial', 'spell-defense', 'mana', 'offensive-dispel'}
 
 
 @dataclass
@@ -19,7 +19,6 @@ class ItemAssessment:
     mechanical: float
     suitability: float
     timing: float
-    usage: int
     groups: list
 
     @property
@@ -84,9 +83,7 @@ class ItemRanking:
             if phase == 'early' and not population.get(phase):
                 return 0.
             return .1 + .9 * math.sqrt(population.get(phase, 0) / max(population.values()))
-        phases = {self.model.value(p, KG.purchasePhase) for p in self.graph.subjects(KG.item, item)
-                  if (p, RDF.type, KG.ItemRolePreference) in self.graph}
-        return 0. if phases and phase not in phases else 1.
+        return 1.
 
     def applications(self, hero, enemy, *, owner=None, purpose='counter', focus=None, needs=None):
         m = self.model
@@ -116,7 +113,7 @@ class ItemRanking:
             if code == 'DEBUFF_IMMUNITY':
                 witnesses = tuple(f for f in witnesses if f.recipient in {'enemy', 'area', 'both'}
                                   and m.value(f.owner, KG.piercesDebuffImmunity) is not True)
-            elif code == 'BASIC_DISPEL' and app.rule.purpose == 'purchase':
+            elif code == 'BASIC_DISPEL' and app.rule.purpose == 'purchase' and app.rule.target != 'DISPELLABLE_BUFF':
                 witnesses = tuple(f for f in witnesses if f.recipient in {'enemy', 'area', 'both'}
                                   and (m.value(f.uri, KG.requiredDispel) == 'Basic'
                                   or m.value(f.owner, KG.dispellableCode) == 2))
@@ -132,6 +129,8 @@ class ItemRanking:
             if purpose == 'counter' and app.rule.family == 'sustain':
                 continue  # Generic regeneration is not a specific counter-purchase.
             value = app.value
+            if app.rule.family == 'vision' and app.fact.recipient == 'enemy':
+                value *= .6  # Targeted tracking is less general than area detection.
             if code == 'STUN' and 'chance' in app.fact.evidence.lower():
                 chances = [v for p, h, v in m.parameter_values(item) if 'chance' in p['name'].lower() and 'damage' not in p['name'].lower() and 0 < v <= 100
                            and ('ranged' if m.stats.get(hero, {}).get('attackType') == 'Melee' else 'melee') not in p['name'].lower()]
@@ -210,7 +209,8 @@ class ItemRanking:
                     and all(f.evidence.startswith('{') for f in self.model.owner_facts.get(item, ()))):
                 continue
             if (owner is None and maximum >= 20 and count / maximum < .025
-                    and not (purpose == 'compensate' and count > 0)):
+                    and not (purpose == 'compensate' and (count > 0 or self.model.value(item, KG.cost, 0) <= 2000))
+                    and not any(a.rule.family == 'vision' for a in apps)):
                 # Broadly useful, role-compatible situational answers can survive a
                 # sparse personal sample. Unobserved generic damage items cannot.
                 carry = (self.model.value(hero, KG.mostPopularPosition) == 1
@@ -219,17 +219,30 @@ class ItemRanking:
                         and a.need.importance >= .7 and a.value >= 1.5
                         and (count > 0 or carry or a.rule.target == 'FORCED_COMBAT') for a in apps)):
                     continue
+            # A specialized active purchase needs a matching functional benefit.
+            # Its incidental numeric armor alone is not a counter-purchase; explicit
+            # inspection and compensation questions retain those stat bonuses.
+            if (owner is None and purpose == 'counter'
+                    and all(a.fact.evidence.lstrip().startswith('{') for a in apps)
+                    and any(not f.evidence.lstrip().startswith('{')
+                            for f in self.model.owner_facts.get(item, ()))):
+                continue
             total, groups = self.model.aggregate(apps)
+            if purpose == 'compensate':
+                # Compare the cost of remedies to a numeric weakness, allowing
+                # useful cheap components absent from the top-build sample.
+                fit *= math.sqrt(1000 / max(1, self.model.value(item, KG.cost, 1000)))
             score = total * fit * timing
             if score > 0:
-                results.append(ItemAssessment(item, score, total, fit, timing, count, groups))
+                results.append(ItemAssessment(item, score, total, fit, timing, groups))
         ordered = sorted(results, key=lambda row: (-row.score, str(row.item)))
         if owner is not None:
             return ordered
         # Offer different solutions, not several purchases with the same main action.
         selected, seen = [], set()
         for row in ordered:
-            key = row.primary.rule.family, (None if row.primary.rule.family == 'accuracy' else row.primary.fact.code)
+            key = row.primary.rule.family, (row.item if row.primary.rule.family == 'vision' else
+                  None if row.primary.rule.family == 'accuracy' else row.primary.fact.code)
             if key not in seen:
                 selected.append(row)
                 seen.add(key)

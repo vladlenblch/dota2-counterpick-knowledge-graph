@@ -178,6 +178,28 @@ class ItemRankingTests(unittest.TestCase):
         row=self.ranking().rank(self.hero,self.enemy,owner=self.first)[0]
         self.assertAlmostEqual(row.mechanical,2. * 1.7 / 10.)
 
+    def test_passive_effect_does_not_inherit_an_unrelated_active_cooldown(self):
+        effect=URIRef(str(self.first)+'/effect/TEST_ONE')
+        self.g.set((effect,KG.evidence,literal('Passive: Always on.')))
+        for item in (self.first,self.second):
+            self.parameter(item,'cooldown',100.)
+            self.g.add((item,KG.hasCooldown,URIRef(str(item)+'/param/cooldown')))
+        ranker=self.ranking()
+        passive=ranker.rank(self.hero,self.enemy,owner=self.first)[0]
+        active=ranker.rank(self.hero,self.enemy,owner=self.second)[0]
+        self.assertGreater(passive.mechanical,active.mechanical)
+
+    def test_incidental_stats_do_not_justify_an_unrelated_specialized_active_purchase(self):
+        effect=URIRef(str(self.first)+'/effect/TEST_ONE')
+        self.g.set((effect,KG.evidence,literal('{"bonus_armor": 10}')))
+        self.effect(self.first,'UNRELATED_ACTIVE','enemy','Active: unrelated effect')
+        ranker=self.ranking()
+        self.assertNotIn(self.first,[r.item for r in ranker.rank(self.hero,self.enemy)])
+        self.assertTrue(ranker.rank(self.hero,self.enemy,owner=self.first))
+        self.effect(self.spell,'ACTIVE_TARGET','self')
+        self.rule('UNRELATED_ACTIVE','ACTIVE_TARGET','offensive-dispel',3.)
+        self.assertIn(self.first,[r.item for r in self.ranking().rank(self.hero,self.enemy)])
+
     def test_purchase_only_rules_do_not_change_hero_scores(self):
         ability=self.node('ability/own',KG.Ability)
         self.g.add((self.hero,KG.hasAbility,ability));self.effect(ability,'TEST_ONE','enemy')

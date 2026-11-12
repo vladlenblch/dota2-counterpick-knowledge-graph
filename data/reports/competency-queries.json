@@ -1,5 +1,5 @@
 {
-  "triples": 599625,
+  "triples": 596777,
   "scope": "12 text examples, not complete game coverage",
   "queries": {
     "cq01": {
@@ -17,7 +17,6 @@
           "effect": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/5244/effect/SUSTAINED_AOE/enemy/base",
           "kind": "ability",
           "rule": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/counter-rule/SUSTAINED_AOE/GROUPED_UNITS",
-          "rule_status": "heuristic",
           "evidence": "Creates waves of damaging energy around Leshrac, one per second, to damage nearby enemy units. Drains Leshrac's mana with each pulse.",
           "target_facts": [
             "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/5066/effect/CREATES_ILLUSIONS/area/base",
@@ -44,7 +43,6 @@
               "effect": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/5244/effect/SUSTAINED_AOE/enemy/base",
               "kind": "ability",
               "rule": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/counter-rule/SUSTAINED_AOE/GROUPED_UNITS",
-              "rule_status": "heuristic",
               "evidence": "Creates waves of damaging energy around Leshrac, one per second, to damage nearby enemy units. Drains Leshrac's mana with each pulse.",
               "target_facts": [
                 "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/5066/effect/CREATES_ILLUSIONS/area/base",
@@ -66,7 +64,6 @@
               "effect": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/5241/effect/AOE_DAMAGE/enemy/base",
               "kind": "ability",
               "rule": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/counter-rule/AOE_DAMAGE/GROUPED_UNITS",
-              "rule_status": "heuristic",
               "evidence": "Splits the earth under enemies. Deals damage and stuns for a short duration.",
               "target_facts": [
                 "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/5066/effect/CREATES_ILLUSIONS/area/base",
@@ -88,7 +85,6 @@
               "effect": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/5242/effect/AOE_DAMAGE/enemy/base",
               "kind": "ability",
               "rule": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/counter-rule/AOE_DAMAGE/GROUPED_UNITS",
-              "rule_status": "heuristic",
               "evidence": "Saturates the area around Leshrac with magical explosions that deal pure damage to enemy units and buildings. The fewer units available to attack, the more damage those units will take.",
               "target_facts": [
                 "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/5066/effect/CREATES_ILLUSIONS/area/base",
@@ -110,7 +106,6 @@
               "effect": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/5241/effect/STUN/enemy/base",
               "kind": "ability",
               "rule": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/counter-rule/STUN/MOBILITY",
-              "rule_status": "heuristic",
               "evidence": "Deals damage and stuns for a short duration.",
               "target_facts": [
                 "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/1221/effect/DASH/self/base"
@@ -129,7 +124,6 @@
               "effect": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/5242/effect/PURE_DAMAGE/enemy/base",
               "kind": "ability",
               "rule": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/counter-rule/PURE_DAMAGE/HIGH_ARMOR",
-              "rule_status": "heuristic",
               "evidence": "Pure",
               "target_facts": [
                 "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/record/hero_feature_matrix/12/value/HIGH_ARMOR"
@@ -146,7 +140,6 @@
               "effect": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/5241/effect/MAGICAL_DAMAGE/enemy/base",
               "kind": "ability",
               "rule": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/counter-rule/MAGICAL_DAMAGE/HIGH_ARMOR",
-              "rule_status": "heuristic",
               "evidence": "Magical",
               "target_facts": [
                 "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/record/hero_feature_matrix/12/value/HIGH_ARMOR"
@@ -163,7 +156,6 @@
               "effect": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/5244/effect/MAGICAL_DAMAGE/enemy/base",
               "kind": "ability",
               "rule": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/counter-rule/MAGICAL_DAMAGE/HIGH_ARMOR",
-              "rule_status": "heuristic",
               "evidence": "Magical",
               "target_facts": [
                 "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/record/hero_feature_matrix/12/value/HIGH_ARMOR"
@@ -182,7 +174,6 @@
           "effect": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/1226/effect/DEATH_EXPLOSION/enemy/base",
           "kind": "ability",
           "rule": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/counter-rule/DEATH_EXPLOSION/GROUPED_UNITS",
-          "rule_status": "heuristic",
           "evidence": "Sand King's attacks inject a venom that causes enemy units to violently explode when they die that does a flat amount of damage and an additional amount based on the dying units max health.",
           "target_facts": [
             "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/5066/effect/CREATES_ILLUSIONS/area/base",
@@ -209,7 +200,6 @@
               "effect": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/1226/effect/DEATH_EXPLOSION/enemy/base",
               "kind": "ability",
               "rule": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/counter-rule/DEATH_EXPLOSION/GROUPED_UNITS",
-              "rule_status": "heuristic",
               "evidence": "Sand King's attacks inject a venom that causes enemy units to violently explode when they die that does a flat amount of damage and an additional amount based on the dying units max health.",
               "target_facts": [
                 "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/5066/effect/CREATES_ILLUSIONS/area/base",
@@ -231,7 +221,6 @@
               "effect": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/5105/effect/SUSTAINED_AOE/enemy/base",
               "kind": "ability",
               "rule": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/counter-rule/SUSTAINED_AOE/GROUPED_UNITS",
-              "rule_status": "heuristic",
               "evidence": "After a cast point of %abilitycastpoint% seconds, Sand King sends a disturbance into the earth, causing it to shudder violently. All enemies caught within range will take damage and become slowed. Each subsequent pulse increases the radius of damage dealt.",
               "target_facts": [
                 "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/5066/effect/CREATES_ILLUSIONS/area/base",
@@ -253,7 +242,6 @@
               "effect": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/5103/effect/SUSTAINED_AOE/enemy/base",
               "kind": "ability",
               "rule": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/counter-rule/SUSTAINED_AOE/GROUPED_UNITS",
-              "rule_status": "heuristic",
               "evidence": "Sand King creates a fearsome sandstorm that damages enemy units and grants Sand King Invisibility while he is in it. The effect ends when Sand King leaves the area.",
               "target_facts": [
                 "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/5066/effect/CREATES_ILLUSIONS/area/base",
@@ -275,7 +263,6 @@
               "effect": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/5102/effect/STUN/enemy/base",
               "kind": "ability",
               "rule": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/counter-rule/STUN/MOBILITY",
-              "rule_status": "heuristic",
               "evidence": "Sand King burrows into the ground and tunnels forward, damaging and stunning enemy units above him as he resurfaces.",
               "target_facts": [
                 "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/1221/effect/DASH/self/base"
@@ -294,7 +281,6 @@
               "effect": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/1226/effect/MAGICAL_DAMAGE/enemy/base",
               "kind": "ability",
               "rule": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/counter-rule/MAGICAL_DAMAGE/HIGH_ARMOR",
-              "rule_status": "heuristic",
               "evidence": "Magical",
               "target_facts": [
                 "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/record/hero_feature_matrix/12/value/HIGH_ARMOR"
@@ -311,7 +297,6 @@
               "effect": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/5102/effect/MAGICAL_DAMAGE/enemy/base",
               "kind": "ability",
               "rule": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/counter-rule/MAGICAL_DAMAGE/HIGH_ARMOR",
-              "rule_status": "heuristic",
               "evidence": "Magical",
               "target_facts": [
                 "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/record/hero_feature_matrix/12/value/HIGH_ARMOR"
@@ -328,7 +313,6 @@
               "effect": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/5103/effect/MAGICAL_DAMAGE/enemy/base",
               "kind": "ability",
               "rule": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/counter-rule/MAGICAL_DAMAGE/HIGH_ARMOR",
-              "rule_status": "heuristic",
               "evidence": "Magical",
               "target_facts": [
                 "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/record/hero_feature_matrix/12/value/HIGH_ARMOR"
@@ -347,7 +331,6 @@
           "effect": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/5026/effect/BONUS_DAMAGE_PER_TARGET/enemy/base",
           "kind": "ability",
           "rule": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/counter-rule/BONUS_DAMAGE_PER_TARGET/GROUPED_UNITS",
-          "rule_status": "heuristic",
           "evidence": "Shockwaves travel through the ground, damaging enemy units. Each enemy hit causes an echo to damage nearby units. Real heroes cause two echoes.",
           "target_facts": [
             "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/5066/effect/CREATES_ILLUSIONS/area/base",
@@ -374,7 +357,6 @@
               "effect": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/5026/effect/BONUS_DAMAGE_PER_TARGET/enemy/base",
               "kind": "ability",
               "rule": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/counter-rule/BONUS_DAMAGE_PER_TARGET/GROUPED_UNITS",
-              "rule_status": "heuristic",
               "evidence": "Shockwaves travel through the ground, damaging enemy units. Each enemy hit causes an echo to damage nearby units. Real heroes cause two echoes.",
               "target_facts": [
                 "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/5066/effect/CREATES_ILLUSIONS/area/base",
@@ -396,7 +378,6 @@
               "effect": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/5023/effect/AOE_DAMAGE/enemy/base",
               "kind": "ability",
               "rule": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/counter-rule/AOE_DAMAGE/GROUPED_UNITS",
-              "rule_status": "heuristic",
               "evidence": "Slams the ground with a mighty totem, creating an impassable ridge of stone while stunning and damaging enemy units along its line.",
               "target_facts": [
                 "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/5066/effect/CREATES_ILLUSIONS/area/base",
@@ -418,7 +399,6 @@
               "effect": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/5023/effect/STUN/enemy/base",
               "kind": "ability",
               "rule": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/counter-rule/STUN/MOBILITY",
-              "rule_status": "heuristic",
               "evidence": "Slams the ground with a mighty totem, creating an impassable ridge of stone while stunning and damaging enemy units along its line.",
               "target_facts": [
                 "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/1221/effect/DASH/self/base"
@@ -437,7 +417,6 @@
               "effect": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/5025/effect/STUN/enemy/base",
               "kind": "ability",
               "rule": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/counter-rule/STUN/MOBILITY",
-              "rule_status": "heuristic",
               "evidence": "Causes the earth to shake underfoot, adding additional damage and stuns to nearby enemy units when Earthshaker casts his abilities.",
               "target_facts": [
                 "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/1221/effect/DASH/self/base"
@@ -456,7 +435,6 @@
               "effect": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/5023/effect/MAGICAL_DAMAGE/enemy/base",
               "kind": "ability",
               "rule": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/counter-rule/MAGICAL_DAMAGE/HIGH_ARMOR",
-              "rule_status": "heuristic",
               "evidence": "Magical",
               "target_facts": [
                 "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/record/hero_feature_matrix/12/value/HIGH_ARMOR"
@@ -473,7 +451,6 @@
               "effect": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/5026/effect/MAGICAL_DAMAGE/enemy/base",
               "kind": "ability",
               "rule": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/counter-rule/MAGICAL_DAMAGE/HIGH_ARMOR",
-              "rule_status": "heuristic",
               "evidence": "Magical",
               "target_facts": [
                 "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/record/hero_feature_matrix/12/value/HIGH_ARMOR"
@@ -507,7 +484,6 @@
           "effect": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/5045/effect/HEX/enemy/base",
           "kind": "ability",
           "rule": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/counter-rule/HEX/CHANNELING",
-          "rule_status": "heuristic",
           "evidence": "Transforms an enemy unit into a harmless beast, with all special abilities disabled.",
           "target_facts": [
             "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/5129/effect/CHANNELING/self/base"
@@ -518,7 +494,7 @@
           "conditions": [],
           "hero": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/hero/26",
           "enemy": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/hero/5",
-          "mechanic_score": 2.612973,
+          "mechanic_score": 2.53,
           "family": "control"
         },
         {
@@ -527,7 +503,6 @@
           "effect": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/5044/effect/STUN/enemy/base",
           "kind": "ability",
           "rule": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/counter-rule/STUN/CHANNELING",
-          "rule_status": "heuristic",
           "evidence": "Enemy units are hurled into the air, then are stunned and take damage when they fall.",
           "target_facts": [
             "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/5129/effect/CHANNELING/self/base"
@@ -538,7 +513,7 @@
           "conditions": [],
           "hero": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/hero/26",
           "enemy": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/hero/5",
-          "mechanic_score": 1.978166,
+          "mechanic_score": 1.776923,
           "family": "control"
         }
       ],
@@ -558,11 +533,7 @@
         {
           "source": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/5130",
           "conditions": [
-            "A unit or tree behind the target enables the full stun; otherwise only the short stun applies.",
-            "This spell can shackle two enemies together, stunning them both.",
-            "Can shackle the target to an enemy unit or tree at most %shackle_distance% behind the target.",
-            "Shackleshot can be disjointed.",
-            "Shackleshot applies to all units and trees behind the target unit and grants Windranger bonus attack damage for each additional shackled unit and tree. Creeps and trees grant less bonus damage."
+            "A unit or tree behind the target enables the full stun; otherwise only the short stun applies."
           ],
           "parameters": [
             {
@@ -682,7 +653,7 @@
               "required_facet": null
             }
           ],
-          "answer": "Shackleshot: A unit or tree behind the target enables the full stun; otherwise only the short stun applies. This spell can shackle two enemies together, stunning them both. Can shackle the target to an enemy unit or tree at most %shackle_distance% behind the target. Shackleshot can be disjointed. Shackleshot applies to all units and trees behind the target unit and grants Windranger bonus attack damage for each additional shackled unit and tree. Creeps and trees grant less bonus damage."
+          "answer": "Shackleshot: A unit or tree behind the target enables the full stun; otherwise only the short stun applies. This spell can shackle two enemies together, stunning them both. Can shackle the target to an enemy unit or tree at most 575 behind the target. Shackleshot can be disjointed."
         }
       ],
       "missing_roles": [],
@@ -699,13 +670,12 @@
       },
       "answers": [
         {
-          "answer": "Riki — Smoke Screen: Безмолвие против «Freezing Field».",
-          "source": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/5142",
-          "effect": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/5142/effect/SILENCE/enemy/base",
+          "answer": "Lion — Hex: Превращение против «Freezing Field».",
+          "source": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/5045",
+          "effect": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/5045/effect/HEX/enemy/base",
           "kind": "ability",
-          "rule": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/counter-rule/SILENCE/CHANNELING",
-          "rule_status": "heuristic",
-          "evidence": "Throws down a smoke bomb, silencing enemies and causing them to miss attacks.",
+          "rule": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/counter-rule/HEX/CHANNELING",
+          "evidence": "Transforms an enemy unit into a harmless beast, with all special abilities disabled.",
           "target_facts": [
             "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/5129/effect/CHANNELING/self/base"
           ],
@@ -713,17 +683,16 @@
             "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/5129"
           ],
           "conditions": [],
-          "mechanic_score": 3.30926,
+          "mechanic_score": 2.53,
           "family": "control"
         },
         {
-          "answer": "Doom — Doom: Безмолвие против «Freezing Field».",
-          "source": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/5342",
-          "effect": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/5342/effect/SILENCE/enemy/base",
+          "answer": "Shadow Shaman — Hex: Превращение против «Freezing Field».",
+          "source": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/5079",
+          "effect": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/5079/effect/HEX/enemy/base",
           "kind": "ability",
-          "rule": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/counter-rule/SILENCE/CHANNELING",
-          "rule_status": "heuristic",
-          "evidence": "Inflicts a curse that dispels an enemy and prevents them from casting spells or healing in any way, while taking damage over time.",
+          "rule": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/counter-rule/HEX/CHANNELING",
+          "evidence": "Transforms an enemy unit into a harmless creature, disabling their attacks and abilities.",
           "target_facts": [
             "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/5129/effect/CHANNELING/self/base"
           ],
@@ -731,17 +700,16 @@
             "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/5129"
           ],
           "conditions": [],
-          "mechanic_score": 3.159,
+          "mechanic_score": 2.53,
           "family": "control"
         },
         {
-          "answer": "Medusa — Stone Gaze: Оглушение против «Freezing Field».",
-          "source": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/5507",
-          "effect": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/5507/effect/STUN/enemy/base",
+          "answer": "Tusk — Snowball: Оглушение против «Freezing Field».",
+          "source": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/5566",
+          "effect": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/5566/effect/STUN/enemy/base",
           "kind": "ability",
           "rule": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/counter-rule/STUN/CHANNELING",
-          "rule_status": "heuristic",
-          "evidence": "Petrified units are stunned, and take bonus physical attack damage.",
+          "evidence": "Once launched, any enemies caught in the snowball's path will be stunned and take damage.",
           "target_facts": [
             "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/5129/effect/CHANNELING/self/base"
           ],
@@ -749,7 +717,7 @@
             "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/5129"
           ],
           "conditions": [],
-          "mechanic_score": 2.959949,
+          "mechanic_score": 2.481818,
           "family": "control"
         },
         {
@@ -758,7 +726,6 @@
           "effect": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/96/effect/HEX/enemy/active-1",
           "kind": "item",
           "rule": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/counter-rule/HEX/CHANNELING",
-          "rule_status": "heuristic",
           "evidence": "Active: Hex Turns a target unit into a harmless critter for %sheep_duration% seconds.",
           "target_facts": [
             "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/5129/effect/CHANNELING/self/base"
@@ -769,9 +736,9 @@
           "conditions": [
             "После активации эффекта предмета."
           ],
-          "mechanic_score": 2.53,
+          "mechanic_score": 1.265,
           "family": "control",
-          "score": 2.53
+          "score": 1.265
         },
         {
           "answer": "Abyssal Blade: Оглушение против «Freezing Field». После активации эффекта предмета.",
@@ -779,7 +746,6 @@
           "effect": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/208/effect/STUN/enemy/active-1",
           "kind": "item",
           "rule": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/counter-rule/STUN/CHANNELING",
-          "rule_status": "heuristic",
           "evidence": "Active: Overwhelm Stuns a target enemy unit for %stun_duration% seconds.",
           "target_facts": [
             "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/5129/effect/CHANNELING/self/base"
@@ -790,9 +756,9 @@
           "conditions": [
             "После активации эффекта предмета."
           ],
-          "mechanic_score": 2.013,
+          "mechanic_score": 1.0065,
           "family": "control",
-          "score": 2.013
+          "score": 1.0065
         },
         {
           "answer": "Bloodthorn: Безмолвие против «Freezing Field». После активации эффекта предмета.",
@@ -800,7 +766,6 @@
           "effect": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/250/effect/SILENCE/enemy/active-1",
           "kind": "item",
           "rule": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/counter-rule/SILENCE/CHANNELING",
-          "rule_status": "heuristic",
           "evidence": "Active: Soul Rend Silences a target for %silence_duration% seconds.",
           "target_facts": [
             "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/5129/effect/CHANNELING/self/base"
@@ -811,9 +776,9 @@
           "conditions": [
             "После активации эффекта предмета."
           ],
-          "mechanic_score": 1.8,
+          "mechanic_score": 0.9,
           "family": "control",
-          "score": 1.8
+          "score": 0.9
         }
       ],
       "missing_roles": [],
@@ -835,7 +800,6 @@
           "effect": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/5009/effect/ATTACK_TRIGGERED_AOE/enemy/base",
           "kind": "ability",
           "rule": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/counter-rule/ATTACK_TRIGGERED_AOE/GROUPED_UNITS",
-          "rule_status": "heuristic",
           "evidence": "After a set number of attacks, Axe will perform a helix counter attack, dealing pure damage to all nearby enemies.",
           "target_facts": [
             "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/5066/effect/CREATES_ILLUSIONS/area/base",
@@ -851,12 +815,11 @@
           "family": "units"
         },
         {
-          "answer": "Sven — Great Cleave: Рассекающий урон от атак ближнего боя против «Doppelganger, Juxtapose».",
+          "answer": "Sven — Great Cleave: Рассекающий урон от атак против «Doppelganger, Juxtapose».",
           "source": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/5095",
           "effect": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/5095/effect/CLEAVE_DAMAGE/enemy/base",
           "kind": "ability",
           "rule": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/counter-rule/CLEAVE_DAMAGE/GROUPED_UNITS",
-          "rule_status": "heuristic",
           "evidence": "Sven strikes with great force, cleaving all nearby enemy units with his attack.",
           "target_facts": [
             "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/5066/effect/CREATES_ILLUSIONS/area/base",
@@ -877,7 +840,6 @@
           "effect": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/5244/effect/SUSTAINED_AOE/enemy/base",
           "kind": "ability",
           "rule": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/counter-rule/SUSTAINED_AOE/GROUPED_UNITS",
-          "rule_status": "heuristic",
           "evidence": "Creates waves of damaging energy around Leshrac, one per second, to damage nearby enemy units. Drains Leshrac's mana with each pulse.",
           "target_facts": [
             "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/5066/effect/CREATES_ILLUSIONS/area/base",
@@ -898,7 +860,6 @@
           "effect": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/137/effect/SUSTAINED_AOE/enemy/base",
           "kind": "item",
           "rule": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/counter-rule/SUSTAINED_AOE/GROUPED_UNITS",
-          "rule_status": "heuristic",
           "evidence": "Toggle: Burn When active, scorches enemies for %aura_damage% magical damage per second. Illusions deal %aura_damage_illusions% magical damage per second. Radius: %aura_radius%",
           "target_facts": [
             "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/5066/effect/CREATES_ILLUSIONS/area/base",
@@ -915,12 +876,11 @@
           "score": 4.08
         },
         {
-          "answer": "Maelstrom: CHAIN_LIGHTNING против «Doppelganger, Juxtapose».",
+          "answer": "Maelstrom: Цепной урон против «Doppelganger, Juxtapose».",
           "source": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/166",
           "effect": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/166/effect/CHAIN_LIGHTNING/enemy/reviewed-passive",
           "kind": "item",
           "rule": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/counter-rule/CHAIN_LIGHTNING/GROUPED_UNITS",
-          "rule_status": "heuristic",
           "evidence": "Passive: Chain Lightning Grants a %chain_chance%%% chance on attack to release a bolt of electricity that leaps between %chain_strikes% targets within a %chain_radius% radius, dealing %chain_damage% magical damage to each. Lightning proc pierces evasion.",
           "target_facts": [
             "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/5066/effect/CREATES_ILLUSIONS/area/base",
@@ -942,7 +902,6 @@
           "effect": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/158/effect/RETALIATORY_LIGHTNING/ally/reviewed-active",
           "kind": "item",
           "rule": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/counter-rule/RETALIATORY_LIGHTNING/GROUPED_UNITS",
-          "rule_status": "heuristic",
           "evidence": "Active: Static Charge Places a charged shield on a target unit for %static_duration% seconds which has a %static_chance%%% chance to release a %static_damage% magical damage shocking bolt at a nearby attacker and %static_strikes% additional enemies. Passive: Chain Lightning Grants a %chain_chance%%% chance on attack to release a bolt of electricity that leaps between %chain_strikes% targets within a %chain_radius% radius, dealing %chain_damage% magical damage to each. Lightning proc pierces evasion.",
           "target_facts": [
             "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/5066/effect/CREATES_ILLUSIONS/area/base",
@@ -976,12 +935,11 @@
       },
       "answers": [
         {
-          "answer": "Bloodseeker — Thirst: Обнаружение невидимости против «Невидимость». Здоровье врага ниже порога True Sight у Thirst.",
+          "answer": "Bloodseeker — Thirst: Обнаружение невидимых целей против «Невидимость». Здоровье врага ниже порога True Sight у Thirst.",
           "source": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/5017",
           "effect": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/5017/effect/DETECTION/enemy/base",
           "kind": "ability",
           "rule": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/counter-rule/DETECTION/INVISIBILITY",
-          "rule_status": "heuristic",
           "evidence": "Bloodseeker is invigorated by the wounds of his enemies, gaining bonus movement speed when an enemy hero's health falls below %min_bonus_pct%%%, with the bonuses increasing as their health falls further. If an enemy hero's health falls below %invis_threshold_pct%%%, he will also gain vision and True Sight of that hero. Bonuses stack per hero. Unlocks max movement speed for Bloodseeker.",
           "target_facts": [],
           "target_abilities": [],
@@ -992,12 +950,11 @@
           "family": "vision"
         },
         {
-          "answer": "Zeus — Lightning Bolt: Обнаружение невидимости против «Невидимость».",
+          "answer": "Zeus — Lightning Bolt: Обнаружение невидимых целей против «Невидимость».",
           "source": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/5111",
           "effect": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/5111/effect/DETECTION/enemy/base",
           "kind": "ability",
           "rule": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/counter-rule/DETECTION/INVISIBILITY",
-          "rule_status": "heuristic",
           "evidence": "When cast, Lightning Bolt briefly provides unobstructed vision and True Sight around the target in a %sight_radius_night% radius.",
           "target_facts": [],
           "target_abilities": [],
@@ -1006,12 +963,11 @@
           "family": "vision"
         },
         {
-          "answer": "Slardar — Corrosive Haze: Обнаружение невидимости против «Невидимость».",
+          "answer": "Slardar — Corrosive Haze: Обнаружение невидимых целей против «Невидимость».",
           "source": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/5117",
           "effect": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/5117/effect/DETECTION/enemy/base",
           "kind": "ability",
           "rule": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/counter-rule/DETECTION/INVISIBILITY",
-          "rule_status": "heuristic",
           "evidence": "Reduces enemy armor to amplify physical damage and provides True Sight and vision of the targeted unit, revealing invisibility.",
           "target_facts": [],
           "target_abilities": [],
@@ -1020,21 +976,48 @@
           "family": "vision"
         },
         {
-          "answer": "Essence Distiller: Обнаружение невидимости против «Невидимость». После активации эффекта предмета.",
-          "source": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/1852",
-          "effect": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/1852/effect/DETECTION/enemy/active-1",
+          "answer": "Gem of True Sight: Обнаружение невидимых целей против «Невидимость».",
+          "source": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/30",
+          "effect": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/30/effect/DETECTION/area/passive-2",
           "kind": "item",
           "rule": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/counter-rule/DETECTION/INVISIBILITY",
-          "rule_status": "heuristic",
-          "evidence": "When on enemies, deals %soul_damage_amount% damage per second and provides True Sight over them and shares their vision with the wearer's team.",
+          "evidence": "Passive: True Sight Grants the ability to see invisible units and wards to any allied vision within %radius% range of its carrier.",
           "target_facts": [],
           "target_abilities": [],
-          "conditions": [
-            "После активации эффекта предмета."
-          ],
+          "conditions": [],
           "mechanic_score": 3.5,
           "family": "vision",
           "score": 3.5
+        },
+        {
+          "answer": "Sentry Ward: Обнаружение невидимых целей против «Невидимость».",
+          "source": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/43",
+          "effect": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/43/effect/DETECTION/area/base",
+          "kind": "item",
+          "rule": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/counter-rule/DETECTION/INVISIBILITY",
+          "evidence": "Use: Plant Plants a Sentry Ward, an invisible watcher that grants True Sight, the ability to see invisible enemy units and wards, to any existing allied vision within a %true_sight_range% radius.",
+          "target_facts": [],
+          "target_abilities": [],
+          "conditions": [],
+          "mechanic_score": 3.5,
+          "family": "vision",
+          "score": 3.5
+        },
+        {
+          "answer": "Dust of Appearance: Обнаружение невидимых целей против «Невидимость». Во время действия эффекта.",
+          "source": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/40",
+          "effect": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/40/effect/DETECTION/area/base",
+          "kind": "item",
+          "rule": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/counter-rule/DETECTION/INVISIBILITY",
+          "evidence": "Use: Reveal For %duration% seconds, creates an area that reveals and slows invisible heroes by %movespeed%%% in a %radius% radius where the caster was standing. Invisible units revealed by dust take %damage% damage. The debuff effect on enemies lingers for %linger_duration%s after leaving the area of effect.",
+          "target_facts": [],
+          "target_abilities": [],
+          "conditions": [
+            "Во время действия эффекта."
+          ],
+          "mechanic_score": 3.15,
+          "family": "vision",
+          "score": 3.15
         }
       ],
       "missing_roles": [],
@@ -1051,64 +1034,156 @@
       },
       "answers": [
         {
-          "source": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/5044",
-          "effect": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/5044/effect/STUN/enemy/base",
-          "cleanser": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/5494",
-          "required": "Strong",
-          "scope": "self",
-          "conditions": [],
-          "evidence": "Enemy units are hurled into the air, then are stunned and take damage when they fall.",
-          "answer": "Earth Spike: Dark Pact — сильное развеивание (на себе)."
+          "source": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/1249",
+          "effect": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/1249/effect/SPELL_AMPLIFICATION/self/base",
+          "target_facts": [
+            "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/1249/effect/SPELL_AMPLIFICATION/self/base"
+          ],
+          "required": "None",
+          "evidence": "Lion gains %spell_amp%%% spell amplification for %duration%s after respawning or resurrecting or until he gets a kill or assist.",
+          "offensive": true,
+          "kind": "restriction",
+          "answer": "To Hell and Back: Усиление урона заклинаний не снимается развеиванием."
         },
         {
           "source": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/5044",
           "effect": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/5044/effect/STUN/enemy/base",
-          "cleanser": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/5586",
+          "target_facts": [
+            "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/5044/effect/STUN/enemy/base"
+          ],
           "required": "Strong",
+          "evidence": "Enemy units are hurled into the air, then are stunned and take damage when they fall.",
+          "offensive": false,
+          "cleanser": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/5586",
+          "kind": "ability",
           "scope": "ally",
           "conditions": [],
-          "evidence": "Enemy units are hurled into the air, then are stunned and take damage when they fall.",
+          "strong": true,
           "answer": "Earth Spike: Aphotic Shield — сильное развеивание (на союзнике)."
         },
         {
           "source": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/5044",
           "effect": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/5044/effect/STUN/enemy/base",
-          "cleanser": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/5596",
+          "target_facts": [
+            "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/5044/effect/STUN/enemy/base"
+          ],
           "required": "Strong",
+          "evidence": "Enemy units are hurled into the air, then are stunned and take damage when they fall.",
+          "offensive": false,
+          "cleanser": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/5596",
+          "kind": "ability",
           "scope": "ally",
           "conditions": [],
-          "evidence": "Enemy units are hurled into the air, then are stunned and take damage when they fall.",
+          "strong": true,
           "answer": "Earth Spike: Press The Attack — сильное развеивание (на союзнике)."
         },
         {
-          "source": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/5045",
-          "effect": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/5045/effect/HEX/enemy/base",
-          "cleanser": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/5494",
+          "source": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/5044",
+          "effect": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/5044/effect/STUN/enemy/base",
+          "target_facts": [
+            "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/5044/effect/STUN/enemy/base"
+          ],
           "required": "Strong",
+          "evidence": "Enemy units are hurled into the air, then are stunned and take damage when they fall.",
+          "offensive": false,
+          "cleanser": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/5640",
+          "kind": "ability",
+          "scope": "ally",
+          "conditions": [],
+          "strong": true,
+          "answer": "Earth Spike: False Promise — сильное развеивание (на союзнике)."
+        },
+        {
+          "source": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/5044",
+          "effect": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/5044/effect/STUN/enemy/base",
+          "target_facts": [
+            "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/5044/effect/STUN/enemy/base"
+          ],
+          "required": "Strong",
+          "evidence": "Enemy units are hurled into the air, then are stunned and take damage when they fall.",
+          "offensive": false,
+          "cleanser": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/256",
+          "kind": "item",
           "scope": "self",
           "conditions": [],
-          "evidence": "Transforms an enemy unit into a harmless beast, with all special abilities disabled.",
-          "answer": "Hex: Dark Pact — сильное развеивание (на себе)."
+          "strong": true,
+          "answer": "Earth Spike: Aeon Disk — сильное развеивание (на себе)."
         },
         {
           "source": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/5045",
           "effect": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/5045/effect/HEX/enemy/base",
-          "cleanser": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/5586",
+          "target_facts": [
+            "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/5045/effect/HEX/enemy/base"
+          ],
           "required": "Strong",
+          "evidence": "Transforms an enemy unit into a harmless beast, with all special abilities disabled.",
+          "offensive": false,
+          "cleanser": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/5586",
+          "kind": "ability",
           "scope": "ally",
           "conditions": [],
-          "evidence": "Transforms an enemy unit into a harmless beast, with all special abilities disabled.",
+          "strong": true,
           "answer": "Hex: Aphotic Shield — сильное развеивание (на союзнике)."
         },
         {
           "source": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/5045",
           "effect": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/5045/effect/HEX/enemy/base",
-          "cleanser": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/5596",
+          "target_facts": [
+            "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/5045/effect/HEX/enemy/base"
+          ],
           "required": "Strong",
+          "evidence": "Transforms an enemy unit into a harmless beast, with all special abilities disabled.",
+          "offensive": false,
+          "cleanser": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/5596",
+          "kind": "ability",
           "scope": "ally",
           "conditions": [],
-          "evidence": "Transforms an enemy unit into a harmless beast, with all special abilities disabled.",
+          "strong": true,
           "answer": "Hex: Press The Attack — сильное развеивание (на союзнике)."
+        },
+        {
+          "source": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/5045",
+          "effect": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/5045/effect/HEX/enemy/base",
+          "target_facts": [
+            "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/5045/effect/HEX/enemy/base"
+          ],
+          "required": "Strong",
+          "evidence": "Transforms an enemy unit into a harmless beast, with all special abilities disabled.",
+          "offensive": false,
+          "cleanser": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/5640",
+          "kind": "ability",
+          "scope": "ally",
+          "conditions": [],
+          "strong": true,
+          "answer": "Hex: False Promise — сильное развеивание (на союзнике)."
+        },
+        {
+          "source": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/5045",
+          "effect": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/5045/effect/HEX/enemy/base",
+          "target_facts": [
+            "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/5045/effect/HEX/enemy/base"
+          ],
+          "required": "Strong",
+          "evidence": "Transforms an enemy unit into a harmless beast, with all special abilities disabled.",
+          "offensive": false,
+          "cleanser": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/256",
+          "kind": "item",
+          "scope": "self",
+          "conditions": [],
+          "strong": true,
+          "answer": "Hex: Aeon Disk — сильное развеивание (на себе)."
+        },
+        {
+          "source": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/5046",
+          "effect": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/5046/effect/SLOW/enemy/base",
+          "target_facts": [
+            "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/5046/effect/SLOW/enemy/base"
+          ],
+          "required": "None",
+          "evidence": "If the enemy has no mana remaining, the slow is increased by %movespeed_bonus_when_empty_pct%%%.",
+          "offensive": false,
+          "kind": "restriction",
+          "answer": "Mana Drain: Замедление передвижения не снимается развеиванием."
         }
       ],
       "missing_roles": [],
@@ -1128,6 +1203,7 @@
         {
           "ability": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/5177",
           "pierces": true,
+          "conditions": [],
           "answer": "Primal Roar: проходит сквозь невосприимчивость к эффектам."
         }
       ],
@@ -1148,12 +1224,11 @@
       },
       "answers": [
         {
-          "answer": "Для Anti-Mage: Battle Fury: Рассекающий урон от атак ближнего боя против «Doppelganger, Juxtapose». Cleave требует атак ближнего боя.",
+          "answer": "Для Anti-Mage: Battle Fury: Рассекающий урон от атак против «Doppelganger, Juxtapose». Cleave требует атак ближнего боя.",
           "source": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/145",
           "effect": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/145/effect/CLEAVE_DAMAGE/enemy/reviewed-passive",
           "kind": "item",
           "rule": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/counter-rule/CLEAVE_DAMAGE/GROUPED_UNITS",
-          "rule_status": "heuristic",
           "evidence": "Active: Chop Tree Destroy a target tree. Passive: Quell Increases attack damage against non-hero units by %quelling_bonus% for melee heroes, and %quelling_bonus_ranged% for ranged. Passive: Cleave Deals %cleave_damage_percent%%% of attack damage as physical damage in a cone up to %cleave_distance% around the target. Deals %cleave_damage_percent_creep%%% against creeps. (Melee Only)",
           "target_facts": [
             "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/5066/effect/CREATES_ILLUSIONS/area/base",
@@ -1176,12 +1251,11 @@
           "timing": 1.0,
           "reasons": [
             {
-              "answer": "Battle Fury: Рассекающий урон от атак ближнего боя против «Doppelganger, Juxtapose». Cleave требует атак ближнего боя.",
+              "answer": "Battle Fury: Рассекающий урон от атак против «Doppelganger, Juxtapose». Cleave требует атак ближнего боя.",
               "source": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/145",
               "effect": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/145/effect/CLEAVE_DAMAGE/enemy/reviewed-passive",
               "kind": "item",
               "rule": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/counter-rule/CLEAVE_DAMAGE/GROUPED_UNITS",
-              "rule_status": "heuristic",
               "evidence": "Active: Chop Tree Destroy a target tree. Passive: Quell Increases attack damage against non-hero units by %quelling_bonus% for melee heroes, and %quelling_bonus_ranged% for ranged. Passive: Cleave Deals %cleave_damage_percent%%% of attack damage as physical damage in a cone up to %cleave_distance% around the target. Deals %cleave_damage_percent_creep%%% against creeps. (Melee Only)",
               "target_facts": [
                 "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/5066/effect/CREATES_ILLUSIONS/area/base",
@@ -1206,7 +1280,6 @@
           "effect": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/147/effect/BASIC_DISPEL/self/base",
           "kind": "item",
           "rule": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/counter-rule/BASIC_DISPEL/SLOW",
-          "rule_status": "heuristic",
           "evidence": "Basic",
           "target_facts": [
             "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/5065/effect/SLOW/enemy/base"
@@ -1231,7 +1304,6 @@
               "effect": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/147/effect/BASIC_DISPEL/self/base",
               "kind": "item",
               "rule": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/counter-rule/BASIC_DISPEL/SLOW",
-              "rule_status": "heuristic",
               "evidence": "Basic",
               "target_facts": [
                 "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/5065/effect/SLOW/enemy/base"
@@ -1248,12 +1320,11 @@
           ]
         },
         {
-          "answer": "Для Anti-Mage: Monkey King Bar: ACCURACY_PROC против «Phantom Rush». У противника: Во время сближения с целью через Phantom Rush.",
+          "answer": "Для Anti-Mage: Monkey King Bar: Вероятностное попадание сквозь уклонение против «Phantom Rush». У противника: Во время сближения с целью через Phantom Rush.",
           "source": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/135",
           "effect": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/135/effect/ACCURACY_PROC/enemy/base",
           "kind": "item",
           "rule": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/counter-rule/ACCURACY_PROC/EVASION",
-          "rule_status": "heuristic",
           "evidence": "Passive: Pierce Grants each attack a %bonus_chance%%% chance to pierce through evasion and deal %bonus_chance_damage% bonus magical damage.",
           "target_facts": [
             "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/1221/effect/EVASION/self/base"
@@ -1273,12 +1344,11 @@
           "timing": 0.333278,
           "reasons": [
             {
-              "answer": "Monkey King Bar: ACCURACY_PROC против «Phantom Rush». У противника: Во время сближения с целью через Phantom Rush.",
+              "answer": "Monkey King Bar: Вероятностное попадание сквозь уклонение против «Phantom Rush». У противника: Во время сближения с целью через Phantom Rush.",
               "source": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/135",
               "effect": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/135/effect/ACCURACY_PROC/enemy/base",
               "kind": "item",
               "rule": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/counter-rule/ACCURACY_PROC/EVASION",
-              "rule_status": "heuristic",
               "evidence": "Passive: Pierce Grants each attack a %bonus_chance%%% chance to pierce through evasion and deal %bonus_chance_damage% bonus magical damage.",
               "target_facts": [
                 "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/1221/effect/EVASION/self/base"
@@ -1315,7 +1385,6 @@
           "effect": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/4/effect/ARMOR_BUFF/self/base",
           "kind": "item",
           "rule": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/counter-rule/ARMOR_BUFF/LOW_ARMOR",
-          "rule_status": "heuristic",
           "evidence": "{\"name\": \"bonus_armor\", \"values_float\": [4], \"is_percentage\": false, \"heading_loc\": \"+$armor\", \"bonuses\": [], \"values_shard\": [], \"values_scepter\": [], \"required_facet\": \"\"}",
           "target_facts": [
             "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/record/hero_feature_matrix/26/value/LOW_ARMOR"
@@ -1325,9 +1394,9 @@
           "item": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/4",
           "mechanic_score": 0.632456,
           "family": "compensation",
-          "score": 0.150428,
+          "score": 0.212737,
           "mechanical_score": 0.632456,
-          "suitability": 0.237847,
+          "suitability": 0.336367,
           "timing": 1.0,
           "reasons": [
             {
@@ -1336,7 +1405,6 @@
               "effect": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/4/effect/ARMOR_BUFF/self/base",
               "kind": "item",
               "rule": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/counter-rule/ARMOR_BUFF/LOW_ARMOR",
-              "rule_status": "heuristic",
               "evidence": "{\"name\": \"bonus_armor\", \"values_float\": [4], \"is_percentage\": false, \"heading_loc\": \"+$armor\", \"bonuses\": [], \"values_shard\": [], \"values_scepter\": [], \"required_facet\": \"\"}",
               "target_facts": [
                 "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/record/hero_feature_matrix/26/value/LOW_ARMOR"
@@ -1371,7 +1439,9 @@
           "rule": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/counter-rule/STUN/CHANNELING",
           "active": true,
           "pierces": false,
-          "answer": "Earth Spike против Black King Bar: Активный эффект предмета ограничивает это противодействие."
+          "conditions": [],
+          "evidence": "Enemy units are hurled into the air, then are stunned and take damage when they fall.",
+          "answer": "Earth Spike против Black King Bar: контроль блокируется невосприимчивостью."
         },
         {
           "source": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/ability/5045",
@@ -1379,7 +1449,9 @@
           "rule": "https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/counter-rule/HEX/CHANNELING",
           "active": true,
           "pierces": false,
-          "answer": "Hex против Black King Bar: Активный эффект предмета ограничивает это противодействие."
+          "conditions": [],
+          "evidence": "Transforms an enemy unit into a harmless beast, with all special abilities disabled.",
+          "answer": "Hex против Black King Bar: контроль блокируется невосприимчивостью."
         }
       ],
       "missing_roles": [],

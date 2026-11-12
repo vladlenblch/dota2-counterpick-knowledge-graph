@@ -90,7 +90,7 @@ def run_query(query_file: Path, *, directory: Path,
     started = time.perf_counter()
     print("Загрузка игровой модели...", file=progress, flush=True)
     try:
-        graph = load_ontology(directory)
+        graph = load_ontology(directory, cache=True)
         print(f"Загружено {len(graph):,} троек. Выполняется {path.name}...", file=progress, flush=True)
         from .questions import QuestionParser
         from .ontology_schema import KG

@@ -7,7 +7,7 @@
     "SHACL: типы, обязательные связи, мощности, количества и границы долей корректны"
   ],
   "errors": [],
-  "triples": 599625,
+  "triples": 596777,
   "package_structure": {
     "imports": [
       "data-entities.ttl",
@@ -16,7 +16,7 @@
       "game.ttl",
       "schema.ttl"
     ],
-    "named_classes": 23
+    "named_classes": 21
   },
   "hierarchy": {
     "Ability": [
@@ -43,9 +43,6 @@
     "Hero": [
       "Entity"
     ],
-    "HeroContext": [
-      "GameFact"
-    ],
     "HeroStatisticsObservation": [
       "Statistics"
     ],
@@ -54,9 +51,6 @@
     ],
     "Item": [
       "Entity"
-    ],
-    "ItemRolePreference": [
-      "GameFact"
     ],
     "ItemUsageObservation": [
       "Statistics"
@@ -119,26 +113,26 @@
       "columns": 4
     },
     "mechanic_catalog": {
-      "rows": 178,
+      "rows": 183,
       "columns": 3
     },
     "counter_rules": {
-      "rows": 104,
+      "rows": 106,
       "columns": 7
     },
     "gameplay_mechanics": {
-      "rows": 2247,
+      "rows": 2263,
       "columns": 9
     }
   },
   "source_tables": 12,
-  "cells_checked": 276579,
+  "cells_checked": 276752,
   "game_model": {
-    "triples": 599625,
-    "classes": 23,
-    "object_properties": 47,
-    "data_properties": 125,
-    "records_verified": 79975,
+    "triples": 596777,
+    "classes": 21,
+    "object_properties": 44,
+    "data_properties": 119,
+    "records_verified": 79879,
     "domain_only": true,
     "short_identifiers": true,
     "anonymous_data_nodes": 0,
@@ -173,20 +167,18 @@
       "FeatureValue": 9652,
       "Feature": 76,
       "Talent": 1016,
-      "HeroContext": 0,
-      "Mechanic": 183,
-      "ItemRolePreference": 12,
-      "CounterRule": 117,
-      "InteractionCondition": 697,
-      "Effect": 2852,
+      "Mechanic": 188,
+      "CounterRule": 119,
+      "InteractionCondition": 590,
+      "Effect": 2868,
+      "Entity": 0,
       "GameCharacteristic": 0,
-      "Statistics": 0,
       "GameFact": 0,
-      "Entity": 0
+      "Statistics": 0
     }
   },
   "relation_types": {
-    "relation_endpoints_checked": 227643,
+    "relation_endpoints_checked": 225020,
     "disjoint_groups_checked": 2
   },
   "class_counts": {
@@ -203,16 +195,14 @@
     "FeatureValue": 9652,
     "Feature": 76,
     "Talent": 1016,
-    "HeroContext": 0,
-    "Mechanic": 183,
-    "ItemRolePreference": 12,
-    "CounterRule": 117,
-    "InteractionCondition": 697,
-    "Effect": 2852,
+    "Mechanic": 188,
+    "CounterRule": 119,
+    "InteractionCondition": 590,
+    "Effect": 2868,
+    "Entity": 0,
     "GameCharacteristic": 0,
-    "Statistics": 0,
     "GameFact": 0,
-    "Entity": 0
+    "Statistics": 0
   },
   "shacl_conforms": true,
   "shacl_report": "Validation Report\nConforms: True\n",
@@ -227,8 +217,8 @@
       "sha256": "d88185d59de9d61da49a003574b1c39632a18969bd066eedb52b3987219e7219"
     },
     "data-entities.ttl": {
-      "bytes": 19566657,
-      "sha256": "7a6fd1e4d2484917c357b0be88dad93619aa841f8e1c0b67762ecb1d0efa3813"
+      "bytes": 19364931,
+      "sha256": "273111c47b6a5e7f15050900049c3073259189a28a0ca62b1fcbd9c0db43a529"
     },
     "data-features.ttl": {
       "bytes": 6662574,
@@ -243,13 +233,13 @@
       "sha256": "4c853934cadc2934877628918de2d8f5b101c7d7a617fa71a10b8e5652b951f0"
     },
     "schema.ttl": {
-      "bytes": 35679,
-      "sha256": "77af070a9cfb0f4dfaa44ee439311bcc4d217626708c4dec79f8187f5b4811c5"
+      "bytes": 33499,
+      "sha256": "292941cb5f3d07cb0a4130ae8dd7a172f81689db5aba802549cc96f632b05f04"
     },
     "shapes.ttl": {
-      "bytes": 16028,
-      "sha256": "0bb6ca28c5a652fb09da25c24da7c6201a570220afbd8aa9616836cea5ec4dfd"
+      "bytes": 13591,
+      "sha256": "c1255e9d71f0940ac40d72c160a70910eb161526419b06f7959f6c9501c11a90"
     }
   },
-  "package_sha256": "42a1db5eb85bd69b2ed5c1f28ba8659556310226c023180785a9658a0cb38ce1"
+  "package_sha256": "00c1d7e5a67852e56d0dd82687c3ff30649f6fc1d6baecac51148005fd8ca151"
 }

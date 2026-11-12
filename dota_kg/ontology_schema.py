@@ -10,6 +10,22 @@ KG = Namespace(BASE + "ontology#")
 RES = Namespace(BASE + "resource/")
 SH = Namespace("http://www.w3.org/ns/shacl#")
 
+# Valve's tooltip flags describe whether an effect can be removed, whereas
+# dispelType describes the kind of dispel that an ability or item applies.
+DISPEL_CODES = {1: "Strong", 2: "Basic", 3: "None"}
+DISPELLABLE_DEBUFFS = {
+    "STUN", "HEX", "SILENCE", "ROOT", "SLOW", "DISARM", "LEASH", "FEAR",
+    "TAUNT", "FORCED_COMBAT", "DAMAGE_OVER_TIME", "ARMOR_REDUCTION",
+    "MAGIC_RESIST_REDUCTION", "ANTI_HEAL", "HEAL_PREVENTION",
+}
+DISPELLABLE_BUFFS = {
+    "ETHEREAL", "PHYSICAL_IMMUNITY", "EVASION", "ARMOR_BUFF",
+    "MAGIC_RESISTANCE_BUFF", "ATTACK_SPEED_BUFF", "MOVEMENT_SPEED_BUFF",
+    "SPELL_AMPLIFICATION", "HEALTH_REGEN", "LIFESTEAL", "SPELL_LIFESTEAL",
+    "DAMAGE_REDUCTION", "DEBUFF_IMMUNITY", "INVISIBILITY", "DAMAGE_BARRIER",
+    "MAGIC_BARRIER", "SLOW_RESISTANCE", "SLOW_IMMUNITY",
+}
+
 TABLES = {
     "heroes": ("Hero", ("hero_id",)),
     "abilities": ("Ability", ("ability_id",)),

@@ -24,11 +24,6 @@ kg:CounterRuleShape a sh:NodeShape ;
             sh:minCount 1 ;
             sh:path kg:targetMechanic ],
         [ sh:datatype xsd:string ;
-            sh:in ( "heuristic"^^xsd:string ) ;
-            sh:maxCount 1 ;
-            sh:minCount 1 ;
-            sh:path kg:ruleStatus ],
-        [ sh:datatype xsd:string ;
             sh:maxCount 1 ;
             sh:minCount 1 ;
             sh:path kg:evidence ],
@@ -46,7 +41,7 @@ kg:CounterRuleShape a sh:NodeShape ;
             sh:minCount 0 ;
             sh:path kg:sourceEffectTarget ],
         [ sh:class kg:InteractionCondition ;
-            sh:minCount 1 ;
+            sh:minCount 0 ;
             sh:path kg:requiresCondition ],
         [ sh:class kg:InteractionCondition ;
             sh:minCount 0 ;
@@ -62,11 +57,6 @@ kg:EffectShape a sh:NodeShape ;
             sh:maxCount 1 ;
             sh:minCount 1 ;
             sh:path kg:evidence ],
-        [ sh:datatype xsd:string ;
-            sh:in ( "feature-derived"^^xsd:string "curated-description"^^xsd:string "structured-description"^^xsd:string ) ;
-            sh:maxCount 1 ;
-            sh:minCount 1 ;
-            sh:path kg:effectStatus ],
         [ sh:class kg:FeatureValue ;
             sh:maxCount 1 ;
             sh:minCount 0 ;
@@ -143,23 +133,6 @@ kg:GameNoteShape a sh:NodeShape ;
             sh:minInclusive 0 ;
             sh:path kg:position ] ;
     sh:targetClass kg:GameNote .
-
-kg:HeroContextShape a sh:NodeShape ;
-    sh:property [ sh:class kg:Hero ;
-            sh:maxCount 1 ;
-            sh:minCount 1 ;
-            sh:path kg:hero ],
-        [ sh:datatype xsd:boolean ;
-            sh:maxCount 1 ;
-            sh:minCount 1 ;
-            sh:path kg:contextComplete ],
-        [ sh:class kg:Item ;
-            sh:minCount 0 ;
-            sh:path kg:heldItem ],
-        [ sh:class kg:Talent ;
-            sh:minCount 0 ;
-            sh:path kg:selectedTalent ] ;
-    sh:targetClass kg:HeroContext .
 
 kg:HeroShape a sh:NodeShape ;
     sh:not [ sh:property [ sh:hasValue 1 ;
@@ -266,20 +239,16 @@ kg:HeroStatisticsObservationShape a sh:NodeShape ;
     sh:targetClass kg:HeroStatisticsObservation .
 
 kg:InteractionConditionShape a sh:NodeShape ;
-    sh:or ( [ sh:property [ sh:hasValue "review"^^xsd:string ;
-                        sh:path kg:conditionKind ] ] [ sh:property [ sh:hasValue "gameplay"^^xsd:string ;
+    sh:or ( [ sh:property [ sh:hasValue "gameplay"^^xsd:string ;
                         sh:path kg:conditionKind ] ] [ sh:property [ sh:hasValue "has-item"^^xsd:string ;
                         sh:path kg:conditionKind ],
                     [ sh:minCount 1 ;
                         sh:path kg:conditionItem ] ] [ sh:property [ sh:hasValue "has-mechanic"^^xsd:string ;
                         sh:path kg:conditionKind ],
                     [ sh:minCount 1 ;
-                        sh:path kg:conditionMechanic ] ] [ sh:property [ sh:hasValue "has-talent"^^xsd:string ;
-                        sh:path kg:conditionKind ],
-                    [ sh:minCount 1 ;
-                        sh:path kg:conditionTalent ] ] ) ;
+                        sh:path kg:conditionMechanic ] ] ) ;
     sh:property [ sh:datatype xsd:string ;
-            sh:in ( "review"^^xsd:string "gameplay"^^xsd:string "has-item"^^xsd:string "has-mechanic"^^xsd:string "has-talent"^^xsd:string ) ;
+            sh:in ( "gameplay"^^xsd:string "has-item"^^xsd:string "has-mechanic"^^xsd:string ) ;
             sh:maxCount 1 ;
             sh:minCount 1 ;
             sh:path kg:conditionKind ],
@@ -299,42 +268,8 @@ kg:InteractionConditionShape a sh:NodeShape ;
         [ sh:class kg:Mechanic ;
             sh:maxCount 1 ;
             sh:minCount 0 ;
-            sh:path kg:conditionMechanic ],
-        [ sh:class kg:Talent ;
-            sh:maxCount 1 ;
-            sh:minCount 0 ;
-            sh:path kg:conditionTalent ] ;
+            sh:path kg:conditionMechanic ] ;
     sh:targetClass kg:InteractionCondition .
-
-kg:ItemRolePreferenceShape a sh:NodeShape ;
-    sh:property [ sh:class kg:Item ;
-            sh:maxCount 1 ;
-            sh:minCount 1 ;
-            sh:path kg:item ],
-        [ sh:datatype xsd:string ;
-            sh:maxCount 1 ;
-            sh:minCount 1 ;
-            sh:path kg:roleName ],
-        [ sh:datatype xsd:string ;
-            sh:in ( "early"^^xsd:string "mid"^^xsd:string "late"^^xsd:string ) ;
-            sh:maxCount 1 ;
-            sh:minCount 1 ;
-            sh:path kg:purchasePhase ],
-        [ sh:datatype xsd:integer ;
-            sh:maxCount 1 ;
-            sh:maxInclusive 3 ;
-            sh:minCount 1 ;
-            sh:minInclusive 1 ;
-            sh:path kg:preferenceRank ],
-        [ sh:datatype xsd:string ;
-            sh:maxCount 1 ;
-            sh:minCount 0 ;
-            sh:path kg:attackType ],
-        [ sh:datatype xsd:string ;
-            sh:maxCount 1 ;
-            sh:minCount 1 ;
-            sh:path kg:evidence ] ;
-    sh:targetClass kg:ItemRolePreference .
 
 kg:ItemShape a sh:NodeShape ;
     sh:property [ sh:datatype xsd:integer ;

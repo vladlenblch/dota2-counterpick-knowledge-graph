@@ -1,9 +1,9 @@
 """Twelve competency tasks, answered by traversing the supplied RDF graph."""
 import re
 
-from rdflib import RDF, RDFS
+from rdflib import RDF, RDFS, URIRef
 
-from .ontology_schema import KG, RES
+from .ontology_schema import KG, RES, DISPELLABLE_BUFFS, DISPELLABLE_DEBUFFS
 from .questions import ROLES, QuestionParser
 
 
@@ -11,9 +11,7 @@ class KnowledgeBase:
     def __init__(self, graph):
         self.graph = graph
         self.parser = QuestionParser(graph)
-        self.heroes = sorted(set(graph.subjects(RDF.type, KG.Hero)), key=str)
         self.owners = sorted(set(graph.subjects(KG.hasEffect, None)), key=str)
-        self.rules = sorted(set(graph.subjects(RDF.type, KG.CounterRule)), key=str)
         self._ranking = None
         self._own_items = frozenset()
         self._enemy_items = frozenset()
@@ -76,22 +74,6 @@ class KnowledgeBase:
     def abilities(self, hero):
         return sorted(self.graph.objects(hero, KG.hasAbility), key=str)
 
-    def traits(self, hero):
-        """Only observed, positive facts and effects supported by abilities."""
-        traits = {}
-        for ability in self.abilities(hero):
-            for effect in self.effects(ability):
-                mechanic = self.graph.value(effect, KG.effectMechanic)
-                traits.setdefault(mechanic, []).append(effect)
-        for fact in self.graph.objects(hero, KG.hasFeatureValue):
-            if self.value(fact, KG.isObserved) is not True or self.value(fact, KG.value, 0) <= 0:
-                continue
-            feature = self.graph.value(fact, KG.feature)
-            for mechanic in self.graph.objects(feature, KG.featureMechanic):
-                if mechanic not in traits:
-                    traits[mechanic] = [fact]
-        return traits
-
     def conditions(self, *nodes):
         result = []
         for node in nodes:
@@ -100,8 +82,7 @@ class KnowledgeBase:
                     # Generic rule qualifications and blocker reminders are not
                     # user instructions. CQ11 checks blockers directly in RDF.
                     if ((node, RDF.type, KG.CounterRule) in self.graph
-                            and (self.value(condition, KG.conditionKind) == "review"
-                                 or prop == KG.blockedByCondition)):
+                            and prop == KG.blockedByCondition):
                         continue
                     text = self.value(condition, KG.conditionText)
                     if text:
@@ -130,7 +111,7 @@ class KnowledgeBase:
             answer = f"{self.label(source_hero)} — " + answer
         return {"answer": answer, "source": str(owner), "effect": str(effect),
                 "kind": "item" if self.is_item(owner) else "ability",
-                "rule": str(rule), "rule_status": self.value(rule, KG.ruleStatus),
+                "rule": str(rule),
                 "evidence": evidence, "target_facts": [str(t) for t in targets],
                 "target_abilities": [str(a) for a in sorted(target_abilities, key=str)],
                 "conditions": conditions, **extra}
@@ -175,40 +156,61 @@ class KnowledgeBase:
                         key=lambda v: self.value(v, KG.position, 0))
         return [self.value(v, KG.numericValue) for v in values]
 
+    def available_effects(self, owner, *, target=False):
+        held, other = ((self._enemy_items, self._own_items) if target else
+                       (self._own_items, self._enemy_items))
+        if self.is_item(owner):
+            held = held | {owner}
+        return [effect for effect in self.effects(owner)
+                if self.ranking.conditions_available(effect, held, other)]
+
     def cq03(self, q):
+        from .game_text import render_game_text
         owners = self.abilities(q.subject) if (q.subject, RDF.type, KG.Hero) in self.graph else [q.subject]
         rows = []
         for owner in owners:
-            conditions = self.conditions(owner, *self.effects(owner))
-            mechanics = {self.graph.value(e, KG.effectMechanic) for e in self.effects(owner)}
-            for rule in self.rules:
-                if self.graph.value(rule, KG.sourceMechanic) in mechanics:
-                    conditions.extend(self.conditions(rule))
-            parameters = [{"uri": str(p), "name": self.value(p, KG.parameterName),
-                           "values": self.series(p), "required_facet": self.value(p, KG.requiredFacet)}
-                          for p in sorted(self.graph.objects(owner, KG.hasParameter), key=str)]
-            notes = [self.value(n, KG.noteText) for n in self.graph.objects(owner, KG.hasNote)]
-            details = list(dict.fromkeys(conditions + [n for n in notes if n]))
-            if not details and not parameters:
-                continue
-            text = " ".join(details)
+            effects = self.effects(owner)
+            per_effect = {effect: self.conditions(effect) for effect in effects}
+            common = set.intersection(*(set(v) for v in per_effect.values())) if effects else set()
+            conditions = list(dict.fromkeys(self.conditions(owner) + sorted(common)))
+            parameters = [{"uri": str(param), "name": self.value(param, KG.parameterName),
+                           "values": self.series(param), "required_facet": self.value(param, KG.requiredFacet)}
+                          for param in sorted(self.graph.objects(owner, KG.hasParameter), key=str)]
+            notes = [self.value(note, KG.noteText) for note in self.graph.objects(owner, KG.hasNote)
+                     if self.value(note, KG.noteKind) != 'facet']
+            details = list(dict.fromkeys(conditions + [note for note in notes if note]))
+            text = ' '.join(render_game_text(self.graph, owner, line) for line in details)
             if not text:
-                continue
-            rows.append({"source": str(owner), "conditions": details, "parameters": parameters,
-                         "answer": f"{self.label(owner)}: {text}"})
+                text = render_game_text(self.graph, owner, self.value(owner, KG.description, ''))
+            if text:
+                rows.append({"source": str(owner), "conditions": conditions, "parameters": parameters,
+                             "answer": f"{self.label(owner)}: {text}"})
+            seen = set()
+            for effect, requirements in per_effect.items():
+                specific = [v for v in requirements if v not in common]
+                if not specific:
+                    continue
+                mechanic = self.graph.value(effect, KG.effectMechanic)
+                key = mechanic, tuple(specific)
+                if key in seen:
+                    continue
+                seen.add(key)
+                rows.append({"source": str(owner), "effect": str(effect), "conditions": specific,
+                             "parameters": [], "conditional": True,
+                             "answer": f"{self.label(owner)}, {self.label(mechanic)}: " + ' '.join(specific)})
         return rows
 
-    def mechanic_task(self, q, focus):
+    def mechanic_task(self, q, focus, *, needs=None):
         from .ranking import Need
         rows = []
-        needs = None
-        if not q.enemy:
+        if needs is None and not q.enemy:
             needs = {code: Need(code, 1., ()) for code in focus}
             if q.subject:
-                facts = [f for profile in (self.ranking.profile(hero)[0] for hero in self.ranking.heroes)
-                         for f in profile if f.owner == q.subject]
-                needs = {code: Need(code, 1., tuple(f for f in facts if f.code == code))
-                         for code in focus if any(f.code == code for f in facts)}
+                owner_hero = self.ranking.ability_hero.get(q.subject)
+                equipment = self._enemy_items | ({q.subject} if self.is_item(q.subject) else set())
+                profile = self.ranking.profile(owner_hero, equipment)
+                needs = {code: Need(code, need.importance, tuple(f for f in need.facts if f.owner == q.subject))
+                         for code, need in profile[3].items() if any(f.owner == q.subject for f in need.facts)}
         heroes = [q.hero] if q.hero else self.ranking.heroes
         for hero in heroes:
             for app in self.ranking.applications(hero, q.enemy, focus=focus, needs=needs):
@@ -228,50 +230,111 @@ class KnowledgeBase:
         return self.mechanic_task(q, {'units', 'GROUPED_UNITS', 'ILLUSIONS'})
 
     def cq06(self, q):
-        return self.mechanic_task(q, {'INVISIBILITY'})
+        profile = None
+        if q.enemy:
+            profile = self.ranking.profile(q.enemy, self._enemy_items)
+        elif q.subject:
+            owner = self.ranking.ability_hero.get(q.subject)
+            equipment = self._enemy_items | ({q.subject} if self.is_item(q.subject) else set())
+            profile = self.ranking.profile(owner, equipment)
+        if profile is None:
+            return self.mechanic_task(q, {'INVISIBILITY'})
+        facts = [f for f in profile[0] if not q.subject or f.owner == q.subject]
+        protected = {f.owner for f in facts if f.code == 'DETECTION_IMMUNITY'}
+        visible_to_detection = tuple(f for f in facts if f.code == 'INVISIBILITY' and f.owner not in protected)
+        from .ranking import Need
+        needs = {'INVISIBILITY': Need('INVISIBILITY', 1., visible_to_detection)} if visible_to_detection else {}
+        rows = []
+        for owner in sorted(protected, key=str):
+            witness = next(f for f in facts if f.owner == owner and f.code == 'DETECTION_IMMUNITY')
+            rows.append({'source': str(owner), 'effect': str(witness.uri), 'evidence': witness.evidence,
+                         'kind': 'item' if self.is_item(owner) else 'ability', 'counterable': False,
+                         'answer': f'{self.label(owner)}: этот эффект не раскрывается обычным True Sight.'})
+        if needs:
+            rows.extend(self.mechanic_task(q, {'INVISIBILITY'}, needs=needs))
+        return rows
 
     def cq07(self, q):
         targets = [q.subject] if q.subject else self.abilities(q.enemy) if q.enemy else self.owners
-        rows = []
+        grouped = {}
         for owner in targets:
-            for effect in self.effects(owner):
+            for effect in self.available_effects(owner, target=True):
+                code = self.ranking.code(self.graph.value(effect, KG.effectMechanic))
+                scope = self.value(effect, KG.effectTarget)
+                if scope not in {'self', 'ally', 'enemy', 'area', 'both'}:
+                    continue
+                if code not in DISPELLABLE_DEBUFFS | DISPELLABLE_BUFFS or code in DISPELLABLE_DEBUFFS and scope == 'self':
+                    continue
                 required = self.value(effect, KG.requiredDispel)
                 if required is None:
                     continue
-                if required == "None":
-                    rows.append({"source": str(owner), "required": required,
-                                 "answer": f"{self.label(owner)}: эффект «{self.label(self.graph.value(effect, KG.effectMechanic))}» не снимается развеиванием."})
+                offensive = code in DISPELLABLE_BUFFS and scope in {'self', 'ally', 'both'}
+                grouped.setdefault((owner, required, offensive), []).append(effect)
+        rows = []
+        for (owner, required, offensive), effects in grouped.items():
+            effect = effects[0]
+            label = ', '.join(dict.fromkeys(self.label(self.graph.value(e, KG.effectMechanic)) for e in effects))
+            common = dict(source=str(owner), effect=str(effect), target_facts=list(map(str, effects)),
+                          required=required, evidence=self.value(effect, KG.evidence), offensive=offensive)
+            if required == 'None':
+                rows.append({**common, 'kind': 'restriction',
+                             'answer': f'{self.label(owner)}: {label} не снимается развеиванием.'})
+                continue
+            for cleanser in self.owners:
+                if q.item and cleanser != q.item:
                     continue
-                for cleanser in self.owners:
-                    if q.item and cleanser != q.item:
+                item = self.is_item(cleanser)
+                if item and (self.value(cleanser, KG.isPurchasable) is not True or self.value(cleanser, KG.isNeutral) is True):
+                    continue
+                if not item and q.hero and cleanser not in self.abilities(q.hero):
+                    continue
+                candidates = []
+                for purge in self.available_effects(cleanser):
+                    code = self.ranking.code(self.graph.value(purge, KG.effectMechanic))
+                    if code not in {'BASIC_DISPEL', 'STRONG_DISPEL', 'CONTINUOUS_DISPEL', 'ALLY_DISPEL'}:
                         continue
-                    scope = self.value(cleanser, KG.dispelTarget)
-                    if scope not in ("self", "ally") or q.ally is True and scope != "ally":
+                    strong = code == 'STRONG_DISPEL'
+                    if required == 'Strong' and not strong:
                         continue
-                    effects = self.effects(cleanser)
-                    strong_effects = [e for e in effects
-                                      if self.graph.value(e, KG.effectMechanic) == RES["mechanic/STRONG_DISPEL"]]
-                    basic_effects = [e for e in effects
-                                     if self.graph.value(e, KG.effectMechanic) == RES["mechanic/BASIC_DISPEL"]]
-                    strong = bool(strong_effects)
-                    usable = strong_effects or (basic_effects if required != "Strong" else [])
-                    if not usable:
+                    scope = self.value(purge, KG.effectTarget)
+                    if offensive:
+                        if scope not in {'enemy', 'both'}:
+                            continue
+                    elif scope not in {'self', 'ally', 'both'} or q.ally is True and scope == 'self' or q.ally is False and scope == 'ally':
                         continue
-                    conditions = self.conditions(*self.alternative_facts(usable))
-                    rows.append({"source": str(owner), "effect": str(effect), "cleanser": str(cleanser),
-                                 "required": required, "scope": scope, "conditions": conditions,
-                                 "evidence": self.value(effect, KG.evidence),
-                                 "answer": (f"{self.label(owner)}: {self.label(cleanser)} — {'сильное' if strong else 'обычное'} развеивание ({'на себе' if scope == 'self' else 'на союзнике'}). " + " ".join(conditions)).rstrip()})
-        return rows
+                    candidates.append((strong, purge, scope))
+                if not candidates:
+                    continue
+                strong, purge, scope = min(candidates, key=lambda c: (c[0], len(self.conditions(c[1])), str(c[1])))
+                conditions = self.conditions(purge)
+                if required == 'Strong' and scope == 'self' and not int(self.value(cleanser, KG.behavior, 0)) & 2:
+                    if not self.value(cleanser, KG.passiveEffect):
+                        conditions.append('Самостоятельное применение требуется до наступления оглушения.')
+                direction = 'на противнике' if offensive else 'на союзнике' if scope == 'ally' else 'на себе' if scope == 'self' else 'на себе или союзнике'
+                rows.append({**common, 'cleanser': str(cleanser), 'kind': 'item' if item else 'ability',
+                             'scope': scope, 'conditions': conditions, 'strong': strong,
+                             'answer': (f"{self.label(owner)}: {self.label(cleanser)} — {'сильное' if strong else 'обычное'} развеивание ({direction}). " + ' '.join(conditions)).rstrip()})
+        return sorted(rows, key=lambda r: (r['source'], r['required'], r.get('strong', False),
+                      r.get('scope') == 'self',
+                      len(r.get('conditions', ())), self.value(URIRef(r.get('cleanser', '')), KG.cost, 0), r.get('cleanser', '')))
 
     def cq08(self, q):
-        owners = [q.subject] if q.subject else self.abilities(q.enemy) if q.enemy else (
-            sorted(set(self.graph.subjects(RDF.type, KG.Ability)), key=str))
-        return [{"ability": str(owner), "pierces": self.value(owner, KG.piercesDebuffImmunity) is True,
-                 "answer": f"{self.label(owner)}: " + ("проходит сквозь невосприимчивость к эффектам."
-                 if self.value(owner, KG.piercesDebuffImmunity) is True else
-                 "не проходит сквозь невосприимчивость к эффектам.")}
-                for owner in owners if q.subject or self.value(owner, KG.piercesDebuffImmunity) is True]
+        owners = [q.subject] if q.subject else self.abilities(q.enemy) if q.enemy else sorted(self.graph.subjects(RDF.type, KG.Ability), key=str)
+        rows = []
+        for owner in owners:
+            effects = self.effects(owner)
+            pierces = self.value(owner, KG.piercesDebuffImmunity) is True or any(
+                self.graph.value(effect, KG.effectMechanic) == RES['mechanic/PIERCES_DEBUFF_IMMUNITY'] for effect in effects)
+            hostile = [effect for effect in effects if self.value(effect, KG.effectTarget) in {'enemy', 'both'}
+                       and self.graph.value(effect, KG.effectMechanic) != RES['mechanic/PIERCES_DEBUFF_IMMUNITY']]
+            if not q.subject and (not pierces or not hostile):
+                continue
+            proofs = [e for e in effects if self.graph.value(e, KG.effectMechanic) == RES['mechanic/PIERCES_DEBUFF_IMMUNITY']]
+            conditions = self.conditions(*self.alternative_facts(proofs))
+            text = 'проходит сквозь невосприимчивость к эффектам.' if pierces else 'не проходит сквозь невосприимчивость к эффектам.'
+            rows.append({'ability': str(owner), 'pierces': pierces, 'conditions': conditions,
+                         'answer': (f'{self.label(owner)}: {text} ' + ' '.join(conditions)).rstrip()})
+        return rows
 
     def item_rows(self, q, purpose="counter"):
         from .item_ranking import ItemRanking
@@ -294,36 +357,78 @@ class KnowledgeBase:
         return self.item_rows(q, purpose="compensate")
 
     def cq11(self, q):
-        item_mechanics = {self.graph.value(e, KG.effectMechanic) for e in self.effects(q.item)}
+        item_codes = {self.ranking.code(self.graph.value(e, KG.effectMechanic)) for e in self.effects(q.item)}
+        defenses = item_codes & {'DEBUFF_IMMUNITY', 'SPELL_BLOCK', 'SPELL_REFLECTION'}
+        if not defenses:
+            return []
+        apps = self.ranking.applications(q.hero, q.enemy, owner=q.subject) if q.enemy else ()
+        applications = {}
+        for app in apps:
+            applications.setdefault(app.fact.owner, app)
+        owners = ([q.subject] if q.subject else self.abilities(q.hero))
         rows = []
-        owners = [q.subject] if q.subject else self.abilities(q.hero)
         for owner in owners:
-            for effect in self.effects(owner):
-                mechanic = self.graph.value(effect, KG.effectMechanic)
-                for rule in self.rules:
-                    if self.graph.value(rule, KG.sourceMechanic) != mechanic:
+            if q.enemy and owner not in applications:
+                continue
+            effects = self.available_effects(owner)
+            relevant = [e for e in effects if self.value(e, KG.effectTarget) in {'enemy', 'both', 'area'}
+                        and self.graph.value(e, KG.effectMechanic) != RES['mechanic/PIERCES_DEBUFF_IMMUNITY']]
+            if not relevant:
+                continue
+            codes = {self.ranking.code(self.graph.value(e, KG.effectMechanic)) for e in relevant}
+            all_codes = {self.ranking.code(self.graph.value(e, KG.effectMechanic)) for e in effects}
+            unit = bool(int(self.value(owner, KG.behavior, 0)) & 8)
+            point = bool(int(self.value(owner, KG.behavior, 0)) & 16)
+            pierces = self.value(owner, KG.piercesDebuffImmunity) is True or 'PIERCES_DEBUFF_IMMUNITY' in all_codes
+            conclusions = []
+            if 'SPELL_BLOCK' in defenses:
+                if q.active is False:
+                    conclusions.append('Блок заклинания потрачен; повторного блока сейчас нет.')
+                elif 'IGNORES_SPELL_BLOCK' in all_codes or not unit:
+                    conclusions.append('Блок направленных заклинаний не срабатывает на эту способность.')
+                else:
+                    conclusions.append('Готовый блок останавливает направленное применение на владельца предмета.')
+                    if point or 'AOE_DAMAGE' in all_codes:
+                        conclusions.append('Попадание через точку или другую цель не является направленным применением на владельца.')
+            if 'SPELL_REFLECTION' in defenses:
+                if q.active is False:
+                    conclusions.append('Эффект отражения не активирован.')
+                elif 'IGNORES_SPELL_REFLECTION' in all_codes or not unit:
+                    conclusions.append('Эта способность не вызывает отражение заклинания.')
+                else:
+                    conclusions.append(('Если отражение активно, ' if q.active is None else '') +
+                                       'отразится копия заклинания; исходный эффект на противнике сохранится.')
+            if 'DEBUFF_IMMUNITY' in defenses:
+                if q.active is False:
+                    conclusions.append('Предмет не активирован, его эффект не действует.')
+                elif pierces:
+                    conclusions.append(('При активном эффекте предмета ' if q.active is None else '') +
+                                       'способность проходит сквозь невосприимчивость к эффектам.')
+                else:
+                    pieces = []
+                    if codes & {'STUN', 'HEX', 'SILENCE', 'ROOT', 'SLOW', 'DISARM', 'LEASH', 'FEAR', 'TAUNT'}:
+                        pieces.append('контроль блокируется невосприимчивостью')
+                    if 'MAGICAL_DAMAGE' in all_codes:
+                        pieces.append('магический урон уменьшается сопротивлением магии')
+                    elif 'PHYSICAL_DAMAGE' in all_codes:
+                        pieces.append('физический урон сохраняется')
+                    elif 'PURE_DAMAGE' in all_codes:
+                        pieces.append('чистый урон без прохода сквозь невосприимчивость блокируется')
+                    if not pieces:
                         continue
-                    if q.enemy and self.graph.value(rule, KG.targetMechanic) not in self.traits(q.enemy):
-                        continue
-                    for blocker in self.graph.objects(rule, KG.blockedByCondition):
-                        block = self.graph.value(blocker, KG.conditionMechanic)
-                        if block not in item_mechanics:
-                            continue
-                        pierces = self.value(owner, KG.piercesDebuffImmunity) is True
-                        if q.active is False:
-                            conclusion = "Предмет не активирован, его эффект не действует."
-                        elif q.active is None:
-                            conclusion = "Одного владения предметом недостаточно: уточните, действует ли его эффект."
-                        elif block == RES["mechanic/DEBUFF_IMMUNITY"] and pierces:
-                            conclusion = "Способность проходит сквозь невосприимчивость к эффектам."
-                        else:
-                            conclusion = "Активный эффект предмета ограничивает это противодействие."
-                        rows.append({"source": str(owner), "item": str(q.item), "rule": str(rule),
-                                     "active": q.active, "pierces": pierces,
-                                     "answer": (f"{self.label(owner)} против {self.label(q.item)}: {conclusion} " + " ".join(self.conditions(effect, rule))).rstrip()})
+                    conclusions.append(('Если эффект активен, ' if q.active is None else '') + '; '.join(pieces) + '.')
+            if not conclusions:
+                continue
+            app = applications.get(owner)
+            effect = app.fact.uri if app else relevant[0]
+            rows.append({'source': str(owner), 'item': str(q.item), 'rule': str(app.rule.uri) if app else None,
+                         'active': q.active, 'pierces': pierces, 'conditions': self.conditions(effect),
+                         'evidence': self.value(effect, KG.evidence),
+                         'answer': f'{self.label(owner)} против {self.label(q.item)}: ' + ' '.join(conclusions)})
         return rows
 
     def cq12(self, q):
+        from .game_text import talent_text, facet_text, render_game_text
         owners = [q.subject] if q.subject else self.abilities(q.hero)
         rows = []
         for owner in owners:
@@ -340,7 +445,8 @@ class KnowledgeBase:
                 if text or parameters or granted is True:
                     if not text and granted is not True:
                         continue
-                    description = text or "Добавляет способность."
+                    description = render_game_text(self.graph, owner, text,
+                        values={p["name"]: p["upgraded"] for p in parameters}) if text else "Добавляет способность."
                     upgrade_name = "Aghanim's Scepter" if kind == "scepter" else "Aghanim's Shard"
                     rows.append({"ability": str(owner), "upgrade": kind, "evidence": text,
                                  "parameters": parameters, "grants_ability": granted is True,
@@ -351,15 +457,30 @@ class KnowledgeBase:
                     kind = "talent" if talent else "facet" if self.value(modifier, KG.modifierKind) == "facet" else None
                     if kind is None or q.upgrade and q.upgrade != kind:
                         continue
-                    name = self.label(talent) if talent else self.value(modifier, KG.conditionName)
+                    name = talent_text(self.graph, owner, talent) if talent else facet_text(self.graph, owner, self.value(modifier, KG.conditionName))
+                    if not name:
+                        continue
                     value = self.value(modifier, KG.numericValue)
                     if value is None:
                         value = self.series(modifier)
                     rows.append({"ability": str(owner), "modifier": str(modifier), "upgrade": kind,
-                                 "talent": str(talent) if talent else None, "value": value,
+                                 "talent": str(talent) if talent else None,
+                                 "facet": self.value(modifier, KG.conditionName) if kind == "facet" else None,
+                                 "parameter": str(parameter), "value": value,
                                  "operation": self.value(modifier, KG.operation),
-                                 "answer": f"{self.label(owner)}: {name}."})
-        return rows
+                                 "answer": f"{self.label(owner)}: {name.rstrip('. ')}."})
+        unique = {}
+        for row in rows:
+            key = row.get('ability'), row.get('upgrade'), row.get('talent') or row.get('facet')
+            if row.get('modifier'):
+                info = {name: row[name] for name in ('modifier', 'parameter', 'value', 'operation')}
+                if key not in unique:
+                    unique[key] = {**row, 'modifiers': [info]}
+                else:
+                    unique[key]['modifiers'].append(info)
+            else:
+                unique.setdefault(key, row)
+        return list(unique.values())
 
     def ask(self, text, limit=3, *, own_items=(), enemy_items=(), level=18):
         if limit < 1:
@@ -382,7 +503,7 @@ class KnowledgeBase:
             if q.cq in (4, 5, 6):
                 group = row["kind"]
             elif q.cq == 7:
-                group = row.get("effect", row["source"])
+                group = (row.get("effect", row["source"]), row.get("kind"))
             entity = row.get("hero") if q.cq == 1 else row.get("item") if q.cq in (9, 10) else None
             if q.cq in (4, 5, 6):
                 entity = row['source']

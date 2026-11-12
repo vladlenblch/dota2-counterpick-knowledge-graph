@@ -14,7 +14,7 @@ from statistics import median
 from rdflib import Graph, RDF, RDFS, URIRef
 
 from .ontology import literal
-from .ontology_schema import KG, RES
+from .ontology_schema import KG, RES, DISPELLABLE_BUFFS
 
 SECOND_ABILITY = .3
 OTHER_GROUPS = .4
@@ -109,7 +109,7 @@ class RankingModel:
                     continue
                 heading = re.sub(r"<[^>]+>", "", self.value(p, KG.parameterHeading, "")).upper()
                 values = self.series(p)
-                parameters.append({"uri": p, "name": self.value(p, KG.parameterName, ""),
+                parameters.append({"name": self.value(p, KG.parameterName, ""),
                                    "heading": heading, "values": values,
                                    "percentage": self.value(p, KG.isPercentage, False)})
             self.parameters[owner] = parameters
@@ -182,12 +182,15 @@ class RankingModel:
         return str(node).rstrip('/').rsplit('/', 1)[-1].rsplit('#', 1)[-1]
 
     def series(self, parameter):
+        if parameter is None:
+            return []
         values = sorted(self.graph.objects(parameter, KG.hasBaseValue),
                         key=lambda node: self.value(node, KG.position, 0))
         return [self.value(node, KG.numericValue) for node in values]
 
     def conditions_available(self, fact, held, opponent=()):
-        for condition in fact.conditions:
+        conditions = fact.conditions if isinstance(fact, Fact) else self.graph.objects(fact, KG.requiresCondition)
+        for condition in conditions:
             if self.value(condition, KG.conditionKind) != "has-item":
                 continue
             equipment = opponent if self.value(condition, KG.conditionScope) == "target" else held
@@ -221,11 +224,30 @@ class RankingModel:
             return [f for code in mechanics for f in by_code.get(code, ())]
 
         for code in sorted(codes):
-            put(code, witnesses=witnesses(code))
-        if codes & {"CREATES_ILLUSIONS", "ILLUSION_DEPENDENCE", "SUMMONS_UNITS", "CLONES"}:
+            proof = witnesses(code)
+            if code == 'INVISIBILITY':
+                proof = [f for f in proof if 'DETECTION_IMMUNITY' not in by_owner[f.owner]]
+            put(code, witnesses=proof)
+        buffs = [f for f in facts if f.code in DISPELLABLE_BUFFS
+                 and f.recipient in {'self', 'ally', 'both'}
+                 and (self.value(f.uri, KG.requiredDispel) == 'Basic'
+                      or self.value(f.owner, KG.dispellableCode) == 2)]
+        if buffs:
+            def buff_importance(fact):
+                if fact.code in {'PHYSICAL_IMMUNITY', 'ETHEREAL'}:
+                    return 1.2
+                if fact.code == 'EVASION':
+                    return .35 if codes & {'CREATES_ILLUSIONS', 'ILLUSION_DEPENDENCE'} else .8
+                if fact.code in {'DAMAGE_REDUCTION', 'DAMAGE_BARRIER', 'MAGIC_BARRIER'}:
+                    return .8
+                return .4
+            importance = max(map(buff_importance, buffs))
+            put('DISPELLABLE_BUFF', importance, [f for f in buffs if buff_importance(f) == importance])
+        ordinary_summons = [f for f in witnesses('SUMMONS_UNITS') if 'SUMMONS_WARDS' not in by_owner[f.owner]]
+        if codes & {"CREATES_ILLUSIONS", "ILLUSION_DEPENDENCE", "CLONES"} or ordinary_summons:
             put("GROUPED_UNITS", 1.2 if "ILLUSION_DEPENDENCE" in codes else
                 .55 if "SUMMONS_UNITS" in codes else .5,
-                witnesses("CREATES_ILLUSIONS", "ILLUSION_DEPENDENCE", "SUMMONS_UNITS", "CLONES"))
+                witnesses("CREATES_ILLUSIONS", "ILLUSION_DEPENDENCE", "CLONES") + ordinary_summons)
         if "CREATES_ILLUSIONS" in codes:
             put("ILLUSIONS", 1.2 if "ILLUSION_DEPENDENCE" in codes else .6, witnesses("CREATES_ILLUSIONS"))
         recovery = codes & {"HEAL", "HEALTH_REGEN", "LIFESTEAL", "SPELL_LIFESTEAL", "DAMAGE_TO_HEALING"}
@@ -424,14 +446,23 @@ class RankingModel:
                 need = needs[rule.target]
                 if need.facts and not any(self.conditions_available(f, enemy_held, held) for f in need.facts):
                     continue
-                value = rule.weight * need.importance * self.strength(fact, hero, enemy, held)
+                strength = self.strength(fact, hero, enemy, held)
+                if rule.target == 'CHANNELING':
+                    cast = self.series(self.graph.value(fact.owner, KG.hasCastPoint))
+                    strength = 1 / (1 + (cast[-1] if cast else 0))
+                    if fact.owner not in self.items and int(self.value(fact.owner, KG.behavior, 0)) & 2:
+                        strength *= .3
+                    triggers = sum(self.value(c, KG.conditionKind) == 'gameplay' for c in fact.conditions)
+                    strength /= 1 + triggers
+                value = rule.weight * need.importance * strength
                 if rule.family == "units" and fact.code in {"CLEAVE_DAMAGE", "MULTI_TARGET_ATTACK"} and "HIGH_ARMOR" in needs:
                     value *= .85
                 if rule.family == "control":
                     value *= {1: 1.1, 2: 1., 3: 1.3}.get(self.value(fact.owner, KG.dispellableCode), 1.)
                 if fact.code in {"SUSTAINED_AOE", "DAMAGE_OVER_TIME"} and self.value(fact.owner, KG.dispellableCode) == 2 and "BASIC_DISPEL" in target_codes:
                     value *= .5
-                if fact.code != "SUSTAINED_AOE":
+                passive_item = fact.owner in self.items and fact.evidence.lstrip().startswith(('Passive:', '{'))
+                if fact.code != "SUSTAINED_AOE" and not passive_item:
                     cooldown = self.native.get(fact.owner, {}).get("cooldown", 0)
                     value *= .7 + .3 * min(1, 20 / max(1, cooldown))
                 if rule.target == "PASSIVE_DEFENSE" and need.facts:
@@ -513,7 +544,6 @@ class RankingModel:
             self.view.add((uri, RDF.type, KG.Effect))
             self.view.add((uri, KG.effectMechanic, RES[f"mechanic/{need.code}"]))
             self.view.add((uri, RDFS.label, literal(self.value(RES[f"mechanic/{need.code}"], RDFS.label, need.code))))
-            self.view.add((uri, KG.effectStatus, literal("structured-description")))
             self.view.add((uri, KG.evidence, literal(' '.join(dict.fromkeys(f.evidence for f in need.facts if f.evidence)))))
             self._target_nodes[key] = uri
         return self._target_nodes[key]

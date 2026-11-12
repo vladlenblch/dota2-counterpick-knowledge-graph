@@ -3,7 +3,7 @@ import json
 import math
 import re
 
-from rdflib import Graph, RDF, RDFS, URIRef
+from rdflib import Graph, RDF, RDFS
 
 from .ontology import literal
 from .ontology_schema import KG, RES, bind
@@ -34,15 +34,10 @@ def build_weighted_rules(game, rows):
             graph.add((rule, RDF.type, KG.CounterRule))
             graph.add((rule, RDFS.label, literal(row['detail_ru'])))
             graph.add((rule, KG.evidence, literal(row['detail_ru'])))
-            graph.add((rule, KG.ruleStatus, literal('heuristic')))
             graph.add((rule, KG.rulePurpose, literal(row['purpose'])))
-            condition = URIRef(f'{rule}/condition/applicability')
-            graph.add((rule, KG.requiresCondition, condition))
-            graph.add((condition, RDF.type, KG.InteractionCondition))
-            graph.add((condition, RDFS.label, literal(row['detail_ru'])))
-            for prop, value in ((KG.conditionKind, 'review'), (KG.conditionScope, 'target'),
-                                (KG.conditionText, row['detail_ru'])):
-                graph.add((condition, prop, literal(value)))
+        elif game.value(rule, KG.evidence) != literal(row['detail_ru']):
+            # Preserve both the original qualification and the refined rule text.
+            graph.add((rule, RDFS.comment, literal(row['detail_ru'])))
         for field, prop in (('source_mechanic', KG.sourceMechanic), ('target_mechanic', KG.targetMechanic)):
             graph.add((rule, prop, RES[f'mechanic/{row[field]}']))
         graph.add((rule, KG.ruleWeight, literal(row['weight'])))

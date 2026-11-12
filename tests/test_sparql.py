@@ -46,7 +46,7 @@ class SparqlRunnerTests(unittest.TestCase):
         with patch("dota_kg.ontology.load_ontology", return_value=self.graph) as load:
             count = run_query(path, directory=self.ontology, output_format="json",
                               output=output, progress=progress)
-        load.assert_called_once_with(self.ontology)
+        load.assert_called_once_with(self.ontology, cache=True)
         self.assertEqual(count, 1)
         result = json.loads(output.getvalue())
         self.assertEqual(result["head"]["vars"], ["hero", "value", "missing", "text"])
@@ -196,7 +196,7 @@ class SparqlRunnerTests(unittest.TestCase):
         with patch("dota_kg.ontology.load_ontology", return_value=self.graph) as load:
             count = run_query(path, directory=self.ontology,
                               output_format="turtle", output=output, progress=io.StringIO())
-        load.assert_called_once_with(self.ontology)
+        load.assert_called_once_with(self.ontology, cache=True)
         self.assertEqual(count, 2)
         restored = Graph().parse(data=output.getvalue(), format="turtle")
         expected = Graph()
