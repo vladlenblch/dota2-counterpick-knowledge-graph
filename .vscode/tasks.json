@@ -23,6 +23,85 @@
       "windows": {
         "command": "${workspaceFolder}/.venv/Scripts/python.exe"
       }
+    },
+    {
+      "label": "SPARQL: контрпики",
+      "type": "process",
+      "command": "${workspaceFolder}/.venv/bin/python",
+      "args": [
+        "-m",
+        "dota_kg",
+        "query",
+        "${workspaceFolder}/queries/01_counterpicks.rq",
+        "--bind",
+        "enemy=${input:rankingEnemy}",
+        "--bind",
+        "position=${input:rankingPosition}"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated",
+        "clear": true
+      },
+      "windows": {
+        "command": "${workspaceFolder}/.venv/Scripts/python.exe"
+      }
+    },
+    {
+      "label": "SPARQL: объяснение пары",
+      "type": "process",
+      "command": "${workspaceFolder}/.venv/bin/python",
+      "args": [
+        "-m",
+        "dota_kg",
+        "query",
+        "${workspaceFolder}/queries/02_explanations.rq",
+        "--bind",
+        "hero=${input:rankingHero}",
+        "--bind",
+        "enemy=${input:rankingEnemy}"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated",
+        "clear": true
+      },
+      "windows": {
+        "command": "${workspaceFolder}/.venv/Scripts/python.exe"
+      }
+    }
+  ],
+  "inputs": [
+    {
+      "id": "rankingEnemy",
+      "type": "promptString",
+      "description": "Имя противника в графе"
+    },
+    {
+      "id": "rankingHero",
+      "type": "promptString",
+      "description": "Имя нашего героя в графе"
+    },
+    {
+      "id": "rankingPosition",
+      "type": "pickString",
+      "description": "Позиция кандидата",
+      "options": [
+        "1",
+        "2",
+        "3",
+        "4",
+        "5"
+      ],
+      "default": "3"
     }
   ]
 }

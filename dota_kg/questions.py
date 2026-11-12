@@ -20,6 +20,8 @@ ALIASES = {
     "Beastmaster": "бистмастер|бист", "Enigma": "энигма",
     "Abaddon": "абаддон|абадон", "Juggernaut": "джаггернаут|джагер|джаггер|юра",
     "Terrorblade": "террорблейд|террор|тб", "Ursa": "урса",
+    "Huskar": "хускар|хуск", "Bristleback": "бристлбек|бристлбэк|бристл|бб",
+    "Timbersaw": "тимберсоу|тимбер|пила", "Winter Wyvern": "винтер виверн|виверна",
     "Morphling": "морфлинг|морф", "Lich": "лич",
     "Storm Spirit": "шторм спирит|шторм", "Sven": "свен",
     "Pugna": "пугна", "Slardar": "слардар|селедка",
@@ -128,27 +130,47 @@ class QuestionParser:
         self.aliases = [(re.compile(alias_pattern(alias)), entities)
                         for alias, entities in aliases.items() if alias]
 
-    def entities(self, text):
+    def entities(self, text, preferred_type=None):
         matches = [(m.start(), m.end(), entities) for pattern, entities in self.aliases
                    for m in pattern.finditer(text)]
         selected = []
         for start, end, entities in sorted(matches, key=lambda m: (-(m[1]-m[0]), m[0])):
             if any(start < b and end > a for a, b, _ in selected):
                 continue
+            if len(entities) > 1 and preferred_type is not None:
+                preferred = {e for e in entities if (e, RDF.type, preferred_type) in self.graph}
+                if preferred:
+                    entities = preferred
             if len(entities) != 1:
                 names = sorted(str(self.graph.value(e, RDFS.label)) for e in entities)
                 raise ValueError(f"Неоднозначное название «{text[start:end]}»: {', '.join(names)}. Укажите полное имя.")
             selected.append((start, end, next(iter(entities))))
         return sorted(selected)
 
+    def resolve_entity(self, value, cls=None):
+        if isinstance(value, URIRef) or str(value).startswith(('https://', 'http://', 'urn:')):
+            direct = URIRef(str(value))
+            exists = (direct, RDF.type, cls) in self.graph if cls is not None else any(self.graph.objects(direct, RDF.type))
+            if exists:
+                return direct
+        normalized = normalize(str(value))
+        exact = sorted({entity for pattern, entities in self.aliases if pattern.fullmatch(normalized)
+                        for entity in entities if cls is None or (entity, RDF.type, cls) in self.graph}, key=str)
+        if len(exact) != 1:
+            raise ValueError(f"Не удалось однозначно найти сущность: {value}")
+        return exact[0]
+
     def parse(self, text):
         text = normalize(text)
         if not text:
             raise ValueError("Введите вопрос о героях, способностях или предметах.")
-        found = self.entities(text)
+        preferred_type = KG.Ability if re.search(r"способност|заклинани|умени", text) else KG.Hero
+        found = self.entities(text, preferred_type)
         has_item = any((entity, RDF.type, KG.Item) in self.graph for _, _, entity in found)
         # Routing order prevents e.g. an enemy BKB question being treated as CQ08.
-        if re.search(r"талант|аспект|аганим|септер|шард|scepter|shard", text):
+        if re.search(r"кто контрит|кого взять|кто.*против|контрпик", text):
+            cq = 1
+        elif re.search(r"талант|аспект|аганим|септер|шард|scepter|shard", text):
             cq = 12
         elif re.search(r"услови|ограничени|дистанци|когда срабатыв|что нужно для", text):
             cq = 3

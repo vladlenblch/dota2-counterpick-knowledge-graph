@@ -1,0 +1,24 @@
+PREFIX kg: <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/ontology#>
+PREFIX fn: <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/function/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+SELECT DISTINCT ?hero ?enemy ?score ?ability ?mechanic ?rule ?weight ?targetMechanic ?evidence ?targetEvidence
+WHERE {
+  # Отсекаем кандидатов без основания до соединения с объясняющими фактами.
+  { SELECT ?hero ?enemy ?score ?effect ?rule ?targetFact WHERE {
+    ?hero a kg:Hero . ?enemy a kg:Hero .
+    FILTER (?hero != ?enemy)
+    BIND (fn:score(?hero, ?enemy) AS ?score)
+    BIND (fn:effect(?hero, ?enemy) AS ?effect)
+    BIND (fn:rule(?hero, ?enemy) AS ?rule)
+    BIND (fn:target(?hero, ?enemy) AS ?targetFact)
+    FILTER (BOUND(?score) && BOUND(?effect))
+  } }
+  FILTER (EXISTS { ?hero kg:hasAbility ?source } || EXISTS { ?source a kg:Item })
+  ?source rdfs:label ?ability ; kg:hasEffect ?effect .
+  ?effect kg:effectMechanic ?mechanic ; kg:evidence ?evidence .
+  ?rule kg:sourceMechanic ?mechanic ; kg:targetMechanic ?targetMechanic ; kg:ruleWeight ?weight .
+  ?targetFact kg:evidence ?targetEvidence .
+}
+ORDER BY DESC(?score) ?hero
+LIMIT 20

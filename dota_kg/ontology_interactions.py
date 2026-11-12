@@ -105,10 +105,11 @@ NEW_PROPERTIES = {KG.hasEffect, KG.effectMechanic, KG.derivedFromFeatureValue,
                   KG.conditionMechanic, KG.conditionTalent, KG.sourceMechanic,
                   KG.targetMechanic, KG.ruleStatus, KG.effectStatus,
                   KG.heldItem, KG.selectedTalent, KG.contextComplete, KG.requiredDispel,
-                  KG.purchasePhase, KG.preferenceRank, KG.dispelTarget, KG.featureMechanic, KG.rulePurpose}
+                  KG.purchasePhase, KG.preferenceRank, KG.dispelTarget, KG.featureMechanic, KG.rulePurpose, KG.effectTarget, KG.mechanicCategory,
+                  KG.ruleWeight, KG.ruleFamily, KG.sourceEffectTarget}
 
 
-def build_interactions(game):
+def build_interactions(game, rows=None):
     """Rebuild only the enrichment, using original entities and observed features."""
     graph = bind(Graph())
 
@@ -237,6 +238,11 @@ def build_interactions(game):
                                 "Невосприимчивость цели: проверить, проходит ли конкретный эффект сквозь неё.",
                                 target="DEBUFF_IMMUNITY")
             graph.add((rule, KG.blockedByCondition, blocker))
+    if rows:
+        from .ontology_mechanics import build_gameplay_mechanics
+        from .ontology_ranking import build_weighted_rules
+        graph += build_gameplay_mechanics(game, rows, legacy=graph)
+        graph += build_weighted_rules(graph, rows)
     for feature in game.subjects(RDF.type, KG.Feature):
         code = str(game.value(feature, KG.identifier))
         represented = RES[f"mechanic/{code}"]
@@ -245,9 +251,9 @@ def build_interactions(game):
     return graph
 
 
-def validate_interactions(game):
+def validate_interactions(game, rows=None):
     """Check exact reproducibility, including evidence and absence of extra effects."""
-    expected = build_interactions(game)
+    expected = build_interactions(game, rows)
     subjects = {s for cls in NEW_CLASSES for s in game.subjects(RDF.type, cls)}
     actual = Graph()
     for triple in game:

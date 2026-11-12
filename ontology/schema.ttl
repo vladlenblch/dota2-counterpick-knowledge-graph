@@ -783,3 +783,26 @@ kg:contextComplete a owl:DatatypeProperty ; rdfs:label "Набор предме�
 [] a owl:AllDisjointClasses ;
     owl:members ( kg:Hero kg:Ability kg:Item ) .
 
+
+kg:effectTarget a owl:DatatypeProperty ;
+    rdfs:label "Получатель эффекта"@ru ;
+    rdfs:comment "self - владелец, ally - союзник, enemy - противник, area - область или созданные существа, both - союзник или противник."@ru ;
+    rdfs:domain kg:Effect ; rdfs:range xsd:string .
+
+kg:mechanicCategory a owl:DatatypeProperty ;
+    rdfs:label "Категория игровой механики"@ru ;
+    rdfs:domain kg:Mechanic ; rdfs:range xsd:string .
+
+kg:ruleWeight a owl:DatatypeProperty ;
+    rdfs:label "Вес противодействия"@ru ;
+    rdfs:comment "Базовая сила взаимодействия механик в модели ранжирования."@ru ;
+    rdfs:domain kg:CounterRule ; rdfs:range xsd:double .
+
+kg:ruleFamily a owl:DatatypeProperty ;
+    rdfs:label "Способ противодействия"@ru ;
+    rdfs:comment "Объединяет похожие взаимодействия, чтобы избежать повторного подсчета."@ru ;
+    rdfs:domain kg:CounterRule ; rdfs:range xsd:string .
+
+kg:sourceEffectTarget a owl:DatatypeProperty ;
+    rdfs:label "Допустимый получатель исходного эффекта"@ru ;
+    rdfs:domain kg:CounterRule ; rdfs:range xsd:string .

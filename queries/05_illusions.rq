@@ -1,0 +1,23 @@
+# Вызов ownerScore оценивает отдельную способность или покупку против иллюзий.
+PREFIX kg: <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/ontology#>
+PREFIX fn: <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/function/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+SELECT DISTINCT ?source ?name ?score ?mechanic ?rule ?targetMechanic ?evidence
+WHERE {
+  # Отсекаем кандидатов без основания до соединения с объясняющими фактами.
+  { SELECT ?hero ?enemy ?source ?score ?effect ?rule WHERE {
+    { ?hero kg:hasAbility ?source . ?enemy a kg:Hero }
+    UNION
+    { ?source a kg:Item ; kg:isPurchasable true . ?enemy a kg:Hero }
+    BIND (fn:ownerScore(?source, ?enemy, "units") AS ?score)
+    BIND (fn:ownerEffect(?source, ?enemy, "units") AS ?effect)
+    BIND (fn:ownerRule(?source, ?enemy, "units") AS ?rule)
+    FILTER (BOUND(?score) && BOUND(?effect))
+  } }
+  ?source rdfs:label ?name ; kg:hasEffect ?effect .
+  ?effect kg:effectMechanic ?mechanic ; kg:evidence ?evidence .
+  ?rule kg:sourceMechanic ?mechanic ; kg:targetMechanic ?targetMechanic ; kg:ruleWeight ?weight .
+}
+ORDER BY DESC(?score) ?source
+LIMIT 20

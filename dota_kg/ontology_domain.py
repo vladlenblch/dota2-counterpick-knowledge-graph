@@ -410,5 +410,5 @@ class DomainBuilder:
         source = Graph()
         source += self.groups["entities"]
         source += self.groups["features"]
-        self.groups["entities"] += build_interactions(source)
+        self.groups["entities"] += build_interactions(source, self.rows)
         return self.groups

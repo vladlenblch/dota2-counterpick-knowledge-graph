@@ -32,6 +32,19 @@ kg:CounterRuleShape a sh:NodeShape ;
             sh:maxCount 1 ;
             sh:minCount 1 ;
             sh:path kg:evidence ],
+        [ sh:datatype xsd:double ;
+            sh:maxCount 1 ;
+            sh:minCount 0 ;
+            sh:minInclusive 0 ;
+            sh:path kg:ruleWeight ],
+        [ sh:datatype xsd:string ;
+            sh:maxCount 1 ;
+            sh:minCount 0 ;
+            sh:path kg:ruleFamily ],
+        [ sh:datatype xsd:string ;
+            sh:in ( "self"^^xsd:string "ally"^^xsd:string "enemy"^^xsd:string "area"^^xsd:string "both"^^xsd:string ) ;
+            sh:minCount 0 ;
+            sh:path kg:sourceEffectTarget ],
         [ sh:class kg:InteractionCondition ;
             sh:minCount 1 ;
             sh:path kg:requiresCondition ],
@@ -65,7 +78,12 @@ kg:EffectShape a sh:NodeShape ;
             sh:in ( "Basic"^^xsd:string "Strong"^^xsd:string "None"^^xsd:string ) ;
             sh:maxCount 1 ;
             sh:minCount 0 ;
-            sh:path kg:requiredDispel ] ;
+            sh:path kg:requiredDispel ],
+        [ sh:datatype xsd:string ;
+            sh:in ( "self"^^xsd:string "ally"^^xsd:string "enemy"^^xsd:string "area"^^xsd:string "both"^^xsd:string ) ;
+            sh:maxCount 1 ;
+            sh:minCount 0 ;
+            sh:path kg:effectTarget ] ;
     sh:targetClass kg:Effect .
 
 kg:FeatureShape a sh:NodeShape ;
@@ -249,6 +267,7 @@ kg:HeroStatisticsObservationShape a sh:NodeShape ;
 
 kg:InteractionConditionShape a sh:NodeShape ;
     sh:or ( [ sh:property [ sh:hasValue "review"^^xsd:string ;
+                        sh:path kg:conditionKind ] ] [ sh:property [ sh:hasValue "gameplay"^^xsd:string ;
                         sh:path kg:conditionKind ] ] [ sh:property [ sh:hasValue "has-item"^^xsd:string ;
                         sh:path kg:conditionKind ],
                     [ sh:minCount 1 ;
@@ -260,7 +279,7 @@ kg:InteractionConditionShape a sh:NodeShape ;
                     [ sh:minCount 1 ;
                         sh:path kg:conditionTalent ] ] ) ;
     sh:property [ sh:datatype xsd:string ;
-            sh:in ( "review"^^xsd:string "has-item"^^xsd:string "has-mechanic"^^xsd:string "has-talent"^^xsd:string ) ;
+            sh:in ( "review"^^xsd:string "gameplay"^^xsd:string "has-item"^^xsd:string "has-mechanic"^^xsd:string "has-talent"^^xsd:string ) ;
             sh:maxCount 1 ;
             sh:minCount 1 ;
             sh:path kg:conditionKind ],
@@ -378,6 +397,10 @@ kg:MatchupObservationShape a sh:NodeShape ;
     sh:targetClass kg:MatchupObservation .
 
 kg:MechanicShape a sh:NodeShape ;
+    sh:property [ sh:datatype xsd:string ;
+            sh:maxCount 1 ;
+            sh:minCount 0 ;
+            sh:path kg:mechanicCategory ] ;
     sh:targetClass kg:Mechanic .
 
 kg:ParameterModifierShape a sh:NodeShape ;

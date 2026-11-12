@@ -2,10 +2,13 @@
 from __future__ import annotations
 
 import csv
+from contextlib import ExitStack
+import re
 from pathlib import Path
 import sys
 import time
-from rdflib import BNode
+from rdflib import BNode, Literal, URIRef
+from rdflib.util import from_n3
 from rdflib.plugins.sparql import prepareQuery
 
 
@@ -43,7 +46,8 @@ def _write_query_table(result, output):
 
 
 def run_query(query_file: Path, *, directory: Path,
-              output_format: str = "table", output=None, progress=None) -> int:
+              output_format: str = "table", output=None, progress=None,
+              bindings=None, own_items=(), enemy_items=(), level=18) -> int:
     """Execute a saved query on the local game ontology."""
     from .ontology import load_ontology, turtle_bytes
 
@@ -78,7 +82,49 @@ def run_query(query_file: Path, *, directory: Path,
     try:
         graph = load_ontology(directory)
         print(f"Загружено {len(graph):,} троек. Выполняется {path.name}...", file=progress, flush=True)
-        result = graph.query(prepared)
+        from .questions import QuestionParser
+        from .ontology_schema import KG
+        from .ranking_sparql import ranking_functions, ranking_query
+        resolver = QuestionParser(graph) if bindings or own_items or enemy_items else None
+        bound = {}
+        entries = bindings.items() if isinstance(bindings, dict) else (
+            entry.split('=', 1) if '=' in entry else (entry, None) for entry in (bindings or ()))
+        for variable, value in entries:
+            variable = variable.lstrip('?')
+            if not re.fullmatch(r'[A-Za-z_]\w*', variable) or value is None:
+                raise ValueError('Параметр задается как --bind имя=значение')
+            if hasattr(value, 'n3'):
+                term = value
+            elif str(value).startswith(('<', '"')):
+                term = from_n3(str(value))
+            elif re.fullmatch(r'-?\d+', str(value)):
+                term = Literal(int(value))
+            elif re.fullmatch(r'-?\d+\.\d+', str(value)):
+                term = Literal(float(value))
+            elif str(value) in ('true', 'false'):
+                term = Literal(str(value) == 'true')
+            elif str(value).startswith(('https://', 'http://', 'urn:')):
+                term = URIRef(value)
+            else:
+                try:
+                    term = resolver.resolve_entity(value, KG.Hero if variable in {'hero', 'enemy'} else
+                                                   KG.Item if variable == 'item' else None)
+                except ValueError:
+                    if variable in {'hero', 'enemy', 'subject', 'item'}:
+                        raise
+                    term = Literal(str(value))
+            bound[variable] = term
+        with ExitStack() as stack:
+            query_graph = graph
+            if ranking_functions(prepared.algebra):
+                own = [resolver.resolve_entity(v, KG.Item) for v in own_items]
+                opposing = [resolver.resolve_entity(v, KG.Item) for v in enemy_items]
+                query_graph = stack.enter_context(ranking_query(graph, own_items=own,
+                    enemy_items=opposing, level=level, actor=bound.get('hero')))
+            result = query_graph.query(prepared, initBindings=bound)
+            # Materialize SELECT/ASK/graph results before unregistering functions.
+            if result.type == 'SELECT':
+                result.bindings = list(result.bindings)
         if graph_query:
             output.write(turtle_bytes(result.graph).decode("utf-8"))
             count = len(result.graph)

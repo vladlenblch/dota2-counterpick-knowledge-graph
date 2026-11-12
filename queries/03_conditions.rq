@@ -1,0 +1,11 @@
+PREFIX kg: <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/ontology#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+SELECT DISTINCT ?subject ?name ?mechanic ?kind ?scope ?condition ?requiredItem
+WHERE {
+  ?subject rdfs:label ?name ; kg:hasEffect ?effect .
+  ?effect kg:effectMechanic ?mechanic ; kg:requiresCondition ?requirement .
+  ?requirement kg:conditionKind ?kind ; kg:conditionScope ?scope ; kg:conditionText ?condition .
+  OPTIONAL { ?requirement kg:conditionItem ?requiredItem }
+}
+ORDER BY ?subject ?mechanic ?condition

@@ -87,13 +87,15 @@ def make_shapes():
         prop(KG.numericValue, None, lo=0), prop(KG.hasBaseValue, KG.ParameterValue, lo=0, hi=None)]
     rules["GameNote"] = [prop(KG.noteText, XSD.string), prop(KG.noteKind, XSD.string),
                          prop(KG.position, XSD.integer, lower=0)]
-    rules["Mechanic"] = []
+    rules["Mechanic"] = [prop(KG.mechanicCategory, XSD.string, lo=0)]
     rules["Effect"] = [prop(KG.effectMechanic, KG.Mechanic), prop(KG.evidence, XSD.string),
         prop(KG.effectStatus, XSD.string), prop(KG.derivedFromFeatureValue, KG.FeatureValue, lo=0),
         prop(KG.requiresCondition, KG.InteractionCondition, lo=0, hi=None),
-        prop(KG.requiredDispel, XSD.string, lo=0)]
+        prop(KG.requiredDispel, XSD.string, lo=0), prop(KG.effectTarget, XSD.string, lo=0)]
     rules["CounterRule"] = [prop(KG.sourceMechanic, KG.Mechanic), prop(KG.targetMechanic, KG.Mechanic),
         prop(KG.ruleStatus, XSD.string), prop(KG.evidence, XSD.string),
+        prop(KG.ruleWeight, XSD.double, lo=0, lower=0), prop(KG.ruleFamily, XSD.string, lo=0),
+        prop(KG.sourceEffectTarget, XSD.string, lo=0, hi=None),
         prop(KG.requiresCondition, KG.InteractionCondition, hi=None),
         prop(KG.blockedByCondition, KG.InteractionCondition, lo=0, hi=None)]
     rules["InteractionCondition"] = [prop(KG.conditionKind, XSD.string), prop(KG.conditionScope, XSD.string),
@@ -105,8 +107,10 @@ def make_shapes():
         prop(KG.purchasePhase, XSD.string), prop(KG.preferenceRank, XSD.integer, lower=1, upper=3),
         prop(KG.attackType, XSD.string, lo=0), prop(KG.evidence, XSD.string)]
     choices = {
+        KG.effectTarget: ("self", "ally", "enemy", "area", "both"),
+        KG.sourceEffectTarget: ("self", "ally", "enemy", "area", "both"),
         KG.conditionScope: ("source", "target"),
-        KG.conditionKind: ("review", "has-item", "has-mechanic", "has-talent"),
+        KG.conditionKind: ("review", "gameplay", "has-item", "has-mechanic", "has-talent"),
         KG.ruleStatus: ("heuristic",),
         KG.effectStatus: ("feature-derived", "curated-description", "structured-description"),
         KG.requiredDispel: ("Basic", "Strong", "None"),
@@ -147,7 +151,7 @@ def make_shapes():
         graph.add((constraint, SH.path, path))
         graph.add((constraint, predicate, Literal(value)))
     alternatives = []
-    for kind, target in (("review", None), ("has-item", KG.conditionItem),
+    for kind, target in (("review", None), ("gameplay", None), ("has-item", KG.conditionItem),
                          ("has-mechanic", KG.conditionMechanic), ("has-talent", KG.conditionTalent)):
         branch = BNode("condition-" + kind)
         constraint = BNode("condition-kind-" + kind)

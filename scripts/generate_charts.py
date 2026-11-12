@@ -631,6 +631,44 @@ def ontology_graph(graph):
     save(fig, "ontology_graph")
 
 
+def mechanic_coverage():
+    facts = pq.read_table(ROOT / "data/gameplay_mechanics.parquet").to_pylist()
+    catalog = {r["mechanic"]: r for r in pq.read_table(ROOT / "data/mechanic_catalog.parquet").to_pylist()}
+    labels = {"control": "Контроль", "damage": "Урон", "defense": "Защита", "recovery": "Восстановление",
+              "support": "Помощь союзникам", "mobility": "Перемещение", "vision": "Обзор и скрытие",
+              "resource": "Ресурсы", "summons": "Иллюзии и существа", "interaction": "Взаимодействия"}
+    counts = Counter(catalog[r["mechanic"]]["category"] for r in facts)
+    categories = sorted(counts, key=counts.get)
+    abilities = table("abilities", ["ability_id", "hero_id"])
+    covered_abilities = {r["entity_id"] for r in facts if r["entity_kind"] == "ability"}
+    covered_heroes = len({r["hero_id"] for r in abilities if r["ability_id"] in covered_abilities})
+    fig = figure("Игровые механики для объяснения контрпиков",
+                 f"{fmt(len(facts))} фактов о способностях и предметах | {len({r['mechanic'] for r in facts})} типов эффектов | {covered_heroes} героев", (13, 6.6))
+    ax = fig.add_axes([.18, .12, .37, .66])
+    values = [counts[c] for c in categories]
+    ax.barh(range(len(categories)), values, color=BLUE, height=.65)
+    ax.set_yticks(range(len(categories)), [labels[c] for c in categories])
+    ax.set_xlim(0, max(values) * 1.17)
+    ax.set_xlabel("Факты с игровым объяснением")
+    clean_axis(ax)
+    for y, value in enumerate(values):
+        ax.text(value + max(values) * .025, y, fmt(value), va="center", fontsize=10)
+    examples = [
+        ("Bristleback", "Снижение урона сбоку и со спины;\nответный Quill Spray после урона со спины."),
+        ("Huskar", "Регенерация, скорость атак и сопротивление\nмагии усиливаются при потере здоровья."),
+        ("Oracle", "False Promise откладывает урон и лечение\nсоюзника до окончания эффекта."),
+        ("Arc Warden", "Tempest Double копирует заклинания\nи большинство предметов с отдельными перезарядками."),
+    ]
+    for index, (title, text) in enumerate(examples):
+        y = .66 - index * .165
+        fig.add_artist(FancyBboxPatch((.615, y - .055), .345, .133,
+                       boxstyle="round,pad=0.01,rounding_size=0.015", transform=fig.transFigure,
+                       facecolor=WHITE, edgecolor=GRID, linewidth=.7))
+        fig.text(.632, y + .031, title, fontweight="bold", fontsize=12, color=BLUE)
+        fig.text(.632, y - .026, text, fontsize=9.4, linespacing=1.6)
+    save(fig, "mechanics")
+
+
 def ontology_figures():
     directory = ROOT / "ontology"
     report = json.loads((directory / "validation.json").read_text(encoding="utf-8"))
@@ -641,6 +679,7 @@ def ontology_figures():
             raise RuntimeError(f"Отчет проверки не соответствует файлу {name}")
     graph = load_ontology(directory)
     ontology_overview(graph)
+    mechanic_coverage()
     ontology_hierarchy(graph)
     ontology_relations(graph)
     ontology_example(graph)

@@ -149,6 +149,15 @@ class InteractionTests(unittest.TestCase):
                       (effect,KG.effectMechanic,RES["mechanic/CREATES_ILLUSIONS"])):
             self.graph.add((s,p,o))
         self.graph += build_interactions(self.graph)
+        for node, cls in ((hero, KG.Hero), (opponent, KG.Hero), (ability, KG.Ability)):
+            self.graph.add((node, RDF.type, cls))
+        self.graph.add((effect, KG.effectTarget, literal('area')))
+        for source_effect in self.graph.objects(item, KG.hasEffect):
+            self.graph.add((source_effect, KG.effectTarget, literal('enemy')))
+        rule = RES['counter-rule/CLEAVE_DAMAGE/CREATES_ILLUSIONS']
+        self.graph.add((rule, KG.ruleWeight, literal(1.)))
+        self.graph.add((rule, KG.ruleFamily, literal('units')))
+        self.graph.add((rule, KG.sourceEffectTarget, literal('enemy')))
         question = Question(9, hero=hero, enemy=opponent, role=1, phase="mid")
         self.graph.set((hero, KG.attackType, literal("Ranged")))
         self.assertEqual(KnowledgeBase(self.graph).cq09(question), [])

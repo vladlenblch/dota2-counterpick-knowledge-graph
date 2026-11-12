@@ -20,10 +20,14 @@ TABLES = {
     "hero_items": ("ItemUsageObservation", ("hero_id", "item_id", "phase")),
     "hero_meta": ("HeroStatisticsObservation", ("hero_id",)),
     "hero_roles": ("Hero", ("hero_id",)),
+    "mechanic_catalog": ("Mechanic", ("mechanic",)),
+    "counter_rules": ("CounterRule", ("source_mechanic", "target_mechanic")),
+    "gameplay_mechanics": ("Effect", ("entity_kind", "entity_id", "mechanic", "target_scope", "variant")),
 }
 
 TABLE_PATHS = {name: Path("data/final") / f"{name}.parquet" for name in TABLES}
-TABLE_PATHS["hero_roles"] = Path("data/hero_roles.parquet")
+for name in ("hero_roles", "mechanic_catalog", "gameplay_mechanics", "counter_rules"):
+    TABLE_PATHS[name] = Path("data") / f"{name}.parquet"
 
 POSITION_PROPERTIES = {
     "most_popular_position": KG.mostPopularPosition,

@@ -25,6 +25,11 @@ def main():
     ask.add_argument("question", help="Например: кто контрит ПЛ на миде")
     ask.add_argument("--format", choices=("text", "json"), default="text")
     ask.add_argument("--limit", type=int, default=3, help="Вариантов на группу/вопрос, по умолчанию 3")
+    query.add_argument('--bind', action='append', default=[], help='Параметр запроса: имя=значение; можно повторять')
+    for command in (ask, query):
+        command.add_argument('--with-item', action='append', default=[], help='Предмет у нашего героя; можно повторять')
+        command.add_argument('--enemy-item', action='append', default=[], help='Предмет у противника; можно повторять')
+        command.add_argument('--level', type=int, default=18, help='Уровень для оценки запаса здоровья; по умолчанию 18')
     args = parser.parse_args()
     try:
         if args.command == "ask":
@@ -38,7 +43,8 @@ def main():
                 raise ValueError("Число вариантов должно быть положительным.")
             graph = load_ontology(ROOT / "ontology", progress=progress, cache=True)
             progress(f"Загружено {len(graph):,} троек за {time.perf_counter() - started:.1f} с. Поиск ответа...")
-            result = KnowledgeBase(graph).ask(args.question, limit=args.limit)
+            result = KnowledgeBase(graph).ask(args.question, limit=args.limit, own_items=args.with_item,
+                                             enemy_items=args.enemy_item, level=args.level)
             if args.format == "json":
                 print(json.dumps(result, ensure_ascii=False, indent=2))
             else:
@@ -49,7 +55,8 @@ def main():
             from .common import ROOT
             from .ontology_queries import run_query
             run_query(args.file, directory=ROOT / "ontology",
-                      output_format=args.format)
+                      output_format=args.format, bindings=args.bind, own_items=args.with_item,
+                      enemy_items=args.enemy_item, level=args.level)
             return
         elif args.command == "build":
             from .build import build

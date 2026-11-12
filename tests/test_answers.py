@@ -30,6 +30,9 @@ class AnswerTests(unittest.TestCase):
         self.add(self.rule, KG.sourceMechanic, RES["mechanic/AOE_DAMAGE"])
         self.add(self.rule, KG.targetMechanic, RES["mechanic/CREATES_ILLUSIONS"])
         self.add(self.rule, KG.ruleStatus, literal("heuristic"))
+        self.add(self.rule, KG.ruleWeight, literal(1.))
+        self.add(self.rule, KG.ruleFamily, literal('units'))
+        self.add(self.rule, KG.sourceEffectTarget, literal('enemy'))
 
     def add(self, s, p, o):
         self.graph.add((s, p, o))
@@ -43,6 +46,9 @@ class AnswerTests(unittest.TestCase):
     def effect_node(self, owner, code):
         effect = RES[str(owner).split("resource/")[1] + "/effect/" + code]
         self.add(owner, KG.hasEffect, effect)
+        self.add(effect, RDF.type, KG.Effect)
+        recipient = 'area' if code == 'CREATES_ILLUSIONS' else 'self' if code in {'ARMOR_BUFF', 'BASIC_DISPEL', 'STRONG_DISPEL', 'LOW_ARMOR'} else 'enemy'
+        self.add(effect, KG.effectTarget, literal(recipient))
         self.add(effect, KG.effectMechanic, RES["mechanic/" + code])
         self.add(effect, KG.evidence, literal("Fixture evidence"))
         return effect
@@ -117,15 +123,77 @@ class AnswerTests(unittest.TestCase):
         self.add(self.effect, KG.requiresCondition, item)
         self.add(item, KG.conditionKind, literal('has-item'))
         self.add(item, KG.conditionText, literal('Требуется Aghanim\'s Shard.'))
+        shard = self.node('item/shard', KG.Item, 'Shard')
+        self.add(item, KG.conditionItem, shard)
+        self.add(item, KG.conditionScope, literal('source'))
         gameplay = self.node('condition/gameplay', KG.InteractionCondition, 'Positioning')
         self.add(self.effect, KG.requiresCondition, gameplay)
         self.add(gameplay, KG.conditionKind, literal('review'))
         self.add(gameplay, KG.conditionText, literal('За целью должно быть дерево.'))
-        result = self.ask('кто контрит ПЛ на миде')
+        result = self.ask('кто контрит ПЛ на миде', own_items=(shard,))
         self.assertNotIn(boilerplate, json.dumps(result, ensure_ascii=False))
         self.assertIn('Требуется Aghanim\'s Shard.', result['answers'][0]['answer'])
         self.assertIn('За целью должно быть дерево.', result['answers'][0]['answer'])
         self.assertEqual(self.graph.value(review, KG.conditionText), literal(boilerplate))
+
+    def test_self_inflicted_control_is_not_a_counter_to_enemy_channeling(self):
+        self.graph.set((self.rule, KG.sourceMechanic, RES['mechanic/SILENCE']))
+        self.graph.set((self.rule, KG.targetMechanic, RES['mechanic/CHANNELING']))
+        self.graph.set((self.target_effect, KG.effectMechanic, RES['mechanic/CHANNELING']))
+        self.graph.set((self.effect, KG.effectMechanic, RES['mechanic/SILENCE']))
+        self.graph.set((self.effect, KG.effectTarget, literal('self')))
+        self.graph.set((RES['mechanic/SILENCE'], KG.mechanicCategory, literal('control')))
+        self.assertEqual(self.ask('кто контрит ПЛ')['answers'], [])
+        self.graph.set((self.effect, KG.effectTarget, literal('enemy')))
+        self.assertTrue(self.ask('кто контрит ПЛ')['answers'])
+
+    def test_refined_fact_replaces_coarse_answer_but_remains_conditional(self):
+        self.graph.remove((self.effect, KG.effectTarget, None))  # Coarse historical description.
+        detailed = self.node('effect/detailed', KG.Effect, 'Detailed')
+        self.add(self.spell, KG.hasEffect, detailed)
+        self.add(detailed, KG.effectMechanic, RES['mechanic/AOE_DAMAGE'])
+        self.add(detailed, KG.effectTarget, literal('enemy'))
+        self.add(detailed, KG.evidence, literal('Detailed evidence'))
+        condition = self.node('condition/night', KG.InteractionCondition, 'Night')
+        self.add(detailed, KG.requiresCondition, condition)
+        self.add(condition, KG.conditionText, literal('Действует ночью.'))
+        result = self.ask('кто контрит ПЛ на миде')
+        self.assertEqual(result['answers'][0]['effect'], str(detailed))
+        self.assertIn('Действует ночью.', result['answers'][0]['answer'])
+        self.assertIn((self.spell, KG.hasEffect, self.effect), self.graph)
+
+    def test_alternative_target_mechanisms_do_not_impose_each_others_upgrades(self):
+        upgraded = self.node('effect/upgraded-illusions', KG.Effect, 'Upgraded illusions')
+        self.add(self.target, KG.hasEffect, upgraded)
+        self.add(upgraded, KG.effectMechanic, RES['mechanic/CREATES_ILLUSIONS'])
+        self.add(upgraded, KG.effectTarget, literal('area'))
+        condition = self.node('condition/upgrade', KG.InteractionCondition, 'Upgrade')
+        self.add(upgraded, KG.requiresCondition, condition)
+        self.add(condition, KG.conditionText, literal('Требуется Scepter.'))
+        scepter = self.node('item/scepter', KG.Item, 'Scepter')
+        self.add(condition, KG.conditionKind, literal('has-item'))
+        self.add(condition, KG.conditionScope, literal('source'))
+        self.add(condition, KG.conditionItem, scepter)
+        answer = self.ask('кто контрит ПЛ на миде')['answers'][0]
+        self.assertNotIn('Scepter', answer['answer'])
+        self.assertEqual(answer['target_facts'], [str(self.target_effect)])
+        self.graph.remove((self.target, KG.hasEffect, self.target_effect))
+        self.assertFalse(self.ask('кто контрит ПЛ на миде')['answers'])
+        answer = self.ask('кто контрит ПЛ на миде', enemy_items=(scepter,))['answers'][0]
+        self.assertIn('У противника: Требуется Scepter.', answer['answer'])
+
+    def test_dispel_answer_uses_only_conditions_of_the_dispel_effect(self):
+        self.add(self.effect, KG.requiredDispel, literal('Strong'))
+        cleanser = self.node('ability/cleanser', KG.Ability, 'Cleanser')
+        self.add(cleanser, KG.dispelTarget, literal('ally'))
+        self.effect_node(cleanser, 'STRONG_DISPEL')
+        upgrade_heal = self.effect_node(cleanser, 'HEAL')
+        condition = self.node('condition/heal-upgrade', KG.InteractionCondition, 'Upgrade')
+        self.add(upgrade_heal, KG.requiresCondition, condition)
+        self.add(condition, KG.conditionText, literal('Требуется Shard.'))
+        rows = KnowledgeBase(self.graph).cq07(Question(7, subject=self.spell))
+        self.assertTrue(rows)
+        self.assertNotIn('Shard', rows[0]['answer'])
 
     def test_parameter_answer_omits_unmapped_condition_message(self):
         parameter = self.node('parameter/test', KG.Parameter, 'Damage')
@@ -172,6 +240,7 @@ class AnswerTests(unittest.TestCase):
             self.add(hero, KG.hasMatchup, obs)
             self.add(obs, KG.opponent, self.enemy)
             self.add(obs, KG.winRate, literal(rate))
+            self.add(obs, KG.normalizedAdvantage, literal(rate - .5))
             self.add(obs, KG.matches, literal(100))
         rows = self.ask("кто контрит ПЛ на миде")["answers"]
         self.assertEqual([r["hero"] for r in rows], [str(self.other), str(self.hero)])
