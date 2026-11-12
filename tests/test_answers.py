@@ -203,9 +203,33 @@ class AnswerTests(unittest.TestCase):
         self.add(parameter, KG.hasBaseValue, value)
         self.add(value, KG.position, literal(0))
         self.add(value, KG.numericValue, literal(100))
-        answer = self.ask('при каких условиях работает Test spell')['answers'][0]['answer']
-        self.assertIn('damage=[100]', answer)
-        self.assertNotIn('не размечены', answer)
+        condition = self.node('condition/tree', KG.InteractionCondition, 'Tree required')
+        self.add(self.effect, KG.requiresCondition, condition)
+        self.add(condition, KG.conditionText, literal('Требуется дерево.'))
+        row = self.ask('при каких условиях работает Test spell')['answers'][0]
+        self.assertEqual(row['answer'], 'Test spell: Требуется дерево.')
+        self.assertEqual(row['parameters'][0]['values'], [100])
+        self.assertEqual(row['parameters'][0]['name'], 'damage')
+
+    def test_upgrade_prose_omits_internal_parameter_rows_and_operation_codes(self):
+        parameter = self.node('parameter/upgrade', KG.Parameter, 'Damage')
+        base = self.node('value/base', KG.ParameterValue, 'Base')
+        upgraded = self.node('value/upgraded', KG.ParameterValue, 'Upgraded')
+        talent = self.node('talent/damage', KG.Talent, '+20 урона')
+        modifier = self.node('modifier/talent', KG.ParameterModifier, 'Modifier')
+        for s, p, o in ((self.spell, KG.shardDescription, literal('Увеличивает урон.')),
+                        (self.spell, KG.hasParameter, parameter),
+                        (parameter, KG.parameterName, literal('internal_damage')),
+                        (parameter, KG.hasBaseValue, base), (base, KG.numericValue, literal(100)),
+                        (parameter, KG.hasShardValue, upgraded), (upgraded, KG.numericValue, literal(120)),
+                        (parameter, KG.hasModifier, modifier), (modifier, KG.requiresTalent, talent),
+                        (modifier, KG.numericValue, literal(20)), (modifier, KG.operation, literal(1))):
+            self.add(s, p, o)
+        rows = KnowledgeBase(self.graph).cq12(Question(12, hero=self.hero))
+        self.assertEqual(rows[0]['answer'], "Test spell, Aghanim's Shard: Увеличивает урон.")
+        self.assertEqual(rows[0]['parameters'][0]['upgraded'], [120])
+        self.assertEqual(rows[1]['answer'], 'Test spell: +20 урона.')
+        self.assertEqual(rows[1]['operation'], 1)
 
     def test_removing_rule_or_target_effect_removes_answer(self):
         self.assertTrue(self.ask("кто контрит ПЛ")["answers"])
@@ -252,17 +276,20 @@ class AnswerTests(unittest.TestCase):
         self.assertNotIn('win_rate', json.dumps(result))
         self.assertNotIn('matches', json.dumps(result))
 
-    def test_item_priorities_use_core_for_mid_and_offlane_and_support_for_both_support_positions(self):
-        item = self.node('item/test', KG.Item, 'Test item')
-        for group, rank in (('carry', 1), ('core', 2), ('support', 3)):
-            pref = self.node('preference/' + group, KG.ItemRolePreference, group)
-            self.add(pref, KG.item, item)
-            self.add(pref, KG.roleName, literal(group))
-            self.add(pref, KG.preferenceRank, literal(rank))
-        kb = KnowledgeBase(self.graph)
-        for position, expected in ((1, 1), (2, 2), (3, 2), (4, 3), (5, 3)):
-            with self.subTest(position=position):
-                self.assertEqual(kb.item_priority(item, Question(9, hero=self.hero, role=position)), expected)
+    def test_legacy_item_priority_does_not_override_mechanical_value(self):
+        first = self.node('item/first', KG.Item, 'First item')
+        second = self.node('item/second', KG.Item, 'Second item')
+        for item in (first, second):
+            self.add(item, KG.isPurchasable, literal(True))
+            self.effect_node(item, 'AOE_DAMAGE')
+        before = self.ask('что купить Test candidate против ПЛ')['answers']
+        pref = self.node('preference/arbitrary', KG.ItemRolePreference, 'Old priority')
+        self.add(pref, KG.item, second)
+        self.add(pref, KG.roleName, literal('core'))
+        self.add(pref, KG.preferenceRank, literal(999))
+        after = self.ask('что купить Test candidate против ПЛ')['answers']
+        self.assertEqual([(r['item'], r['score']) for r in before],
+                         [(r['item'], r['score']) for r in after])
 
     def test_unknown_and_ambiguous_names_and_tasks_are_rejected(self):
         for question in ("кто контрит несуществующего героя", "какая сегодня погода", "почему ПЛ"):
@@ -318,10 +345,17 @@ class AnswerTests(unittest.TestCase):
         blocker = RES["condition/immunity"]
         self.add(self.rule, KG.blockedByCondition, blocker)
         self.add(blocker, KG.conditionMechanic, RES["mechanic/DEBUFF_IMMUNITY"])
+        reminder = "Невосприимчивость цели: проверить, проходит ли конкретный эффект сквозь неё."
+        self.add(blocker, KG.conditionKind, literal("has-mechanic"))
+        self.add(blocker, KG.conditionText, literal(reminder))
+        counterpick = self.ask("кто контрит ПЛ на миде")
+        self.assertNotIn(reminder, json.dumps(counterpick, ensure_ascii=False))
+        self.assertEqual(self.graph.value(blocker, KG.conditionText), literal(reminder))
         base = "как Test candidate контрит ПЛ если у противника BKB"
         row = self.ask(base)["answers"][0]
         self.assertIsNone(row["active"])
         self.assertIn("уточните", row["answer"])
+        self.assertNotIn(reminder, row["answer"])
         row = self.ask(base + " не активирован")["answers"][0]
         self.assertIs(row["active"], False)
         self.add(self.spell, KG.piercesDebuffImmunity, literal(True))

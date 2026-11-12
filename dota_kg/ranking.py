@@ -372,7 +372,7 @@ class RankingModel:
         self._strength[key] = value
         return value
 
-    def applications(self, hero, enemy, *, owner=None, items=False, focus=None, purpose="counter", needs=None):
+    def applications(self, hero, enemy, *, owner=None, items=False, focus=None, purpose="counter", needs=None, deduplicate=True):
         held = self.own_items
         facts, source_codes, source_owners, _ = self.profile(hero, held)
         target_facts, target_codes, target_owners, known_needs = self.profile(enemy, self.enemy_items)
@@ -386,10 +386,10 @@ class RankingModel:
         elif owner is not None:
             facts = [f for f in facts if f.owner == owner]
         return self._applications(hero, enemy, facts, source_codes, source_owners, target_codes,
-                                  target_owners, needs, held, self.enemy_items, focus, purpose)
+                                  target_owners, needs, held, self.enemy_items, focus, purpose, deduplicate)
 
     def _applications(self, hero, enemy, facts, source_codes, source_owners, target_codes,
-                      target_owners, needs, held, enemy_held, focus, purpose):
+                      target_owners, needs, held, enemy_held, focus, purpose, deduplicate=True):
         hits = {}
         for fact in facts:
             allowed = True
@@ -439,7 +439,7 @@ class RankingModel:
                 if fact.code == "ANTI_ILLUSION" and int(self.value(fact.owner, KG.behavior, 0)) & 8:
                     value *= 1.3
                 application = Application(fact, rule, need, value)
-                key = rule.family, fact.owner
+                key = (rule.family, fact.owner) if deduplicate else (rule.uri, fact.uri)
                 previous = hits.get(key)
                 order = lambda app: (-app.value, len(app.fact.conditions), app.fact.code, app.rule.target, str(app.fact.uri))
                 if previous is None or order(application) < order(previous):

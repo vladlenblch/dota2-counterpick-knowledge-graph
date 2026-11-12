@@ -7,7 +7,7 @@ import re
 from pathlib import Path
 import sys
 import time
-from rdflib import BNode, Literal, URIRef
+from rdflib import BNode, Literal, RDFS, URIRef
 from rdflib.util import from_n3
 from rdflib.plugins.sparql import prepareQuery
 
@@ -26,10 +26,20 @@ def _check_local_query(value):
             _check_local_query(child)
 
 
-def _write_query_table(result, output):
+def _write_query_table(result, output, graph):
+    names = {}
+
     def cell(value):
         if value is None:
             return ""
+        if isinstance(value, URIRef):
+            if value not in names:
+                labels = [label for label in graph.objects(value, RDFS.label) if str(label)]
+                labels.sort(key=lambda label: (
+                    not (getattr(label, "language", None) or "").lower().startswith("ru"), str(label)))
+                local_name = str(value).rstrip("/#").rsplit("#", 1)[-1].rsplit("/", 1)[-1].rsplit(":", 1)[-1]
+                names[value] = str(labels[0]) if labels else local_name
+            value = names[value]
         return str(value).replace("\\", "\\\\").replace("\n", "\\n").replace("\r", "\\r").replace("\t", "\\t")
 
     headers = [str(variable) for variable in result.vars]
@@ -120,7 +130,9 @@ def run_query(query_file: Path, *, directory: Path,
                 own = [resolver.resolve_entity(v, KG.Item) for v in own_items]
                 opposing = [resolver.resolve_entity(v, KG.Item) for v in enemy_items]
                 query_graph = stack.enter_context(ranking_query(graph, own_items=own,
-                    enemy_items=opposing, level=level, actor=bound.get('hero')))
+                    enemy_items=opposing, level=level, actor=bound.get('hero'),
+                    position=bound['position'].toPython() if 'position' in bound else None,
+                    phase=str(bound['phase']) if 'phase' in bound else None))
             result = query_graph.query(prepared, initBindings=bound)
             # Materialize SELECT/ASK/graph results before unregistering functions.
             if result.type == 'SELECT':
@@ -153,7 +165,7 @@ def run_query(query_file: Path, *, directory: Path,
             print("true" if result.askAnswer else "false", file=output)
             count = 1
         else:
-            count = _write_query_table(result, output)
+            count = _write_query_table(result, output, query_graph)
     except Exception as error:
         raise RuntimeError(f"Не удалось выполнить SPARQL-запрос: {error}") from error
     print(f"Результат: {count}. Время: {time.perf_counter() - started:.2f} с.", file=progress, flush=True)

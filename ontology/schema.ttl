@@ -752,7 +752,7 @@ kg:conditionItem a owl:ObjectProperty ; rdfs:label "Предмет в услов
 kg:conditionMechanic a owl:ObjectProperty ; rdfs:label "Механика в условии"@ru ;
     rdfs:domain kg:InteractionCondition ; rdfs:range kg:Mechanic .
 kg:rulePurpose a owl:DatatypeProperty ;
-    rdfs:label "Назначение правила: counter или compensate"@ru ;
+    rdfs:label "Назначение правила: counter, purchase или compensate"@ru ;
     rdfs:domain kg:CounterRule ; rdfs:range xsd:string .
 
 kg:conditionTalent a owl:ObjectProperty ; rdfs:label "Талант в условии"@ru ;

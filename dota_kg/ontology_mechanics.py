@@ -108,6 +108,7 @@ def build_gameplay_mechanics(game, rows, legacy=None):
         graph.add((mechanic, RDF.type, KG.Mechanic))
         # Preserve labels of existing mechanics referenced by counter rules.
         labels = list(legacy.objects(mechanic, RDFS.label)) if legacy is not None else []
+        labels = [literal(definition["label_ru"]) if str(label) == code else label for label in labels]
         labels = labels or [literal(definition["label_ru"])]
         for label in labels:
             graph.add((mechanic, RDFS.label, label))

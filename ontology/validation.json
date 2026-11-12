@@ -7,7 +7,7 @@
     "SHACL: типы, обязательные связи, мощности, количества и границы долей корректны"
   ],
   "errors": [],
-  "triples": 599261,
+  "triples": 599625,
   "package_structure": {
     "imports": [
       "data-entities.ttl",
@@ -123,22 +123,22 @@
       "columns": 3
     },
     "counter_rules": {
-      "rows": 80,
-      "columns": 6
+      "rows": 104,
+      "columns": 7
     },
     "gameplay_mechanics": {
-      "rows": 2255,
+      "rows": 2247,
       "columns": 9
     }
   },
   "source_tables": 12,
-  "cells_checked": 276403,
+  "cells_checked": 276579,
   "game_model": {
-    "triples": 599261,
+    "triples": 599625,
     "classes": 23,
     "object_properties": 47,
     "data_properties": 125,
-    "records_verified": 79932,
+    "records_verified": 79975,
     "domain_only": true,
     "short_identifiers": true,
     "anonymous_data_nodes": 0,
@@ -173,20 +173,20 @@
       "FeatureValue": 9652,
       "Feature": 76,
       "Talent": 1016,
-      "Effect": 2860,
-      "CounterRule": 93,
       "HeroContext": 0,
-      "ItemRolePreference": 12,
-      "InteractionCondition": 670,
       "Mechanic": 183,
+      "ItemRolePreference": 12,
+      "CounterRule": 117,
+      "InteractionCondition": 697,
+      "Effect": 2852,
+      "GameCharacteristic": 0,
       "Statistics": 0,
       "GameFact": 0,
-      "GameCharacteristic": 0,
       "Entity": 0
     }
   },
   "relation_types": {
-    "relation_endpoints_checked": 227377,
+    "relation_endpoints_checked": 227643,
     "disjoint_groups_checked": 2
   },
   "class_counts": {
@@ -203,15 +203,15 @@
     "FeatureValue": 9652,
     "Feature": 76,
     "Talent": 1016,
-    "Effect": 2860,
-    "CounterRule": 93,
     "HeroContext": 0,
-    "ItemRolePreference": 12,
-    "InteractionCondition": 670,
     "Mechanic": 183,
+    "ItemRolePreference": 12,
+    "CounterRule": 117,
+    "InteractionCondition": 697,
+    "Effect": 2852,
+    "GameCharacteristic": 0,
     "Statistics": 0,
     "GameFact": 0,
-    "GameCharacteristic": 0,
     "Entity": 0
   },
   "shacl_conforms": true,
@@ -227,8 +227,8 @@
       "sha256": "d88185d59de9d61da49a003574b1c39632a18969bd066eedb52b3987219e7219"
     },
     "data-entities.ttl": {
-      "bytes": 19529987,
-      "sha256": "eb01c6687bd431cf0525bd00bc2f19b111185ea92bfc0781af99f216269124b6"
+      "bytes": 19566657,
+      "sha256": "7a6fd1e4d2484917c357b0be88dad93619aa841f8e1c0b67762ecb1d0efa3813"
     },
     "data-features.ttl": {
       "bytes": 6662574,
@@ -243,13 +243,13 @@
       "sha256": "4c853934cadc2934877628918de2d8f5b101c7d7a617fa71a10b8e5652b951f0"
     },
     "schema.ttl": {
-      "bytes": 35669,
-      "sha256": "83e9dccd838fd6b1a0a33e2fe90d05cce8d9d07b679ce6dbf3d383cbfca70255"
+      "bytes": 35679,
+      "sha256": "77af070a9cfb0f4dfaa44ee439311bcc4d217626708c4dec79f8187f5b4811c5"
     },
     "shapes.ttl": {
       "bytes": 16028,
       "sha256": "0bb6ca28c5a652fb09da25c24da7c6201a570220afbd8aa9616836cea5ec4dfd"
     }
   },
-  "package_sha256": "4b48906590ce4e5590a4cd76f0c390593d4c9a097188462e024a1d616d20df8d"
+  "package_sha256": "42a1db5eb85bd69b2ed5c1f28ba8659556310226c023180785a9658a0cb38ce1"
 }

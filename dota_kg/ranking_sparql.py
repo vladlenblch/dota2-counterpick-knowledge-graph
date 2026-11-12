@@ -27,7 +27,7 @@ def ranking_functions(value):
 
 
 @contextmanager
-def ranking_query(graph, *, own_items=(), enemy_items=(), level=18, actor=None):
+def ranking_query(graph, *, own_items=(), enemy_items=(), level=18, actor=None, position=None, phase=None):
     """Restore the process registry after evaluation, including on exceptions."""
     model = RankingModel(graph, own_items=own_items, enemy_items=enemy_items, level=level)
     # Build the small derived-fact view before SPARQL joins can inspect it.
@@ -35,9 +35,12 @@ def ranking_query(graph, *, own_items=(), enemy_items=(), level=18, actor=None):
     for enemy in model.heroes:
         for need in model.profile(enemy, model.enemy_items)[3].values():
             model.target_node(need, enemy)
-    owners = {}
+    from .item_ranking import ItemRanking
+    purchases = None
+    owners, purchase_lists = {}, {}
 
     def evaluate(mode, field, source, enemy, family=None):
+        nonlocal purchases
         if mode == 'hero':
             assessment = model.assess(source, enemy)
             if assessment is None:
@@ -47,10 +50,23 @@ def ranking_query(graph, *, own_items=(), enemy_items=(), level=18, actor=None):
             key = source, enemy, str(family) if family is not None else None
             if key not in owners:
                 hero = model.ability_hero.get(source, actor)
-                apps = model.applications(hero, enemy, owner=source, items=source in model.items,
-                                          focus={str(family)} if family is not None else None)
-                total, groups = model.aggregate(apps)
-                owners[key] = total, groups[0]['applications'][0] if groups else None
+                focus = set(str(family).split(',')) if family is not None else None
+                if source in model.items:
+                    if purchases is None:
+                        purchases = ItemRanking(model)
+                    # A named SPARQL source is enumeration, not an explicitly
+                    # requested exception to purchase suitability.
+                    purchase_key = hero, enemy, str(family)
+                    if purchase_key not in purchase_lists:
+                        purchase_lists[purchase_key] = {row.item: row for row in purchases.rank(hero, enemy,
+                            position=position, phase=phase, focus=focus)}
+                    eligible = purchase_lists[purchase_key]
+                    row = eligible.get(source)
+                    owners[key] = (row.score, row.primary) if row else (0., None)
+                else:
+                    apps = model.applications(hero, enemy, owner=source, focus=focus)
+                    total, groups = model.aggregate(apps)
+                    owners[key] = total, groups[0]['applications'][0] if groups else None
             value, primary = owners[key]
             if primary is None:
                 raise SPARQLError('Нет применимого механического основания')

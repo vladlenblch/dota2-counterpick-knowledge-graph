@@ -83,6 +83,32 @@
     kg:sourceMechanic <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/mechanic/ALLY_PHYSICAL_IMMUNITY> ;
     kg:targetMechanic <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/mechanic/FORCED_COMBAT> .
 
+<https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/counter-rule/ALLY_REPOSITION/GROUPED_UNITS> a kg:CounterRule ;
+    rdfs:label "Перемещение себя или союзника помогает выйти из окружения существ."^^xsd:string ;
+    kg:evidence "Перемещение себя или союзника помогает выйти из окружения существ."^^xsd:string ;
+    kg:requiresCondition <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/counter-rule/ALLY_REPOSITION/GROUPED_UNITS/condition/applicability> ;
+    kg:ruleFamily "escape"^^xsd:string ;
+    kg:rulePurpose "purchase"^^xsd:string ;
+    kg:ruleStatus "heuristic"^^xsd:string ;
+    kg:ruleWeight "2.2"^^<http://www.w3.org/2001/XMLSchema#double> ;
+    kg:sourceEffectTarget "ally"^^xsd:string,
+        "self"^^xsd:string ;
+    kg:sourceMechanic <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/mechanic/ALLY_REPOSITION> ;
+    kg:targetMechanic <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/mechanic/GROUPED_UNITS> .
+
+<https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/counter-rule/ALLY_REPOSITION/PHYSICAL_PRESSURE> a kg:CounterRule ;
+    rdfs:label "Перемещение помогает увеличить дистанцию до атакующего противника."^^xsd:string ;
+    kg:evidence "Перемещение помогает увеличить дистанцию до атакующего противника."^^xsd:string ;
+    kg:requiresCondition <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/counter-rule/ALLY_REPOSITION/PHYSICAL_PRESSURE/condition/applicability> ;
+    kg:ruleFamily "escape"^^xsd:string ;
+    kg:rulePurpose "purchase"^^xsd:string ;
+    kg:ruleStatus "heuristic"^^xsd:string ;
+    kg:ruleWeight "2.2"^^<http://www.w3.org/2001/XMLSchema#double> ;
+    kg:sourceEffectTarget "ally"^^xsd:string,
+        "self"^^xsd:string ;
+    kg:sourceMechanic <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/mechanic/ALLY_REPOSITION> ;
+    kg:targetMechanic <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/mechanic/PHYSICAL_PRESSURE> .
+
 <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/counter-rule/ANTI_HEAL/HEAL> a kg:CounterRule ;
     rdfs:label "ANTI_HEAL против HEAL"^^xsd:string ;
     kg:evidence "Авторское правило подбора кандидатов; не статистическое доказательство преимущества."^^xsd:string ;
@@ -347,6 +373,58 @@
     kg:sourceMechanic <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/mechanic/BASE_ARMOR_BYPASS> ;
     kg:targetMechanic <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/mechanic/HIGH_ARMOR> .
 
+<https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/counter-rule/BASIC_DISPEL/DISARM> a kg:CounterRule ;
+    rdfs:label "Обычное развеивание снимает DISARM с получателя, если этот эффект развеивается."^^xsd:string ;
+    kg:evidence "Обычное развеивание снимает DISARM с получателя, если этот эффект развеивается."^^xsd:string ;
+    kg:requiresCondition <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/counter-rule/BASIC_DISPEL/DISARM/condition/applicability> ;
+    kg:ruleFamily "dispel-defense"^^xsd:string ;
+    kg:rulePurpose "purchase"^^xsd:string ;
+    kg:ruleStatus "heuristic"^^xsd:string ;
+    kg:ruleWeight "2.2"^^<http://www.w3.org/2001/XMLSchema#double> ;
+    kg:sourceEffectTarget "ally"^^xsd:string,
+        "self"^^xsd:string ;
+    kg:sourceMechanic <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/mechanic/BASIC_DISPEL> ;
+    kg:targetMechanic <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/mechanic/DISARM> .
+
+<https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/counter-rule/BASIC_DISPEL/ROOT> a kg:CounterRule ;
+    rdfs:label "Обычное развеивание снимает ROOT с получателя, если этот эффект развеивается."^^xsd:string ;
+    kg:evidence "Обычное развеивание снимает ROOT с получателя, если этот эффект развеивается."^^xsd:string ;
+    kg:requiresCondition <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/counter-rule/BASIC_DISPEL/ROOT/condition/applicability> ;
+    kg:ruleFamily "dispel-defense"^^xsd:string ;
+    kg:rulePurpose "purchase"^^xsd:string ;
+    kg:ruleStatus "heuristic"^^xsd:string ;
+    kg:ruleWeight "1.4"^^<http://www.w3.org/2001/XMLSchema#double> ;
+    kg:sourceEffectTarget "ally"^^xsd:string,
+        "self"^^xsd:string ;
+    kg:sourceMechanic <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/mechanic/BASIC_DISPEL> ;
+    kg:targetMechanic <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/mechanic/ROOT> .
+
+<https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/counter-rule/BASIC_DISPEL/SILENCE> a kg:CounterRule ;
+    rdfs:label "Обычное развеивание снимает SILENCE с получателя, если этот эффект развеивается."^^xsd:string ;
+    kg:evidence "Обычное развеивание снимает SILENCE с получателя, если этот эффект развеивается."^^xsd:string ;
+    kg:requiresCondition <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/counter-rule/BASIC_DISPEL/SILENCE/condition/applicability> ;
+    kg:ruleFamily "dispel-defense"^^xsd:string ;
+    kg:rulePurpose "purchase"^^xsd:string ;
+    kg:ruleStatus "heuristic"^^xsd:string ;
+    kg:ruleWeight "2.3"^^<http://www.w3.org/2001/XMLSchema#double> ;
+    kg:sourceEffectTarget "ally"^^xsd:string,
+        "self"^^xsd:string ;
+    kg:sourceMechanic <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/mechanic/BASIC_DISPEL> ;
+    kg:targetMechanic <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/mechanic/SILENCE> .
+
+<https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/counter-rule/BASIC_DISPEL/SLOW> a kg:CounterRule ;
+    rdfs:label "Обычное развеивание снимает SLOW с получателя, если этот эффект развеивается."^^xsd:string ;
+    kg:evidence "Обычное развеивание снимает SLOW с получателя, если этот эффект развеивается."^^xsd:string ;
+    kg:requiresCondition <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/counter-rule/BASIC_DISPEL/SLOW/condition/applicability> ;
+    kg:ruleFamily "dispel-defense"^^xsd:string ;
+    kg:rulePurpose "purchase"^^xsd:string ;
+    kg:ruleStatus "heuristic"^^xsd:string ;
+    kg:ruleWeight "0.7"^^<http://www.w3.org/2001/XMLSchema#double> ;
+    kg:sourceEffectTarget "ally"^^xsd:string,
+        "self"^^xsd:string ;
+    kg:sourceMechanic <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/mechanic/BASIC_DISPEL> ;
+    kg:targetMechanic <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/mechanic/SLOW> .
+
 <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/counter-rule/BLINK/RANGED_CASTER> a kg:CounterRule ;
     rdfs:label "Мгновенное перемещение против механики «Герой дальней атаки с активными способностями»."^^xsd:string ;
     kg:evidence "Мгновенное перемещение против механики «Герой дальней атаки с активными способностями»."^^xsd:string ;
@@ -396,6 +474,18 @@
     kg:sourceMechanic <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/mechanic/CHAIN_LIGHTNING> ;
     kg:targetMechanic <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/mechanic/CREATES_ILLUSIONS> .
 
+<https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/counter-rule/CHAIN_LIGHTNING/GROUPED_UNITS> a kg:CounterRule ;
+    rdfs:label "Молнии от атак поражают несколько иллюзий или призванных существ."^^xsd:string ;
+    kg:evidence "Молнии от атак поражают несколько иллюзий или призванных существ."^^xsd:string ;
+    kg:requiresCondition <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/counter-rule/CHAIN_LIGHTNING/GROUPED_UNITS/condition/applicability> ;
+    kg:ruleFamily "units"^^xsd:string ;
+    kg:rulePurpose "purchase"^^xsd:string ;
+    kg:ruleStatus "heuristic"^^xsd:string ;
+    kg:ruleWeight "3.2"^^<http://www.w3.org/2001/XMLSchema#double> ;
+    kg:sourceEffectTarget "enemy"^^xsd:string ;
+    kg:sourceMechanic <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/mechanic/CHAIN_LIGHTNING> ;
+    kg:targetMechanic <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/mechanic/GROUPED_UNITS> .
+
 <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/counter-rule/CLEAVE_DAMAGE/CREATES_ILLUSIONS> a kg:CounterRule ;
     rdfs:label "CLEAVE_DAMAGE против CREATES_ILLUSIONS"^^xsd:string ;
     kg:evidence "Авторское правило подбора кандидатов; не статистическое доказательство преимущества."^^xsd:string ;
@@ -442,6 +532,44 @@
     kg:sourceMechanic <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/mechanic/CONTINUOUS_DISPEL> ;
     kg:targetMechanic <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/mechanic/STACKING_DEBUFF> .
 
+<https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/counter-rule/DAMAGE_BLOCK/GROUPED_UNITS> a kg:CounterRule ;
+    rdfs:label "Блок урона уменьшает урон многочисленных атак иллюзий."^^xsd:string ;
+    kg:evidence "Блок урона уменьшает урон многочисленных атак иллюзий."^^xsd:string ;
+    kg:requiresCondition <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/counter-rule/DAMAGE_BLOCK/GROUPED_UNITS/condition/applicability> ;
+    kg:ruleFamily "physical-defense"^^xsd:string ;
+    kg:rulePurpose "purchase"^^xsd:string ;
+    kg:ruleStatus "heuristic"^^xsd:string ;
+    kg:ruleWeight "1.8"^^<http://www.w3.org/2001/XMLSchema#double> ;
+    kg:sourceEffectTarget "ally"^^xsd:string,
+        "self"^^xsd:string ;
+    kg:sourceMechanic <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/mechanic/DAMAGE_BLOCK> ;
+    kg:targetMechanic <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/mechanic/GROUPED_UNITS> .
+
+<https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/counter-rule/DAMAGE_REDUCTION/FORCED_COMBAT> a kg:CounterRule ;
+    rdfs:label "Снижение урона помогает пережить принудительный бой; активируемый эффект нужно применить заранее."^^xsd:string ;
+    kg:evidence "Снижение урона помогает пережить принудительный бой; активируемый эффект нужно применить заранее."^^xsd:string ;
+    kg:requiresCondition <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/counter-rule/DAMAGE_REDUCTION/FORCED_COMBAT/condition/applicability> ;
+    kg:ruleFamily "physical-defense"^^xsd:string ;
+    kg:rulePurpose "purchase"^^xsd:string ;
+    kg:ruleStatus "heuristic"^^xsd:string ;
+    kg:ruleWeight "3.4"^^<http://www.w3.org/2001/XMLSchema#double> ;
+    kg:sourceEffectTarget "self"^^xsd:string ;
+    kg:sourceMechanic <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/mechanic/DAMAGE_REDUCTION> ;
+    kg:targetMechanic <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/mechanic/FORCED_COMBAT> .
+
+<https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/counter-rule/DAMAGE_REDUCTION/PHYSICAL_PRESSURE> a kg:CounterRule ;
+    rdfs:label "Снижение входящего урона помогает пережить физический урон."^^xsd:string ;
+    kg:evidence "Снижение входящего урона помогает пережить физический урон."^^xsd:string ;
+    kg:requiresCondition <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/counter-rule/DAMAGE_REDUCTION/PHYSICAL_PRESSURE/condition/applicability> ;
+    kg:ruleFamily "physical-defense"^^xsd:string ;
+    kg:rulePurpose "purchase"^^xsd:string ;
+    kg:ruleStatus "heuristic"^^xsd:string ;
+    kg:ruleWeight "1.8"^^<http://www.w3.org/2001/XMLSchema#double> ;
+    kg:sourceEffectTarget "ally"^^xsd:string,
+        "self"^^xsd:string ;
+    kg:sourceMechanic <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/mechanic/DAMAGE_REDUCTION> ;
+    kg:targetMechanic <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/mechanic/PHYSICAL_PRESSURE> .
+
 <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/counter-rule/DASH/RANGED_CASTER> a kg:CounterRule ;
     rdfs:label "Рывок против механики «Герой дальней атаки с активными способностями»."^^xsd:string ;
     kg:evidence "Рывок против механики «Герой дальней атаки с активными способностями»."^^xsd:string ;
@@ -467,6 +595,84 @@
         "enemy"^^xsd:string ;
     kg:sourceMechanic <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/mechanic/DEATH_EXPLOSION> ;
     kg:targetMechanic <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/mechanic/GROUPED_UNITS> .
+
+<https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/counter-rule/DEBUFF_IMMUNITY/DISARM> a kg:CounterRule ;
+    rdfs:label "Невосприимчивость защищает от DISARM, если эффект не проходит сквозь нее."^^xsd:string ;
+    kg:evidence "Невосприимчивость защищает от DISARM, если эффект не проходит сквозь нее."^^xsd:string ;
+    kg:requiresCondition <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/counter-rule/DEBUFF_IMMUNITY/DISARM/condition/applicability> ;
+    kg:ruleFamily "debuff-defense"^^xsd:string ;
+    kg:rulePurpose "purchase"^^xsd:string ;
+    kg:ruleStatus "heuristic"^^xsd:string ;
+    kg:ruleWeight "2.4"^^<http://www.w3.org/2001/XMLSchema#double> ;
+    kg:sourceEffectTarget "ally"^^xsd:string,
+        "self"^^xsd:string ;
+    kg:sourceMechanic <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/mechanic/DEBUFF_IMMUNITY> ;
+    kg:targetMechanic <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/mechanic/DISARM> .
+
+<https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/counter-rule/DEBUFF_IMMUNITY/HEX> a kg:CounterRule ;
+    rdfs:label "Невосприимчивость защищает от HEX, если эффект не проходит сквозь нее."^^xsd:string ;
+    kg:evidence "Невосприимчивость защищает от HEX, если эффект не проходит сквозь нее."^^xsd:string ;
+    kg:requiresCondition <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/counter-rule/DEBUFF_IMMUNITY/HEX/condition/applicability> ;
+    kg:ruleFamily "debuff-defense"^^xsd:string ;
+    kg:rulePurpose "purchase"^^xsd:string ;
+    kg:ruleStatus "heuristic"^^xsd:string ;
+    kg:ruleWeight "2.4"^^<http://www.w3.org/2001/XMLSchema#double> ;
+    kg:sourceEffectTarget "ally"^^xsd:string,
+        "self"^^xsd:string ;
+    kg:sourceMechanic <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/mechanic/DEBUFF_IMMUNITY> ;
+    kg:targetMechanic <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/mechanic/HEX> .
+
+<https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/counter-rule/DEBUFF_IMMUNITY/ROOT> a kg:CounterRule ;
+    rdfs:label "Невосприимчивость защищает от ROOT, если эффект не проходит сквозь нее."^^xsd:string ;
+    kg:evidence "Невосприимчивость защищает от ROOT, если эффект не проходит сквозь нее."^^xsd:string ;
+    kg:requiresCondition <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/counter-rule/DEBUFF_IMMUNITY/ROOT/condition/applicability> ;
+    kg:ruleFamily "debuff-defense"^^xsd:string ;
+    kg:rulePurpose "purchase"^^xsd:string ;
+    kg:ruleStatus "heuristic"^^xsd:string ;
+    kg:ruleWeight "1.3"^^<http://www.w3.org/2001/XMLSchema#double> ;
+    kg:sourceEffectTarget "ally"^^xsd:string,
+        "self"^^xsd:string ;
+    kg:sourceMechanic <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/mechanic/DEBUFF_IMMUNITY> ;
+    kg:targetMechanic <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/mechanic/ROOT> .
+
+<https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/counter-rule/DEBUFF_IMMUNITY/SILENCE> a kg:CounterRule ;
+    rdfs:label "Невосприимчивость защищает от SILENCE, если эффект не проходит сквозь нее."^^xsd:string ;
+    kg:evidence "Невосприимчивость защищает от SILENCE, если эффект не проходит сквозь нее."^^xsd:string ;
+    kg:requiresCondition <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/counter-rule/DEBUFF_IMMUNITY/SILENCE/condition/applicability> ;
+    kg:ruleFamily "debuff-defense"^^xsd:string ;
+    kg:rulePurpose "purchase"^^xsd:string ;
+    kg:ruleStatus "heuristic"^^xsd:string ;
+    kg:ruleWeight "2.2"^^<http://www.w3.org/2001/XMLSchema#double> ;
+    kg:sourceEffectTarget "ally"^^xsd:string,
+        "self"^^xsd:string ;
+    kg:sourceMechanic <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/mechanic/DEBUFF_IMMUNITY> ;
+    kg:targetMechanic <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/mechanic/SILENCE> .
+
+<https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/counter-rule/DEBUFF_IMMUNITY/SLOW> a kg:CounterRule ;
+    rdfs:label "Невосприимчивость защищает от SLOW, если эффект не проходит сквозь нее."^^xsd:string ;
+    kg:evidence "Невосприимчивость защищает от SLOW, если эффект не проходит сквозь нее."^^xsd:string ;
+    kg:requiresCondition <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/counter-rule/DEBUFF_IMMUNITY/SLOW/condition/applicability> ;
+    kg:ruleFamily "debuff-defense"^^xsd:string ;
+    kg:rulePurpose "purchase"^^xsd:string ;
+    kg:ruleStatus "heuristic"^^xsd:string ;
+    kg:ruleWeight "0.4"^^<http://www.w3.org/2001/XMLSchema#double> ;
+    kg:sourceEffectTarget "ally"^^xsd:string,
+        "self"^^xsd:string ;
+    kg:sourceMechanic <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/mechanic/DEBUFF_IMMUNITY> ;
+    kg:targetMechanic <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/mechanic/SLOW> .
+
+<https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/counter-rule/DEBUFF_IMMUNITY/STUN> a kg:CounterRule ;
+    rdfs:label "Невосприимчивость защищает от STUN, если эффект не проходит сквозь нее."^^xsd:string ;
+    kg:evidence "Невосприимчивость защищает от STUN, если эффект не проходит сквозь нее."^^xsd:string ;
+    kg:requiresCondition <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/counter-rule/DEBUFF_IMMUNITY/STUN/condition/applicability> ;
+    kg:ruleFamily "debuff-defense"^^xsd:string ;
+    kg:rulePurpose "purchase"^^xsd:string ;
+    kg:ruleStatus "heuristic"^^xsd:string ;
+    kg:ruleWeight "2.2"^^<http://www.w3.org/2001/XMLSchema#double> ;
+    kg:sourceEffectTarget "ally"^^xsd:string,
+        "self"^^xsd:string ;
+    kg:sourceMechanic <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/mechanic/DEBUFF_IMMUNITY> ;
+    kg:targetMechanic <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/mechanic/STUN> .
 
 <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/counter-rule/DETECTION/INVISIBILITY> a kg:CounterRule ;
     rdfs:label "DETECTION против INVISIBILITY"^^xsd:string ;
@@ -509,6 +715,20 @@
         "enemy"^^xsd:string ;
     kg:sourceMechanic <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/mechanic/DISARM> ;
     kg:targetMechanic <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/mechanic/FORCED_COMBAT> .
+
+<https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/counter-rule/ETHEREAL/PHYSICAL_PRESSURE> a kg:CounterRule ;
+    rdfs:label "Бесплотность защищает цель от обычных физических атак."^^xsd:string ;
+    kg:evidence "Бесплотность защищает цель от обычных физических атак."^^xsd:string ;
+    kg:requiresCondition <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/counter-rule/ETHEREAL/PHYSICAL_PRESSURE/condition/applicability> ;
+    kg:ruleFamily "physical-defense"^^xsd:string ;
+    kg:rulePurpose "purchase"^^xsd:string ;
+    kg:ruleStatus "heuristic"^^xsd:string ;
+    kg:ruleWeight "2.0"^^<http://www.w3.org/2001/XMLSchema#double> ;
+    kg:sourceEffectTarget "ally"^^xsd:string,
+        "both"^^xsd:string,
+        "self"^^xsd:string ;
+    kg:sourceMechanic <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/mechanic/ETHEREAL> ;
+    kg:targetMechanic <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/mechanic/PHYSICAL_PRESSURE> .
 
 <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/counter-rule/EVASION/ATTACK_DEPENDENCE> a kg:CounterRule ;
     rdfs:label "Уклонение против механики «Зависимость от обычных атак»."^^xsd:string ;
@@ -560,6 +780,19 @@
         "enemy"^^xsd:string ;
     kg:sourceMechanic <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/mechanic/FORCED_FACING> ;
     kg:targetMechanic <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/mechanic/DIRECTIONAL_DEFENSE> .
+
+<https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/counter-rule/FORCED_MOVEMENT/PHYSICAL_PRESSURE> a kg:CounterRule ;
+    rdfs:label "Отталкивание помогает разорвать дистанцию с атакующим противником."^^xsd:string ;
+    kg:evidence "Отталкивание помогает разорвать дистанцию с атакующим противником."^^xsd:string ;
+    kg:requiresCondition <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/counter-rule/FORCED_MOVEMENT/PHYSICAL_PRESSURE/condition/applicability> ;
+    kg:ruleFamily "escape"^^xsd:string ;
+    kg:rulePurpose "purchase"^^xsd:string ;
+    kg:ruleStatus "heuristic"^^xsd:string ;
+    kg:ruleWeight "1.5"^^<http://www.w3.org/2001/XMLSchema#double> ;
+    kg:sourceEffectTarget "both"^^xsd:string,
+        "enemy"^^xsd:string ;
+    kg:sourceMechanic <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/mechanic/FORCED_MOVEMENT> ;
+    kg:targetMechanic <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/mechanic/PHYSICAL_PRESSURE> .
 
 <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/counter-rule/GAP_CLOSER/RANGED_CASTER> a kg:CounterRule ;
     rdfs:label "Сближение с целью против механики «Герой дальней атаки с активными способностями»."^^xsd:string ;
@@ -699,6 +932,32 @@
         "enemy"^^xsd:string ;
     kg:sourceMechanic <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/mechanic/HEX> ;
     kg:targetMechanic <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/mechanic/SPELL_CASTING> .
+
+<https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/counter-rule/INVISIBILITY/GROUPED_UNITS> a kg:CounterRule ;
+    rdfs:label "Невидимость позволяет избежать атак иллюзий при отсутствии обнаружения."^^xsd:string ;
+    kg:evidence "Невидимость позволяет избежать атак иллюзий при отсутствии обнаружения."^^xsd:string ;
+    kg:requiresCondition <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/counter-rule/INVISIBILITY/GROUPED_UNITS/condition/applicability> ;
+    kg:ruleFamily "escape"^^xsd:string ;
+    kg:rulePurpose "purchase"^^xsd:string ;
+    kg:ruleStatus "heuristic"^^xsd:string ;
+    kg:ruleWeight "1.8"^^<http://www.w3.org/2001/XMLSchema#double> ;
+    kg:sourceEffectTarget "ally"^^xsd:string,
+        "self"^^xsd:string ;
+    kg:sourceMechanic <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/mechanic/INVISIBILITY> ;
+    kg:targetMechanic <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/mechanic/GROUPED_UNITS> .
+
+<https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/counter-rule/INVISIBILITY/PHYSICAL_PRESSURE> a kg:CounterRule ;
+    rdfs:label "Невидимость затрудняет физические атаки при отсутствии обнаружения."^^xsd:string ;
+    kg:evidence "Невидимость затрудняет физические атаки при отсутствии обнаружения."^^xsd:string ;
+    kg:requiresCondition <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/counter-rule/INVISIBILITY/PHYSICAL_PRESSURE/condition/applicability> ;
+    kg:ruleFamily "escape"^^xsd:string ;
+    kg:rulePurpose "purchase"^^xsd:string ;
+    kg:ruleStatus "heuristic"^^xsd:string ;
+    kg:ruleWeight "0.8"^^<http://www.w3.org/2001/XMLSchema#double> ;
+    kg:sourceEffectTarget "ally"^^xsd:string,
+        "self"^^xsd:string ;
+    kg:sourceMechanic <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/mechanic/INVISIBILITY> ;
+    kg:targetMechanic <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/mechanic/PHYSICAL_PRESSURE> .
 
 <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/counter-rule/LEASH/MOBILITY> a kg:CounterRule ;
     rdfs:label "Ограничение перемещения привязкой против механики «Перемещение с помощью способностей»."^^xsd:string ;
@@ -910,6 +1169,20 @@
     kg:sourceMechanic <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/mechanic/PHYSICAL_IMMUNITY> ;
     kg:targetMechanic <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/mechanic/ATTACK_DEPENDENCE> .
 
+<https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/counter-rule/PHYSICAL_IMMUNITY/GROUPED_UNITS> a kg:CounterRule ;
+    rdfs:label "Физическая неуязвимость временно защищает от атак иллюзий."^^xsd:string ;
+    kg:evidence "Физическая неуязвимость временно защищает от атак иллюзий."^^xsd:string ;
+    kg:requiresCondition <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/counter-rule/PHYSICAL_IMMUNITY/GROUPED_UNITS/condition/applicability> ;
+    kg:ruleFamily "physical-defense"^^xsd:string ;
+    kg:rulePurpose "purchase"^^xsd:string ;
+    kg:ruleStatus "heuristic"^^xsd:string ;
+    kg:ruleWeight "2.4"^^<http://www.w3.org/2001/XMLSchema#double> ;
+    kg:sourceEffectTarget "ally"^^xsd:string,
+        "both"^^xsd:string,
+        "self"^^xsd:string ;
+    kg:sourceMechanic <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/mechanic/PHYSICAL_IMMUNITY> ;
+    kg:targetMechanic <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/mechanic/GROUPED_UNITS> .
+
 <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/counter-rule/PHYSICAL_IMMUNITY/PHYSICAL_PRESSURE> a kg:CounterRule ;
     rdfs:label "Невосприимчивость к физическому урону против механики «Физический урон и усиленные атаки»."^^xsd:string ;
     kg:evidence "Невосприимчивость к физическому урону против механики «Физический урон и усиленные атаки»."^^xsd:string ;
@@ -952,6 +1225,18 @@
     kg:sourceMechanic <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/mechanic/PURE_DAMAGE> ;
     kg:targetMechanic <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/mechanic/HIGH_MAGIC_RESISTANCE> .
 
+<https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/counter-rule/REFLECTS_DAMAGE/PHYSICAL_PRESSURE> a kg:CounterRule ;
+    rdfs:label "Возвращение урона наказывает противника за нанесение физического урона."^^xsd:string ;
+    kg:evidence "Возвращение урона наказывает противника за нанесение физического урона."^^xsd:string ;
+    kg:requiresCondition <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/counter-rule/REFLECTS_DAMAGE/PHYSICAL_PRESSURE/condition/applicability> ;
+    kg:ruleFamily "retaliation"^^xsd:string ;
+    kg:rulePurpose "purchase"^^xsd:string ;
+    kg:ruleStatus "heuristic"^^xsd:string ;
+    kg:ruleWeight "2.2"^^<http://www.w3.org/2001/XMLSchema#double> ;
+    kg:sourceEffectTarget "enemy"^^xsd:string ;
+    kg:sourceMechanic <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/mechanic/REFLECTS_DAMAGE> ;
+    kg:targetMechanic <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/mechanic/PHYSICAL_PRESSURE> .
+
 <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/counter-rule/RETALIATORY_LIGHTNING/CREATES_ILLUSIONS> a kg:CounterRule ;
     rdfs:label "RETALIATORY_LIGHTNING против CREATES_ILLUSIONS"^^xsd:string ;
     kg:evidence "Авторское правило подбора кандидатов; не статистическое доказательство преимущества."^^xsd:string ;
@@ -960,6 +1245,19 @@
     kg:ruleStatus "heuristic"^^xsd:string ;
     kg:sourceMechanic <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/mechanic/RETALIATORY_LIGHTNING> ;
     kg:targetMechanic <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/mechanic/CREATES_ILLUSIONS> .
+
+<https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/counter-rule/RETALIATORY_LIGHTNING/GROUPED_UNITS> a kg:CounterRule ;
+    rdfs:label "Ответные молнии поражают группу атакующих существ."^^xsd:string ;
+    kg:evidence "Ответные молнии поражают группу атакующих существ."^^xsd:string ;
+    kg:requiresCondition <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/counter-rule/RETALIATORY_LIGHTNING/GROUPED_UNITS/condition/applicability> ;
+    kg:ruleFamily "units"^^xsd:string ;
+    kg:rulePurpose "purchase"^^xsd:string ;
+    kg:ruleStatus "heuristic"^^xsd:string ;
+    kg:ruleWeight "3.5"^^<http://www.w3.org/2001/XMLSchema#double> ;
+    kg:sourceEffectTarget "ally"^^xsd:string,
+        "self"^^xsd:string ;
+    kg:sourceMechanic <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/mechanic/RETALIATORY_LIGHTNING> ;
+    kg:targetMechanic <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/mechanic/GROUPED_UNITS> .
 
 <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/counter-rule/RETALIATORY_LIGHTNING/SUMMONS_UNITS> a kg:CounterRule ;
     rdfs:label "RETALIATORY_LIGHTNING против SUMMONS_UNITS"^^xsd:string ;
@@ -1050,6 +1348,18 @@
         "enemy"^^xsd:string ;
     kg:sourceMechanic <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/mechanic/SILENCE> ;
     kg:targetMechanic <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/mechanic/SPELL_CASTING> .
+
+<https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/counter-rule/SPELL_BLOCK/FORCED_COMBAT> a kg:CounterRule ;
+    rdfs:label "Блок направленного заклинания предотвращает начало принудительного боя против владельца."^^xsd:string ;
+    kg:evidence "Блок направленного заклинания предотвращает начало принудительного боя против владельца."^^xsd:string ;
+    kg:requiresCondition <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/counter-rule/SPELL_BLOCK/FORCED_COMBAT/condition/applicability> ;
+    kg:ruleFamily "spell-defense"^^xsd:string ;
+    kg:rulePurpose "purchase"^^xsd:string ;
+    kg:ruleStatus "heuristic"^^xsd:string ;
+    kg:ruleWeight "3.4"^^<http://www.w3.org/2001/XMLSchema#double> ;
+    kg:sourceEffectTarget "self"^^xsd:string ;
+    kg:sourceMechanic <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/mechanic/SPELL_BLOCK> ;
+    kg:targetMechanic <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/mechanic/FORCED_COMBAT> .
 
 <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/counter-rule/SPELL_BLOCK/TARGETED_SPELLS> a kg:CounterRule ;
     rdfs:label "Блокирование направленного заклинания против механики «Направленные способности»."^^xsd:string ;
@@ -3020,11 +3330,9 @@
         <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/119/parameter/1> ;
     kg:hasCooldown <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/119/parameter/10> ;
     kg:hasDuration <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/119/parameter/6> ;
-    kg:hasEffect <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/119/effect/ANTI_HEAL/enemy/reviewed-passive>,
-        <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/119/effect/AOE_DAMAGE/enemy/active-1>,
+    kg:hasEffect <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/119/effect/AOE_DAMAGE/enemy/active-1>,
         <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/119/effect/ARMOR_BUFF/self/base>,
         <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/119/effect/ATTACK_SPEED_SLOW/enemy/reviewed-passive>,
-        <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/119/effect/MULTI_TARGET_ATTACK/enemy/passive-2>,
         <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/119/effect/SLOW/enemy/active-1> ;
     kg:hasManaCost <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/119/parameter/9> ;
     kg:hasNote <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/119/note/note/0>,
@@ -5989,8 +6297,7 @@
         <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/166/parameter/1> ;
     kg:hasCooldown <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/166/parameter/cooldown> ;
     kg:hasDamage <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/166/parameter/0> ;
-    kg:hasEffect <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/166/effect/CHAIN_LIGHTNING/enemy/reviewed-passive>,
-        <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/166/effect/LEAP/self/passive-1> ;
+    kg:hasEffect <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/166/effect/CHAIN_LIGHTNING/enemy/reviewed-passive> ;
     kg:hasManaCost <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/166/parameter/mana_cost> ;
     kg:hasParameter <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/166/parameter/0>,
         <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/166/parameter/1>,
@@ -6822,11 +7129,11 @@ Movement speed bonuses from multiple pairs of boots do not stack."""^^xsd:string
         <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/1806/parameter/3> ;
     kg:hasCooldown <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/1806/parameter/10> ;
     kg:hasDuration <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/1806/parameter/7> ;
-    kg:hasEffect <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/1806/effect/ARMOR_BUFF/self/base>,
+    kg:hasEffect <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/1806/effect/ACCURACY_PROC/enemy/passive-1>,
+        <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/1806/effect/ARMOR_BUFF/self/base>,
         <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/1806/effect/DAMAGE_OVER_TIME/enemy/passive-1>,
         <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/1806/effect/MAGIC_RESIST_REDUCTION/enemy/passive-2>,
-        <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/1806/effect/MANA_REGEN/self/base>,
-        <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/1806/effect/TRUE_STRIKE/enemy/passive-1> ;
+        <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/1806/effect/MANA_REGEN/self/base> ;
     kg:hasManaCost <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/1806/parameter/mana_cost> ;
     kg:hasParameter <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/1806/parameter/0>,
         <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/1806/parameter/1>,
@@ -7209,8 +7516,7 @@ Movement speed bonuses from multiple pairs of boots do not stack."""^^xsd:string
         <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/1852/effect/DAMAGE_OVER_TIME/enemy/active-1>,
         <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/1852/effect/DETECTION/enemy/active-1>,
         <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/1852/effect/HEAL/ally/active-1>,
-        <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/1852/effect/HEALTH_REGEN/ally/active-1>,
-        <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/1852/effect/SUSTAINED_AOE/enemy/active-1> ;
+        <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/1852/effect/HEALTH_REGEN/ally/active-1> ;
     kg:hasManaCost <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/1852/parameter/mana_cost> ;
     kg:hasNote <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/1852/note/note/0>,
         <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/1852/note/note/1>,
@@ -7401,8 +7707,7 @@ Movement speed bonuses from multiple pairs of boots do not stack."""^^xsd:string
     kg:hasDamage <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/1858/parameter/2> ;
     kg:hasDuration <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/1858/parameter/11> ;
     kg:hasEffect <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/1858/effect/DAMAGE_OVER_TIME/enemy/passive-1>,
-        <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/1858/effect/SUSTAINED_AOE/enemy/passive-1>,
-        <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/1858/effect/SUSTAINED_AOE/enemy/passive-2> ;
+        <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/1858/effect/MULTI_TARGET_ATTACK/enemy/item-targeting> ;
     kg:hasManaCost <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/1858/parameter/mana_cost> ;
     kg:hasNote <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/1858/note/note/0> ;
     kg:hasParameter <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/1858/parameter/0>,
@@ -10581,7 +10886,8 @@ Movement speed bonuses from multiple pairs of boots do not stack."""^^xsd:string
     kg:hasCastRange <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/263/parameter/12> ;
     kg:hasCooldown <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/263/parameter/14> ;
     kg:hasDuration <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/263/parameter/7> ;
-    kg:hasEffect <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/263/effect/FORCED_MOVEMENT/enemy/active-1> ;
+    kg:hasEffect <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/263/effect/ALLY_REPOSITION/ally/item-targeting>,
+        <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/263/effect/FORCED_MOVEMENT/enemy/active-1> ;
     kg:hasManaCost <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/263/parameter/13> ;
     kg:hasNote <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/263/note/note/0>,
         <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/263/note/note/1>,
@@ -10692,8 +10998,7 @@ Movement speed bonuses from multiple pairs of boots do not stack."""^^xsd:string
         <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/267/effect/DAMAGE_OVER_TIME/enemy/active-1>,
         <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/267/effect/HEAL/ally/active-1>,
         <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/267/effect/HEALTH_REGEN/ally/active-1>,
-        <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/267/effect/MANA_REGEN/self/base>,
-        <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/267/effect/SUSTAINED_AOE/enemy/active-1> ;
+        <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/267/effect/MANA_REGEN/self/base> ;
     kg:hasManaCost <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/267/parameter/mana_cost> ;
     kg:hasNote <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/267/note/note/0>,
         <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/267/note/note/1>,
@@ -14102,10 +14407,10 @@ Movement speed bonuses from multiple pairs of boots do not stack."""^^xsd:string
         <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/534/parameter/3> ;
     kg:hasCooldown <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/534/parameter/8> ;
     kg:hasDuration <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/534/parameter/6> ;
-    kg:hasEffect <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/534/effect/ARMOR_BUFF/self/base>,
+    kg:hasEffect <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/534/effect/ACCURACY_PROC/enemy/passive-1>,
+        <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/534/effect/ARMOR_BUFF/self/base>,
         <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/534/effect/DAMAGE_OVER_TIME/enemy/passive-1>,
-        <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/534/effect/MANA_REGEN/self/base>,
-        <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/534/effect/TRUE_STRIKE/enemy/passive-1> ;
+        <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/534/effect/MANA_REGEN/self/base> ;
     kg:hasManaCost <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/534/parameter/mana_cost> ;
     kg:hasParameter <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/534/parameter/0>,
         <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/534/parameter/1>,
@@ -14642,8 +14947,7 @@ Movement speed bonuses from multiple pairs of boots do not stack."""^^xsd:string
         <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/598/effect/HEALTH_REGEN/self/base>,
         <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/598/effect/MAGIC_RESISTANCE_BUFF/self/base>,
         <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/598/effect/MANA_REGEN/self/base>,
-        <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/598/effect/PHYSICAL_DAMAGE/enemy/passive-1>,
-        <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/598/effect/SUSTAINED_AOE/enemy/passive-1> ;
+        <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/598/effect/PHYSICAL_DAMAGE/enemy/passive-1> ;
     kg:hasManaCost <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/598/parameter/mana_cost> ;
     kg:hasParameter <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/598/parameter/0>,
         <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/598/parameter/1>,
@@ -16645,8 +16949,7 @@ Dispel Type: Basic Dispel"""^^xsd:string ;
     kg:hasEffect <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/92/effect/ARMOR_BUFF/self/base>,
         <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/92/effect/DAMAGE_OVER_TIME/enemy/active-1>,
         <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/92/effect/HEAL/ally/active-1>,
-        <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/92/effect/HEALTH_REGEN/ally/active-1>,
-        <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/92/effect/SUSTAINED_AOE/enemy/active-1> ;
+        <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/92/effect/HEALTH_REGEN/ally/active-1> ;
     kg:hasManaCost <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/92/parameter/mana_cost> ;
     kg:hasNote <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/92/note/note/0>,
         <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/92/note/note/1>,
@@ -188693,6 +188996,18 @@ DISPEL TYPE: Basic Dispel"""^^xsd:string ;
     kg:conditionScope "target"^^xsd:string ;
     kg:conditionText "Защита союзника от физического урона против механики «Принудительный бой между героями»."^^xsd:string .
 
+<https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/counter-rule/ALLY_REPOSITION/GROUPED_UNITS/condition/applicability> a kg:InteractionCondition ;
+    rdfs:label "Перемещение себя или союзника помогает выйти из окружения существ."^^xsd:string ;
+    kg:conditionKind "review"^^xsd:string ;
+    kg:conditionScope "target"^^xsd:string ;
+    kg:conditionText "Перемещение себя или союзника помогает выйти из окружения существ."^^xsd:string .
+
+<https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/counter-rule/ALLY_REPOSITION/PHYSICAL_PRESSURE/condition/applicability> a kg:InteractionCondition ;
+    rdfs:label "Перемещение помогает увеличить дистанцию до атакующего противника."^^xsd:string ;
+    kg:conditionKind "review"^^xsd:string ;
+    kg:conditionScope "target"^^xsd:string ;
+    kg:conditionText "Перемещение помогает увеличить дистанцию до атакующего противника."^^xsd:string .
+
 <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/counter-rule/ANTI_HEAL/HEAL/condition/applicability> a kg:InteractionCondition ;
     rdfs:label "Снижение лечения должно действовать на получателя лечения."^^xsd:string ;
     kg:conditionKind "review"^^xsd:string ;
@@ -188819,6 +189134,30 @@ DISPEL TYPE: Basic Dispel"""^^xsd:string ;
     kg:conditionScope "target"^^xsd:string ;
     kg:conditionText "Marksmanship procs ignore base armor, not bonus armor; keep enemy heroes outside the disable range."^^xsd:string .
 
+<https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/counter-rule/BASIC_DISPEL/DISARM/condition/applicability> a kg:InteractionCondition ;
+    rdfs:label "Обычное развеивание снимает DISARM с получателя, если этот эффект развеивается."^^xsd:string ;
+    kg:conditionKind "review"^^xsd:string ;
+    kg:conditionScope "target"^^xsd:string ;
+    kg:conditionText "Обычное развеивание снимает DISARM с получателя, если этот эффект развеивается."^^xsd:string .
+
+<https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/counter-rule/BASIC_DISPEL/ROOT/condition/applicability> a kg:InteractionCondition ;
+    rdfs:label "Обычное развеивание снимает ROOT с получателя, если этот эффект развеивается."^^xsd:string ;
+    kg:conditionKind "review"^^xsd:string ;
+    kg:conditionScope "target"^^xsd:string ;
+    kg:conditionText "Обычное развеивание снимает ROOT с получателя, если этот эффект развеивается."^^xsd:string .
+
+<https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/counter-rule/BASIC_DISPEL/SILENCE/condition/applicability> a kg:InteractionCondition ;
+    rdfs:label "Обычное развеивание снимает SILENCE с получателя, если этот эффект развеивается."^^xsd:string ;
+    kg:conditionKind "review"^^xsd:string ;
+    kg:conditionScope "target"^^xsd:string ;
+    kg:conditionText "Обычное развеивание снимает SILENCE с получателя, если этот эффект развеивается."^^xsd:string .
+
+<https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/counter-rule/BASIC_DISPEL/SLOW/condition/applicability> a kg:InteractionCondition ;
+    rdfs:label "Обычное развеивание снимает SLOW с получателя, если этот эффект развеивается."^^xsd:string ;
+    kg:conditionKind "review"^^xsd:string ;
+    kg:conditionScope "target"^^xsd:string ;
+    kg:conditionText "Обычное развеивание снимает SLOW с получателя, если этот эффект развеивается."^^xsd:string .
+
 <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/counter-rule/BLINK/RANGED_CASTER/condition/applicability> a kg:InteractionCondition ;
     rdfs:label "Мгновенное перемещение против механики «Герой дальней атаки с активными способностями»."^^xsd:string ;
     kg:conditionKind "review"^^xsd:string ;
@@ -188842,6 +189181,12 @@ DISPEL TYPE: Basic Dispel"""^^xsd:string ;
     kg:conditionKind "review"^^xsd:string ;
     kg:conditionScope "target"^^xsd:string ;
     kg:conditionText "Chain Lightning procs can damage multiple illusions; it is not an instant-kill effect."^^xsd:string .
+
+<https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/counter-rule/CHAIN_LIGHTNING/GROUPED_UNITS/condition/applicability> a kg:InteractionCondition ;
+    rdfs:label "Молнии от атак поражают несколько иллюзий или призванных существ."^^xsd:string ;
+    kg:conditionKind "review"^^xsd:string ;
+    kg:conditionScope "target"^^xsd:string ;
+    kg:conditionText "Молнии от атак поражают несколько иллюзий или призванных существ."^^xsd:string .
 
 <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/counter-rule/CLEAVE_DAMAGE/CREATES_ILLUSIONS/condition/applicability> a kg:InteractionCondition ;
     rdfs:label "Требуются атаки ближнего боя; иллюзии должны попадать в область cleave."^^xsd:string ;
@@ -188867,6 +189212,24 @@ DISPEL TYPE: Basic Dispel"""^^xsd:string ;
     kg:conditionScope "target"^^xsd:string ;
     kg:conditionText "Повторяющееся развеивание против механики «Накапливающиеся отрицательные эффекты»."^^xsd:string .
 
+<https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/counter-rule/DAMAGE_BLOCK/GROUPED_UNITS/condition/applicability> a kg:InteractionCondition ;
+    rdfs:label "Блок урона уменьшает урон многочисленных атак иллюзий."^^xsd:string ;
+    kg:conditionKind "review"^^xsd:string ;
+    kg:conditionScope "target"^^xsd:string ;
+    kg:conditionText "Блок урона уменьшает урон многочисленных атак иллюзий."^^xsd:string .
+
+<https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/counter-rule/DAMAGE_REDUCTION/FORCED_COMBAT/condition/applicability> a kg:InteractionCondition ;
+    rdfs:label "Снижение урона помогает пережить принудительный бой; активируемый эффект нужно применить заранее."^^xsd:string ;
+    kg:conditionKind "review"^^xsd:string ;
+    kg:conditionScope "target"^^xsd:string ;
+    kg:conditionText "Снижение урона помогает пережить принудительный бой; активируемый эффект нужно применить заранее."^^xsd:string .
+
+<https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/counter-rule/DAMAGE_REDUCTION/PHYSICAL_PRESSURE/condition/applicability> a kg:InteractionCondition ;
+    rdfs:label "Снижение входящего урона помогает пережить физический урон."^^xsd:string ;
+    kg:conditionKind "review"^^xsd:string ;
+    kg:conditionScope "target"^^xsd:string ;
+    kg:conditionText "Снижение входящего урона помогает пережить физический урон."^^xsd:string .
+
 <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/counter-rule/DASH/RANGED_CASTER/condition/applicability> a kg:InteractionCondition ;
     rdfs:label "Рывок против механики «Герой дальней атаки с активными способностями»."^^xsd:string ;
     kg:conditionKind "review"^^xsd:string ;
@@ -188878,6 +189241,42 @@ DISPEL TYPE: Basic Dispel"""^^xsd:string ;
     kg:conditionKind "review"^^xsd:string ;
     kg:conditionScope "target"^^xsd:string ;
     kg:conditionText "Взрыв при смерти цели против механики «Множество подконтрольных целей»."^^xsd:string .
+
+<https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/counter-rule/DEBUFF_IMMUNITY/DISARM/condition/applicability> a kg:InteractionCondition ;
+    rdfs:label "Невосприимчивость защищает от DISARM, если эффект не проходит сквозь нее."^^xsd:string ;
+    kg:conditionKind "review"^^xsd:string ;
+    kg:conditionScope "target"^^xsd:string ;
+    kg:conditionText "Невосприимчивость защищает от DISARM, если эффект не проходит сквозь нее."^^xsd:string .
+
+<https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/counter-rule/DEBUFF_IMMUNITY/HEX/condition/applicability> a kg:InteractionCondition ;
+    rdfs:label "Невосприимчивость защищает от HEX, если эффект не проходит сквозь нее."^^xsd:string ;
+    kg:conditionKind "review"^^xsd:string ;
+    kg:conditionScope "target"^^xsd:string ;
+    kg:conditionText "Невосприимчивость защищает от HEX, если эффект не проходит сквозь нее."^^xsd:string .
+
+<https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/counter-rule/DEBUFF_IMMUNITY/ROOT/condition/applicability> a kg:InteractionCondition ;
+    rdfs:label "Невосприимчивость защищает от ROOT, если эффект не проходит сквозь нее."^^xsd:string ;
+    kg:conditionKind "review"^^xsd:string ;
+    kg:conditionScope "target"^^xsd:string ;
+    kg:conditionText "Невосприимчивость защищает от ROOT, если эффект не проходит сквозь нее."^^xsd:string .
+
+<https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/counter-rule/DEBUFF_IMMUNITY/SILENCE/condition/applicability> a kg:InteractionCondition ;
+    rdfs:label "Невосприимчивость защищает от SILENCE, если эффект не проходит сквозь нее."^^xsd:string ;
+    kg:conditionKind "review"^^xsd:string ;
+    kg:conditionScope "target"^^xsd:string ;
+    kg:conditionText "Невосприимчивость защищает от SILENCE, если эффект не проходит сквозь нее."^^xsd:string .
+
+<https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/counter-rule/DEBUFF_IMMUNITY/SLOW/condition/applicability> a kg:InteractionCondition ;
+    rdfs:label "Невосприимчивость защищает от SLOW, если эффект не проходит сквозь нее."^^xsd:string ;
+    kg:conditionKind "review"^^xsd:string ;
+    kg:conditionScope "target"^^xsd:string ;
+    kg:conditionText "Невосприимчивость защищает от SLOW, если эффект не проходит сквозь нее."^^xsd:string .
+
+<https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/counter-rule/DEBUFF_IMMUNITY/STUN/condition/applicability> a kg:InteractionCondition ;
+    rdfs:label "Невосприимчивость защищает от STUN, если эффект не проходит сквозь нее."^^xsd:string ;
+    kg:conditionKind "review"^^xsd:string ;
+    kg:conditionScope "target"^^xsd:string ;
+    kg:conditionText "Невосприимчивость защищает от STUN, если эффект не проходит сквозь нее."^^xsd:string .
 
 <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/counter-rule/DETECTION/INVISIBILITY/condition/applicability> a kg:InteractionCondition ;
     rdfs:label "Цель должна попадать в область обнаружения; отдельные виды скрытия могут быть исключением."^^xsd:string ;
@@ -188896,6 +189295,12 @@ DISPEL TYPE: Basic Dispel"""^^xsd:string ;
     kg:conditionKind "review"^^xsd:string ;
     kg:conditionScope "target"^^xsd:string ;
     kg:conditionText "Запрет атак против механики «Принудительный бой между героями»."^^xsd:string .
+
+<https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/counter-rule/ETHEREAL/PHYSICAL_PRESSURE/condition/applicability> a kg:InteractionCondition ;
+    rdfs:label "Бесплотность защищает цель от обычных физических атак."^^xsd:string ;
+    kg:conditionKind "review"^^xsd:string ;
+    kg:conditionScope "target"^^xsd:string ;
+    kg:conditionText "Бесплотность защищает цель от обычных физических атак."^^xsd:string .
 
 <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/counter-rule/EVASION/ATTACK_DEPENDENCE/condition/applicability> a kg:InteractionCondition ;
     rdfs:label "Уклонение против механики «Зависимость от обычных атак»."^^xsd:string ;
@@ -188920,6 +189325,12 @@ DISPEL TYPE: Basic Dispel"""^^xsd:string ;
     kg:conditionKind "review"^^xsd:string ;
     kg:conditionScope "target"^^xsd:string ;
     kg:conditionText "Принудительный разворот к атакующему против механики «Снижение урона с определенного направления»."^^xsd:string .
+
+<https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/counter-rule/FORCED_MOVEMENT/PHYSICAL_PRESSURE/condition/applicability> a kg:InteractionCondition ;
+    rdfs:label "Отталкивание помогает разорвать дистанцию с атакующим противником."^^xsd:string ;
+    kg:conditionKind "review"^^xsd:string ;
+    kg:conditionScope "target"^^xsd:string ;
+    kg:conditionText "Отталкивание помогает разорвать дистанцию с атакующим противником."^^xsd:string .
 
 <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/counter-rule/GAP_CLOSER/RANGED_CASTER/condition/applicability> a kg:InteractionCondition ;
     rdfs:label "Сближение с целью против механики «Герой дальней атаки с активными способностями»."^^xsd:string ;
@@ -188987,6 +189398,18 @@ DISPEL TYPE: Basic Dispel"""^^xsd:string ;
     kg:conditionKind "review"^^xsd:string ;
     kg:conditionScope "target"^^xsd:string ;
     kg:conditionText "Превращение против механики «Применение активных способностей»."^^xsd:string .
+
+<https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/counter-rule/INVISIBILITY/GROUPED_UNITS/condition/applicability> a kg:InteractionCondition ;
+    rdfs:label "Невидимость позволяет избежать атак иллюзий при отсутствии обнаружения."^^xsd:string ;
+    kg:conditionKind "review"^^xsd:string ;
+    kg:conditionScope "target"^^xsd:string ;
+    kg:conditionText "Невидимость позволяет избежать атак иллюзий при отсутствии обнаружения."^^xsd:string .
+
+<https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/counter-rule/INVISIBILITY/PHYSICAL_PRESSURE/condition/applicability> a kg:InteractionCondition ;
+    rdfs:label "Невидимость затрудняет физические атаки при отсутствии обнаружения."^^xsd:string ;
+    kg:conditionKind "review"^^xsd:string ;
+    kg:conditionScope "target"^^xsd:string ;
+    kg:conditionText "Невидимость затрудняет физические атаки при отсутствии обнаружения."^^xsd:string .
 
 <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/counter-rule/LEASH/MOBILITY/condition/applicability> a kg:InteractionCondition ;
     rdfs:label "Ограничение перемещения привязкой против механики «Перемещение с помощью способностей»."^^xsd:string ;
@@ -189078,6 +189501,12 @@ DISPEL TYPE: Basic Dispel"""^^xsd:string ;
     kg:conditionScope "target"^^xsd:string ;
     kg:conditionText "Невосприимчивость к физическому урону против механики «Зависимость от обычных атак»."^^xsd:string .
 
+<https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/counter-rule/PHYSICAL_IMMUNITY/GROUPED_UNITS/condition/applicability> a kg:InteractionCondition ;
+    rdfs:label "Физическая неуязвимость временно защищает от атак иллюзий."^^xsd:string ;
+    kg:conditionKind "review"^^xsd:string ;
+    kg:conditionScope "target"^^xsd:string ;
+    kg:conditionText "Физическая неуязвимость временно защищает от атак иллюзий."^^xsd:string .
+
 <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/counter-rule/PHYSICAL_IMMUNITY/PHYSICAL_PRESSURE/condition/applicability> a kg:InteractionCondition ;
     rdfs:label "Невосприимчивость к физическому урону против механики «Физический урон и усиленные атаки»."^^xsd:string ;
     kg:conditionKind "review"^^xsd:string ;
@@ -189096,11 +189525,23 @@ DISPEL TYPE: Basic Dispel"""^^xsd:string ;
     kg:conditionScope "target"^^xsd:string ;
     kg:conditionText "Чистый урон против механики «Высокое сопротивление магии»."^^xsd:string .
 
+<https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/counter-rule/REFLECTS_DAMAGE/PHYSICAL_PRESSURE/condition/applicability> a kg:InteractionCondition ;
+    rdfs:label "Возвращение урона наказывает противника за нанесение физического урона."^^xsd:string ;
+    kg:conditionKind "review"^^xsd:string ;
+    kg:conditionScope "target"^^xsd:string ;
+    kg:conditionText "Возвращение урона наказывает противника за нанесение физического урона."^^xsd:string .
+
 <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/counter-rule/RETALIATORY_LIGHTNING/CREATES_ILLUSIONS/condition/applicability> a kg:InteractionCondition ;
     rdfs:label "Наложить Static Charge на атакуемую цель; молнии срабатывают с вероятностью при получении атак."^^xsd:string ;
     kg:conditionKind "review"^^xsd:string ;
     kg:conditionScope "target"^^xsd:string ;
     kg:conditionText "Наложить Static Charge на атакуемую цель; молнии срабатывают с вероятностью при получении атак."^^xsd:string .
+
+<https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/counter-rule/RETALIATORY_LIGHTNING/GROUPED_UNITS/condition/applicability> a kg:InteractionCondition ;
+    rdfs:label "Ответные молнии поражают группу атакующих существ."^^xsd:string ;
+    kg:conditionKind "review"^^xsd:string ;
+    kg:conditionScope "target"^^xsd:string ;
+    kg:conditionText "Ответные молнии поражают группу атакующих существ."^^xsd:string .
 
 <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/counter-rule/RETALIATORY_LIGHTNING/SUMMONS_UNITS/condition/applicability> a kg:InteractionCondition ;
     rdfs:label "Apply Static Charge to the attacked unit; retaliation procs can hit nearby summons."^^xsd:string ;
@@ -189157,6 +189598,12 @@ DISPEL TYPE: Basic Dispel"""^^xsd:string ;
     kg:conditionKind "review"^^xsd:string ;
     kg:conditionScope "target"^^xsd:string ;
     kg:conditionText "Безмолвие против механики «Применение активных способностей»."^^xsd:string .
+
+<https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/counter-rule/SPELL_BLOCK/FORCED_COMBAT/condition/applicability> a kg:InteractionCondition ;
+    rdfs:label "Блок направленного заклинания предотвращает начало принудительного боя против владельца."^^xsd:string ;
+    kg:conditionKind "review"^^xsd:string ;
+    kg:conditionScope "target"^^xsd:string ;
+    kg:conditionText "Блок направленного заклинания предотвращает начало принудительного боя против владельца."^^xsd:string .
 
 <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/counter-rule/SPELL_BLOCK/TARGETED_SPELLS/condition/applicability> a kg:InteractionCondition ;
     rdfs:label "Блокирование направленного заклинания против механики «Направленные способности»."^^xsd:string ;
@@ -195198,14 +195645,6 @@ DISPEL TYPE: Basic Dispel"""^^xsd:string ;
     kg:numericValue 0 ;
     kg:position 0 .
 
-<https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/119/effect/ANTI_HEAL/enemy/reviewed-passive> a kg:Effect ;
-    rdfs:label "Shiva's Guard: Снижение восстановления здоровья"^^xsd:string ;
-    rdfs:comment "Аура снижает восстановление здоровья и скорость атак врагов рядом."^^xsd:string ;
-    kg:effectMechanic <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/mechanic/ANTI_HEAL> ;
-    kg:effectStatus "curated-description"^^xsd:string ;
-    kg:effectTarget "enemy"^^xsd:string ;
-    kg:evidence "Active: Arctic Blast Emits a freezing wave that deals %blast_damage% magical damage to enemies and slows their movement by %blast_movement_speed%%% for %blast_debuff_duration% seconds. Radius: %blast_radius% Passive: Freezing Aura Reduces the attack speed of all enemies by %aura_attack_speed%. Radius: %aura_radius%"^^xsd:string .
-
 <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/119/effect/AOE_DAMAGE/enemy/active-1> a kg:Effect ;
     rdfs:label "Shiva's Guard: Урон по области"^^xsd:string ;
     rdfs:comment "Наносит урон нескольким врагам в области действия."^^xsd:string ;
@@ -195236,14 +195675,6 @@ DISPEL TYPE: Basic Dispel"""^^xsd:string ;
     kg:effectStatus "curated-description"^^xsd:string ;
     kg:effectTarget "enemy"^^xsd:string ;
     kg:evidence "Active: Arctic Blast Emits a freezing wave that deals %blast_damage% magical damage to enemies and slows their movement by %blast_movement_speed%%% for %blast_debuff_duration% seconds. Radius: %blast_radius% Passive: Freezing Aura Reduces the attack speed of all enemies by %aura_attack_speed%. Radius: %aura_radius%"^^xsd:string .
-
-<https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/119/effect/MULTI_TARGET_ATTACK/enemy/passive-2> a kg:Effect ;
-    rdfs:label "Shiva's Guard: Атаки по нескольким целям"^^xsd:string ;
-    rdfs:comment "Воздействует на несколько целей последовательными атаками или попаданиями."^^xsd:string ;
-    kg:effectMechanic <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/mechanic/MULTI_TARGET_ATTACK> ;
-    kg:effectStatus "curated-description"^^xsd:string ;
-    kg:effectTarget "enemy"^^xsd:string ;
-    kg:evidence "Passive: Freezing Aura Reduces the attack speed of all enemies by %aura_attack_speed%. Radius: %aura_radius%"^^xsd:string .
 
 <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/119/effect/SLOW/enemy/active-1> a kg:Effect ;
     rdfs:label "Shiva's Guard: Замедление передвижения"^^xsd:string ;
@@ -197788,14 +198219,6 @@ DISPEL TYPE: Basic Dispel"""^^xsd:string ;
     kg:effectStatus "curated-description"^^xsd:string ;
     kg:effectTarget "enemy"^^xsd:string ;
     kg:evidence "Active: Static Charge Places a charged shield on a target unit for %static_duration% seconds which has a %static_chance%%% chance to release a %static_damage% magical damage shocking bolt at a nearby attacker and %static_strikes% additional enemies. Passive: Chain Lightning Grants a %chain_chance%%% chance on attack to release a bolt of electricity that leaps between %chain_strikes% targets within a %chain_radius% radius, dealing %chain_damage% magical damage to each. Lightning proc pierces evasion."^^xsd:string .
-
-<https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/158/effect/LEAP/self/passive-2> a kg:Effect ;
-    rdfs:label "Mjollnir: Прыжок"^^xsd:string ;
-    rdfs:comment "Прыжок."^^xsd:string ;
-    kg:effectMechanic <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/mechanic/LEAP> ;
-    kg:effectStatus "curated-description"^^xsd:string ;
-    kg:effectTarget "self"^^xsd:string ;
-    kg:evidence "Passive: Chain Lightning Grants a %chain_chance%%% chance on attack to release a bolt of electricity that leaps between %chain_strikes% targets within a %chain_radius% radius, dealing %chain_damage% magical damage to each."^^xsd:string .
 
 <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/158/effect/RETALIATORY_LIGHTNING> a kg:Effect ;
     rdfs:label "Mjollnir: RETALIATORY_LIGHTNING"^^xsd:string ;
@@ -200636,14 +201059,6 @@ DISPEL TYPE: Basic Dispel"""^^xsd:string ;
     kg:effectTarget "enemy"^^xsd:string ;
     kg:evidence "Passive: Chain Lightning Grants a %chain_chance%%% chance on attack to release a bolt of electricity that leaps between %chain_strikes% targets within a %chain_radius% radius, dealing %chain_damage% magical damage to each. Lightning proc pierces evasion."^^xsd:string .
 
-<https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/166/effect/LEAP/self/passive-1> a kg:Effect ;
-    rdfs:label "Maelstrom: Прыжок"^^xsd:string ;
-    rdfs:comment "Прыжок."^^xsd:string ;
-    kg:effectMechanic <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/mechanic/LEAP> ;
-    kg:effectStatus "curated-description"^^xsd:string ;
-    kg:effectTarget "self"^^xsd:string ;
-    kg:evidence "Passive: Chain Lightning Grants a %chain_chance%%% chance on attack to release a bolt of electricity that leaps between %chain_strikes% targets within a %chain_radius% radius, dealing %chain_damage% magical damage to each."^^xsd:string .
-
 <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/166/parameter/0/hasBaseValue/0> a kg:ParameterValue ;
     rdfs:label "Maelstrom: bonus_damage: значение 1 = 25"^^xsd:string ;
     kg:numericValue 25 ;
@@ -202064,6 +202479,21 @@ DISPEL TYPE: Basic Dispel"""^^xsd:string ;
     kg:numericValue 0 ;
     kg:position 0 .
 
+<https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/1806/effect/ACCURACY_PROC/enemy/passive-1> a kg:Effect ;
+    rdfs:label "Parasma: Вероятностное попадание сквозь уклонение"^^xsd:string ;
+    rdfs:comment "Не промахивается атака, накладывающая яд; обычные атаки между срабатываниями не получают этот эффект."^^xsd:string ;
+    kg:effectMechanic <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/mechanic/ACCURACY_PROC> ;
+    kg:effectStatus "curated-description"^^xsd:string ;
+    kg:effectTarget "enemy"^^xsd:string ;
+    kg:evidence "Passive: Witch Blade Causes your next attack to have true strike, apply a poison for %slow_duration% seconds, slowing by %slow%%% and dealing %int_damage_multiplier%x your intelligence as damage every second."^^xsd:string ;
+    kg:requiresCondition <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/1806/effect/ACCURACY_PROC/enemy/passive-1/condition/cooldown-attack> .
+
+<https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/1806/effect/ACCURACY_PROC/enemy/passive-1/condition/cooldown-attack> a kg:InteractionCondition ;
+    rdfs:label "Без промаха проходит атака, накладывающая яд, с учетом перезарядки эффекта."^^xsd:string ;
+    kg:conditionKind "gameplay"^^xsd:string ;
+    kg:conditionScope "source"^^xsd:string ;
+    kg:conditionText "Без промаха проходит атака, накладывающая яд, с учетом перезарядки эффекта."^^xsd:string .
+
 <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/1806/effect/ARMOR_BUFF/self/base> a kg:Effect ;
     rdfs:label "Parasma: Повышение брони"^^xsd:string ;
     rdfs:comment "Параметр предмета предоставляет соответствующий положительный эффект."^^xsd:string ;
@@ -202095,14 +202525,6 @@ DISPEL TYPE: Basic Dispel"""^^xsd:string ;
     kg:effectStatus "curated-description"^^xsd:string ;
     kg:effectTarget "self"^^xsd:string ;
     kg:evidence "{\"name\": \"bonus_mana_regen\", \"values_float\": [1.5], \"is_percentage\": false, \"heading_loc\": \"+$mana_regen\", \"bonuses\": [], \"values_shard\": [], \"values_scepter\": [], \"required_facet\": \"\"}"^^xsd:string .
-
-<https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/1806/effect/TRUE_STRIKE/enemy/passive-1> a kg:Effect ;
-    rdfs:label "Parasma: Атаки без промаха"^^xsd:string ;
-    rdfs:comment "Атаки без промаха."^^xsd:string ;
-    kg:effectMechanic <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/mechanic/TRUE_STRIKE> ;
-    kg:effectStatus "curated-description"^^xsd:string ;
-    kg:effectTarget "enemy"^^xsd:string ;
-    kg:evidence "Passive: Witch Blade Causes your next attack to have true strike, apply a poison for %slow_duration% seconds, slowing by %slow%%% and dealing %int_damage_multiplier%x your intelligence as damage every second."^^xsd:string .
 
 <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/1806/parameter/0/hasBaseValue/0> a kg:ParameterValue ;
     rdfs:label "Parasma: bonus_intellect: значение 1 = 40"^^xsd:string ;
@@ -202211,7 +202633,14 @@ DISPEL TYPE: Basic Dispel"""^^xsd:string ;
     kg:effectMechanic <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/mechanic/BREAK> ;
     kg:effectStatus "curated-description"^^xsd:string ;
     kg:effectTarget "enemy"^^xsd:string ;
-    kg:evidence "Passive: Empower Spell The next Unit Target spell you cast on an enemy deals a separate %bonus_spell_damage% additional damage, disables their passives, and slows their movement speed by %slow%%% for %slow_duration%s."^^xsd:string .
+    kg:evidence "Passive: Empower Spell The next Unit Target spell you cast on an enemy deals a separate %bonus_spell_damage% additional damage, disables their passives, and slows their movement speed by %slow%%% for %slow_duration%s."^^xsd:string ;
+    kg:requiresCondition <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/1808/effect/BREAK/enemy/passive-1/condition/enemy-unit-target-spell> .
+
+<https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/1808/effect/BREAK/enemy/passive-1/condition/enemy-unit-target-spell> a kg:InteractionCondition ;
+    rdfs:label "Нужно применить направленное на врага заклинание."^^xsd:string ;
+    kg:conditionKind "gameplay"^^xsd:string ;
+    kg:conditionScope "source"^^xsd:string ;
+    kg:conditionText "Нужно применить направленное на врага заклинание."^^xsd:string .
 
 <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/1808/effect/HEALTH_REGEN/self/base> a kg:Effect ;
     rdfs:label "Khanda: Регенерация здоровья"^^xsd:string ;
@@ -202235,7 +202664,14 @@ DISPEL TYPE: Basic Dispel"""^^xsd:string ;
     kg:effectMechanic <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/mechanic/SLOW> ;
     kg:effectStatus "curated-description"^^xsd:string ;
     kg:effectTarget "enemy"^^xsd:string ;
-    kg:evidence "Passive: Empower Spell The next Unit Target spell you cast on an enemy deals a separate %bonus_spell_damage% additional damage, disables their passives, and slows their movement speed by %slow%%% for %slow_duration%s."^^xsd:string .
+    kg:evidence "Passive: Empower Spell The next Unit Target spell you cast on an enemy deals a separate %bonus_spell_damage% additional damage, disables their passives, and slows their movement speed by %slow%%% for %slow_duration%s."^^xsd:string ;
+    kg:requiresCondition <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/1808/effect/SLOW/enemy/passive-1/condition/enemy-unit-target-spell> .
+
+<https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/1808/effect/SLOW/enemy/passive-1/condition/enemy-unit-target-spell> a kg:InteractionCondition ;
+    rdfs:label "Нужно применить направленное на врага заклинание."^^xsd:string ;
+    kg:conditionKind "gameplay"^^xsd:string ;
+    kg:conditionScope "source"^^xsd:string ;
+    kg:conditionText "Нужно применить направленное на врага заклинание."^^xsd:string .
 
 <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/1808/note/note/0> a kg:GameNote ;
     rdfs:label "Khanda: примечание 1"^^xsd:string ;
@@ -202688,21 +203124,6 @@ DISPEL TYPE: Basic Dispel"""^^xsd:string ;
     kg:requiresCondition <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/1852/effect/HEALTH_REGEN/ally/active-1/condition/active> .
 
 <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/1852/effect/HEALTH_REGEN/ally/active-1/condition/active> a kg:InteractionCondition ;
-    rdfs:label "После активации эффекта предмета."^^xsd:string ;
-    kg:conditionKind "gameplay"^^xsd:string ;
-    kg:conditionScope "source"^^xsd:string ;
-    kg:conditionText "После активации эффекта предмета."^^xsd:string .
-
-<https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/1852/effect/SUSTAINED_AOE/enemy/active-1> a kg:Effect ;
-    rdfs:label "Essence Distiller: Продолжительный урон по области"^^xsd:string ;
-    rdfs:comment "Повторно наносит урон врагам в области действия."^^xsd:string ;
-    kg:effectMechanic <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/mechanic/SUSTAINED_AOE> ;
-    kg:effectStatus "curated-description"^^xsd:string ;
-    kg:effectTarget "enemy"^^xsd:string ;
-    kg:evidence "Active: Soul Release Provides %soul_heal_amount% health regeneration when cast on allies. Can be ground targeted to lie dormant for up to %ground_duration%s and attach to the first enemy that comes within %latch_range% radius. When on enemies, deals %soul_damage_amount% damage per second and provides True Sight over them and shares their vision with the wearer's team. Lasts %duration% seconds. Gains charges every time an enemy hero dies within %soul_radius% units."^^xsd:string ;
-    kg:requiresCondition <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/1852/effect/SUSTAINED_AOE/enemy/active-1/condition/active> .
-
-<https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/1852/effect/SUSTAINED_AOE/enemy/active-1/condition/active> a kg:InteractionCondition ;
     rdfs:label "После активации эффекта предмета."^^xsd:string ;
     kg:conditionKind "gameplay"^^xsd:string ;
     kg:conditionScope "source"^^xsd:string ;
@@ -203176,21 +203597,20 @@ DISPEL TYPE: Basic Dispel"""^^xsd:string ;
     kg:effectTarget "enemy"^^xsd:string ;
     kg:evidence "Passive: Miasma Attacks poison enemies, dealing %poison_damage_per_second%%% of the target's Max HP as Magical Damage per second for %poison_duration% seconds."^^xsd:string .
 
-<https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/1858/effect/SUSTAINED_AOE/enemy/passive-1> a kg:Effect ;
-    rdfs:label "Hydra's Breath: Продолжительный урон по области"^^xsd:string ;
-    rdfs:comment "Повторно наносит урон врагам в области действия."^^xsd:string ;
-    kg:effectMechanic <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/mechanic/SUSTAINED_AOE> ;
+<https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/1858/effect/MULTI_TARGET_ATTACK/enemy/item-targeting> a kg:Effect ;
+    rdfs:label "Hydra's Breath: Атаки по нескольким целям"^^xsd:string ;
+    rdfs:comment "Дополнительные снаряды атак дальнего боя поражают несколько целей и накладывают Miasma."^^xsd:string ;
+    kg:effectMechanic <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/mechanic/MULTI_TARGET_ATTACK> ;
     kg:effectStatus "curated-description"^^xsd:string ;
     kg:effectTarget "enemy"^^xsd:string ;
-    kg:evidence "Passive: Miasma Attacks poison enemies, dealing %poison_damage_per_second%%% of the target's Max HP as Magical Damage per second for %poison_duration% seconds."^^xsd:string .
+    kg:evidence "Passive: Polycephaly Ranged attacks have a %proc_chance%%% chance to fire additional projectiles at up to %count% nearby enemies with %secondary_target_range_bonus% extra range and within a %secondary_target_angle% degree angle in front of the attacker. The additional projectiles deal %base_proc_dmg% + %proc_dmg_pct%%% damage of a normal attack and do not trigger on hit effects except for Miasma. The primary attack deals %base_proc_dmg% + %proc_dmg_pct_primary_tooltip%%% damage of a normal attack."^^xsd:string ;
+    kg:requiresCondition <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/1858/effect/MULTI_TARGET_ATTACK/enemy/item-targeting/condition/ranged-attacks> .
 
-<https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/1858/effect/SUSTAINED_AOE/enemy/passive-2> a kg:Effect ;
-    rdfs:label "Hydra's Breath: Продолжительный урон по области"^^xsd:string ;
-    rdfs:comment "Повторно наносит урон врагам в области действия."^^xsd:string ;
-    kg:effectMechanic <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/mechanic/SUSTAINED_AOE> ;
-    kg:effectStatus "curated-description"^^xsd:string ;
-    kg:effectTarget "enemy"^^xsd:string ;
-    kg:evidence "Passive: Polycephaly Ranged attacks have a %proc_chance%%% chance to fire additional projectiles at up to %count% nearby enemies with %secondary_target_range_bonus% extra range and within a %secondary_target_angle% degree angle in front of the attacker. The additional projectiles deal %base_proc_dmg% + %proc_dmg_pct%%% damage of a normal attack and do not trigger on hit effects except for Miasma. The primary attack deals %base_proc_dmg% + %proc_dmg_pct_primary_tooltip%%% damage of a normal attack."^^xsd:string .
+<https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/1858/effect/MULTI_TARGET_ATTACK/enemy/item-targeting/condition/ranged-attacks> a kg:InteractionCondition ;
+    rdfs:label "Требуются атаки дальнего боя."^^xsd:string ;
+    kg:conditionKind "gameplay"^^xsd:string ;
+    kg:conditionScope "source"^^xsd:string ;
+    kg:conditionText "Требуются атаки дальнего боя."^^xsd:string .
 
 <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/1858/note/note/0> a kg:GameNote ;
     rdfs:label "Hydra's Breath: примечание 1"^^xsd:string ;
@@ -209454,6 +209874,21 @@ DISPEL TYPE: Basic Dispel"""^^xsd:string ;
     kg:numericValue 0 ;
     kg:position 0 .
 
+<https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/263/effect/ALLY_REPOSITION/ally/item-targeting> a kg:Effect ;
+    rdfs:label "Hurricane Pike: Перемещение союзника"^^xsd:string ;
+    rdfs:comment "Перемещает себя или союзника в направлении взгляда."^^xsd:string ;
+    kg:effectMechanic <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/mechanic/ALLY_REPOSITION> ;
+    kg:effectStatus "curated-description"^^xsd:string ;
+    kg:effectTarget "ally"^^xsd:string ;
+    kg:evidence "Can be cast on self or allies to push the target %push_length% units in the direction it is facing."^^xsd:string ;
+    kg:requiresCondition <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/263/effect/ALLY_REPOSITION/ally/item-targeting/condition/active> .
+
+<https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/263/effect/ALLY_REPOSITION/ally/item-targeting/condition/active> a kg:InteractionCondition ;
+    rdfs:label "После активации эффекта предмета."^^xsd:string ;
+    kg:conditionKind "gameplay"^^xsd:string ;
+    kg:conditionScope "source"^^xsd:string ;
+    kg:conditionText "После активации эффекта предмета."^^xsd:string .
+
 <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/263/effect/FORCED_MOVEMENT/enemy/active-1> a kg:Effect ;
     rdfs:label "Hurricane Pike: Принудительное перемещение"^^xsd:string ;
     rdfs:comment "Принудительное перемещение."^^xsd:string ;
@@ -209774,21 +210209,6 @@ DISPEL TYPE: Basic Dispel"""^^xsd:string ;
     kg:effectStatus "curated-description"^^xsd:string ;
     kg:effectTarget "self"^^xsd:string ;
     kg:evidence "{\"name\": \"bonus_mana_regen\", \"values_float\": [1.75], \"is_percentage\": false, \"heading_loc\": \"+$mana_regen\", \"bonuses\": [], \"values_shard\": [], \"values_scepter\": [], \"required_facet\": \"\"}"^^xsd:string .
-
-<https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/267/effect/SUSTAINED_AOE/enemy/active-1> a kg:Effect ;
-    rdfs:label "Spirit Vessel: Продолжительный урон по области"^^xsd:string ;
-    rdfs:comment "Повторно наносит урон врагам в области действия."^^xsd:string ;
-    kg:effectMechanic <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/mechanic/SUSTAINED_AOE> ;
-    kg:effectStatus "curated-description"^^xsd:string ;
-    kg:effectTarget "enemy"^^xsd:string ;
-    kg:evidence "Active: Soul Release When used against enemies, it reduces health by %enemy_hp_drain%%% of current health per second, and reduces Health Restoration by %restoration_reduction_enemy%%%. Deals %soul_damage_amount% damage per second. When used on allies, it provides %soul_heal_amount% health regeneration per second. Lasts %duration% seconds. Gains charges every time an enemy hero dies within %soul_radius% units or the user dies."^^xsd:string ;
-    kg:requiresCondition <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/267/effect/SUSTAINED_AOE/enemy/active-1/condition/active> .
-
-<https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/267/effect/SUSTAINED_AOE/enemy/active-1/condition/active> a kg:InteractionCondition ;
-    rdfs:label "После активации эффекта предмета."^^xsd:string ;
-    kg:conditionKind "gameplay"^^xsd:string ;
-    kg:conditionScope "source"^^xsd:string ;
-    kg:conditionText "После активации эффекта предмета."^^xsd:string .
 
 <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/267/note/note/0> a kg:GameNote ;
     rdfs:label "Spirit Vessel: примечание 1"^^xsd:string ;
@@ -214816,6 +215236,21 @@ DISPEL TYPE: Basic Dispel"""^^xsd:string ;
     kg:numericValue 0 ;
     kg:position 0 .
 
+<https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/534/effect/ACCURACY_PROC/enemy/passive-1> a kg:Effect ;
+    rdfs:label "Witch Blade: Вероятностное попадание сквозь уклонение"^^xsd:string ;
+    rdfs:comment "Не промахивается атака, накладывающая яд; обычные атаки между срабатываниями не получают этот эффект."^^xsd:string ;
+    kg:effectMechanic <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/mechanic/ACCURACY_PROC> ;
+    kg:effectStatus "curated-description"^^xsd:string ;
+    kg:effectTarget "enemy"^^xsd:string ;
+    kg:evidence "This attack has True Strike."^^xsd:string ;
+    kg:requiresCondition <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/534/effect/ACCURACY_PROC/enemy/passive-1/condition/cooldown-attack> .
+
+<https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/534/effect/ACCURACY_PROC/enemy/passive-1/condition/cooldown-attack> a kg:InteractionCondition ;
+    rdfs:label "Без промаха проходит атака, накладывающая яд, с учетом перезарядки эффекта."^^xsd:string ;
+    kg:conditionKind "gameplay"^^xsd:string ;
+    kg:conditionScope "source"^^xsd:string ;
+    kg:conditionText "Без промаха проходит атака, накладывающая яд, с учетом перезарядки эффекта."^^xsd:string .
+
 <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/534/effect/ARMOR_BUFF/self/base> a kg:Effect ;
     rdfs:label "Witch Blade: Повышение брони"^^xsd:string ;
     rdfs:comment "Параметр предмета предоставляет соответствующий положительный эффект."^^xsd:string ;
@@ -214839,14 +215274,6 @@ DISPEL TYPE: Basic Dispel"""^^xsd:string ;
     kg:effectStatus "curated-description"^^xsd:string ;
     kg:effectTarget "self"^^xsd:string ;
     kg:evidence "{\"name\": \"bonus_mana_regen\", \"values_float\": [1.5], \"is_percentage\": false, \"heading_loc\": \"+$mana_regen\", \"bonuses\": [], \"values_shard\": [], \"values_scepter\": [], \"required_facet\": \"\"}"^^xsd:string .
-
-<https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/534/effect/TRUE_STRIKE/enemy/passive-1> a kg:Effect ;
-    rdfs:label "Witch Blade: Атаки без промаха"^^xsd:string ;
-    rdfs:comment "Атаки без промаха."^^xsd:string ;
-    kg:effectMechanic <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/mechanic/TRUE_STRIKE> ;
-    kg:effectStatus "curated-description"^^xsd:string ;
-    kg:effectTarget "enemy"^^xsd:string ;
-    kg:evidence "This attack has True Strike."^^xsd:string .
 
 <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/534/parameter/0/hasBaseValue/0> a kg:ParameterValue ;
     rdfs:label "Witch Blade: bonus_attack_speed: значение 1 = 40"^^xsd:string ;
@@ -215532,14 +215959,6 @@ DISPEL TYPE: Basic Dispel"""^^xsd:string ;
     kg:effectStatus "curated-description"^^xsd:string ;
     kg:effectTarget "enemy"^^xsd:string ;
     kg:evidence "Physical"^^xsd:string .
-
-<https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/598/effect/SUSTAINED_AOE/enemy/passive-1> a kg:Effect ;
-    rdfs:label "Mage Slayer: Продолжительный урон по области"^^xsd:string ;
-    rdfs:comment "Повторно наносит урон врагам в области действия."^^xsd:string ;
-    kg:effectMechanic <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/mechanic/SUSTAINED_AOE> ;
-    kg:effectStatus "curated-description"^^xsd:string ;
-    kg:effectTarget "enemy"^^xsd:string ;
-    kg:evidence "Passive: Mage Slayer Places a debuff when you attack enemies, dealing %dps% physical damage per second and causing them to do %spell_amp_debuff%%% less spell damage for %duration% seconds."^^xsd:string .
 
 <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/598/parameter/0/hasBaseValue/0> a kg:ParameterValue ;
     rdfs:label "Mage Slayer: bonus_magical_armor: значение 1 = 18"^^xsd:string ;
@@ -218734,21 +219153,6 @@ DISPEL TYPE: Basic Dispel"""^^xsd:string ;
     kg:requiresCondition <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/92/effect/HEALTH_REGEN/ally/active-1/condition/active> .
 
 <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/92/effect/HEALTH_REGEN/ally/active-1/condition/active> a kg:InteractionCondition ;
-    rdfs:label "После активации эффекта предмета."^^xsd:string ;
-    kg:conditionKind "gameplay"^^xsd:string ;
-    kg:conditionScope "source"^^xsd:string ;
-    kg:conditionText "После активации эффекта предмета."^^xsd:string .
-
-<https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/92/effect/SUSTAINED_AOE/enemy/active-1> a kg:Effect ;
-    rdfs:label "Urn of Shadows: Продолжительный урон по области"^^xsd:string ;
-    rdfs:comment "Повторно наносит урон врагам в области действия."^^xsd:string ;
-    kg:effectMechanic <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/mechanic/SUSTAINED_AOE> ;
-    kg:effectStatus "curated-description"^^xsd:string ;
-    kg:effectTarget "enemy"^^xsd:string ;
-    kg:evidence "Active: Soul Release Provides %soul_heal_amount% health regeneration when cast on allies, and deals %soul_damage_amount% damage per second when cast on enemies. Lasts %duration% seconds. Gains charges every time an enemy hero dies within %soul_radius% units."^^xsd:string ;
-    kg:requiresCondition <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/92/effect/SUSTAINED_AOE/enemy/active-1/condition/active> .
-
-<https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/92/effect/SUSTAINED_AOE/enemy/active-1/condition/active> a kg:InteractionCondition ;
     rdfs:label "После активации эффекта предмета."^^xsd:string ;
     kg:conditionKind "gameplay"^^xsd:string ;
     kg:conditionScope "source"^^xsd:string ;
@@ -268293,7 +268697,6 @@ DISPEL TYPE: Basic Dispel"""^^xsd:string ;
     kg:hasDuration <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/158/parameter/2> ;
     kg:hasEffect <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/158/effect/CHAIN_LIGHTNING>,
         <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/158/effect/CHAIN_LIGHTNING/enemy/reviewed-passive>,
-        <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/158/effect/LEAP/self/passive-2>,
         <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/158/effect/RETALIATORY_LIGHTNING>,
         <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/158/effect/RETALIATORY_LIGHTNING/ally/reviewed-active> ;
     kg:hasManaCost <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/item/158/parameter/18> ;
@@ -276792,10 +277195,6 @@ DISPEL TYPE: Basic Dispel"""^^xsd:string ;
     rdfs:label "Усиление ночью"^^xsd:string ;
     kg:mechanicCategory "vision"^^xsd:string .
 
-<https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/mechanic/PHYSICAL_PRESSURE> a kg:Mechanic ;
-    rdfs:label "Физический урон и усиленные атаки"^^xsd:string ;
-    kg:mechanicCategory "damage"^^xsd:string .
-
 <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/mechanic/REINCARNATION> a kg:Mechanic ;
     rdfs:label "Возвращение к жизни"^^xsd:string ;
     kg:mechanicCategory "defense"^^xsd:string .
@@ -278894,7 +279293,8 @@ DISPEL TYPE: Basic Dispel"""^^xsd:string ;
     kg:mechanicCategory "interaction"^^xsd:string .
 
 <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/mechanic/BASE_ARMOR_BYPASS> a kg:Mechanic ;
-    rdfs:label "BASE_ARMOR_BYPASS"^^xsd:string ;
+    rdfs:label "BASE_ARMOR_BYPASS"^^xsd:string,
+        "Игнорирование базовой брони"^^xsd:string ;
     kg:mechanicCategory "interaction"^^xsd:string .
 
 <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/mechanic/BONUS_DAMAGE_PER_TARGET> a kg:Mechanic ;
@@ -278971,10 +279371,6 @@ DISPEL TYPE: Basic Dispel"""^^xsd:string ;
 <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/mechanic/RECOVERY> a kg:Mechanic ;
     rdfs:label "Восстановление здоровья в бою"^^xsd:string ;
     kg:mechanicCategory "recovery"^^xsd:string .
-
-<https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/mechanic/REFLECTS_DAMAGE> a kg:Mechanic ;
-    rdfs:label "Отражение урона"^^xsd:string ;
-    kg:mechanicCategory "damage"^^xsd:string .
 
 <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/mechanic/TERRAIN_BARRIER> a kg:Mechanic ;
     rdfs:label "Преграда из ландшафта"^^xsd:string ;
@@ -279176,10 +279572,6 @@ DISPEL TYPE: Basic Dispel"""^^xsd:string ;
     rdfs:label "Кража характеристик"^^xsd:string ;
     kg:mechanicCategory "recovery"^^xsd:string .
 
-<https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/mechanic/CHAIN_LIGHTNING> a kg:Mechanic ;
-    rdfs:label "CHAIN_LIGHTNING"^^xsd:string ;
-    kg:mechanicCategory "damage"^^xsd:string .
-
 <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/mechanic/CURRENT_HEALTH_DAMAGE> a kg:Mechanic ;
     rdfs:label "Урон от текущего здоровья"^^xsd:string ;
     kg:mechanicCategory "damage"^^xsd:string .
@@ -279187,10 +279579,6 @@ DISPEL TYPE: Basic Dispel"""^^xsd:string ;
 <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/mechanic/DEATH_EXPLOSION> a kg:Mechanic ;
     rdfs:label "Взрыв при смерти цели"^^xsd:string ;
     kg:mechanicCategory "damage"^^xsd:string .
-
-<https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/mechanic/ETHEREAL> a kg:Mechanic ;
-    rdfs:label "Бесплотность"^^xsd:string ;
-    kg:mechanicCategory "interaction"^^xsd:string .
 
 <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/mechanic/GLOBAL_ABILITY> a kg:Mechanic ;
     rdfs:label "Глобальная способность"^^xsd:string ;
@@ -279204,12 +279592,8 @@ DISPEL TYPE: Basic Dispel"""^^xsd:string ;
     rdfs:label "Поглощение урона за счет маны"^^xsd:string ;
     kg:mechanicCategory "resource"^^xsd:string .
 
-<https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/mechanic/PHYSICAL_IMMUNITY> a kg:Mechanic ;
-    rdfs:label "Невосприимчивость к физическому урону"^^xsd:string ;
-    kg:mechanicCategory "defense"^^xsd:string .
-
-<https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/mechanic/RETALIATORY_LIGHTNING> a kg:Mechanic ;
-    rdfs:label "Ответные молнии при получении атак"^^xsd:string ;
+<https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/mechanic/REFLECTS_DAMAGE> a kg:Mechanic ;
+    rdfs:label "Отражение урона"^^xsd:string ;
     kg:mechanicCategory "damage"^^xsd:string .
 
 <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/mechanic/SLEEP> a kg:Mechanic ;
@@ -279297,6 +279681,15 @@ DISPEL TYPE: Basic Dispel"""^^xsd:string ;
     rdfs:label "Снижение урона атак противника"^^xsd:string ;
     kg:mechanicCategory "defense"^^xsd:string .
 
+<https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/mechanic/CHAIN_LIGHTNING> a kg:Mechanic ;
+    rdfs:label "CHAIN_LIGHTNING"^^xsd:string,
+        "Цепной урон"^^xsd:string ;
+    kg:mechanicCategory "damage"^^xsd:string .
+
+<https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/mechanic/ETHEREAL> a kg:Mechanic ;
+    rdfs:label "Бесплотность"^^xsd:string ;
+    kg:mechanicCategory "interaction"^^xsd:string .
+
 <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/mechanic/HEAL_AMPLIFICATION> a kg:Mechanic ;
     rdfs:label "Усиление восстановления здоровья"^^xsd:string ;
     kg:mechanicCategory "recovery"^^xsd:string .
@@ -279305,13 +279698,17 @@ DISPEL TYPE: Basic Dispel"""^^xsd:string ;
     rdfs:label "Барьер против магического урона"^^xsd:string ;
     kg:mechanicCategory "defense"^^xsd:string .
 
+<https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/mechanic/PHYSICAL_IMMUNITY> a kg:Mechanic ;
+    rdfs:label "Невосприимчивость к физическому урону"^^xsd:string ;
+    kg:mechanicCategory "defense"^^xsd:string .
+
+<https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/mechanic/RETALIATORY_LIGHTNING> a kg:Mechanic ;
+    rdfs:label "Ответные молнии при получении атак"^^xsd:string ;
+    kg:mechanicCategory "damage"^^xsd:string .
+
 <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/mechanic/UNOBSTRUCTED_VISION> a kg:Mechanic ;
     rdfs:label "Обзор без препятствий"^^xsd:string ;
     kg:mechanicCategory "vision"^^xsd:string .
-
-<https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/mechanic/ACCURACY_PROC> a kg:Mechanic ;
-    rdfs:label "ACCURACY_PROC"^^xsd:string ;
-    kg:mechanicCategory "interaction"^^xsd:string .
 
 <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/mechanic/ALLY_DISPEL> a kg:Mechanic ;
     rdfs:label "Развеивание на союзнике"^^xsd:string ;
@@ -279328,10 +279725,6 @@ DISPEL TYPE: Basic Dispel"""^^xsd:string ;
 <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/mechanic/MOBILITY> a kg:Mechanic ;
     rdfs:label "Перемещение с помощью способностей"^^xsd:string ;
     kg:mechanicCategory "mobility"^^xsd:string .
-
-<https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/mechanic/SPELL_BLOCK> a kg:Mechanic ;
-    rdfs:label "SPELL_BLOCK"^^xsd:string ;
-    kg:mechanicCategory "defense"^^xsd:string .
 
 <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/mechanic/SPELL_CASTING> a kg:Mechanic ;
     rdfs:label "Применение активных способностей"^^xsd:string ;
@@ -279350,10 +279743,6 @@ DISPEL TYPE: Basic Dispel"""^^xsd:string ;
     kg:maxLevel 4 ;
     kg:position 6 .
 
-<https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/mechanic/ALLY_REPOSITION> a kg:Mechanic ;
-    rdfs:label "Перемещение союзника"^^xsd:string ;
-    kg:mechanicCategory "support"^^xsd:string .
-
 <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/mechanic/MAGIC_RESIST_REDUCTION> a kg:Mechanic ;
     rdfs:label "Снижение сопротивления магии"^^xsd:string ;
     kg:mechanicCategory "interaction"^^xsd:string .
@@ -279365,6 +279754,11 @@ DISPEL TYPE: Basic Dispel"""^^xsd:string ;
 <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/mechanic/MAX_HEALTH_DAMAGE> a kg:Mechanic ;
     rdfs:label "Урон от максимального здоровья"^^xsd:string ;
     kg:mechanicCategory "damage"^^xsd:string .
+
+<https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/mechanic/SPELL_BLOCK> a kg:Mechanic ;
+    rdfs:label "SPELL_BLOCK"^^xsd:string,
+        "Блокирование направленного заклинания"^^xsd:string ;
+    kg:mechanicCategory "defense"^^xsd:string .
 
 <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/mechanic/TAUNT> a kg:Mechanic ;
     rdfs:label "Провокация"^^xsd:string ;
@@ -279383,13 +279777,18 @@ DISPEL TYPE: Basic Dispel"""^^xsd:string ;
     kg:maxLevel 4 ;
     kg:position 6 .
 
+<https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/mechanic/ACCURACY_PROC> a kg:Mechanic ;
+    rdfs:label "ACCURACY_PROC"^^xsd:string,
+        "Вероятностное попадание сквозь уклонение"^^xsd:string ;
+    kg:mechanicCategory "interaction"^^xsd:string .
+
 <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/mechanic/CANNOT_BE_DISJOINTED> a kg:Mechanic ;
     rdfs:label "Снаряд не сбрасывается обычным уклонением от снарядов"^^xsd:string ;
     kg:mechanicCategory "mobility"^^xsd:string .
 
-<https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/mechanic/GROUPED_UNITS> a kg:Mechanic ;
-    rdfs:label "Множество подконтрольных целей"^^xsd:string ;
-    kg:mechanicCategory "summons"^^xsd:string .
+<https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/mechanic/PHYSICAL_PRESSURE> a kg:Mechanic ;
+    rdfs:label "Физический урон и усиленные атаки"^^xsd:string ;
+    kg:mechanicCategory "damage"^^xsd:string .
 
 <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/mechanic/SPELL_LIFESTEAL> a kg:Mechanic ;
     rdfs:label "Вампиризм от способностей"^^xsd:string ;
@@ -279402,10 +279801,6 @@ DISPEL TYPE: Basic Dispel"""^^xsd:string ;
 <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/mechanic/BREAK> a kg:Mechanic ;
     rdfs:label "Отключение пассивных способностей"^^xsd:string ;
     kg:mechanicCategory "interaction"^^xsd:string .
-
-<https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/mechanic/FORCED_COMBAT> a kg:Mechanic ;
-    rdfs:label "Принудительный бой между героями"^^xsd:string ;
-    kg:mechanicCategory "control"^^xsd:string .
 
 <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/mechanic/IGNORES_SPELL_BLOCK> a kg:Mechanic ;
     rdfs:label "Действие без срабатывания блокирования заклинаний"^^xsd:string ;
@@ -279425,6 +279820,10 @@ DISPEL TYPE: Basic Dispel"""^^xsd:string ;
 <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/mechanic/TREE_DESTRUCTION> a kg:Mechanic ;
     rdfs:label "Уничтожение деревьев"^^xsd:string ;
     kg:mechanicCategory "vision"^^xsd:string .
+
+<https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/mechanic/ALLY_REPOSITION> a kg:Mechanic ;
+    rdfs:label "Перемещение союзника"^^xsd:string ;
+    kg:mechanicCategory "support"^^xsd:string .
 
 <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/mechanic/ANTI_ILLUSION> a kg:Mechanic ;
     rdfs:label "Противодействие иллюзиям"^^xsd:string ;
@@ -279457,6 +279856,10 @@ DISPEL TYPE: Basic Dispel"""^^xsd:string ;
 <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/mechanic/CLEAVE_DAMAGE> a kg:Mechanic ;
     rdfs:label "Рассекающий урон от атак ближнего боя"^^xsd:string ;
     kg:mechanicCategory "damage"^^xsd:string .
+
+<https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/mechanic/FORCED_COMBAT> a kg:Mechanic ;
+    rdfs:label "Принудительный бой между героями"^^xsd:string ;
+    kg:mechanicCategory "control"^^xsd:string .
 
 <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/mechanic/PERMANENT_SCALING> a kg:Mechanic ;
     rdfs:label "Постоянное усиление за игровые события"^^xsd:string ;
@@ -282712,6 +283115,10 @@ DISPEL TYPE: Basic Dispel"""^^xsd:string ;
     kg:supportLevel 1 ;
     kg:turnRate "0.6"^^<http://www.w3.org/2001/XMLSchema#double> .
 
+<https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/mechanic/LEAP> a kg:Mechanic ;
+    rdfs:label "Прыжок"^^xsd:string ;
+    kg:mechanicCategory "mobility"^^xsd:string .
+
 <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/hero/10> a kg:Hero ;
     rdfs:label "Morphling"^^xsd:string ;
     kg:agility "33.0"^^<http://www.w3.org/2001/XMLSchema#double> ;
@@ -285555,9 +285962,13 @@ DISPEL TYPE: Basic Dispel"""^^xsd:string ;
     kg:supportLevel 0 ;
     kg:turnRate "0.9"^^<http://www.w3.org/2001/XMLSchema#double> .
 
-<https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/mechanic/HEX> a kg:Mechanic ;
-    rdfs:label "Превращение"^^xsd:string ;
-    kg:mechanicCategory "control"^^xsd:string .
+<https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/mechanic/GROUPED_UNITS> a kg:Mechanic ;
+    rdfs:label "Множество подконтрольных целей"^^xsd:string ;
+    kg:mechanicCategory "summons"^^xsd:string .
+
+<https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/mechanic/TRUE_STRIKE> a kg:Mechanic ;
+    rdfs:label "Атаки без промахов"^^xsd:string ;
+    kg:mechanicCategory "interaction"^^xsd:string .
 
 <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/hero/100> a kg:Hero ;
     rdfs:label "Tusk"^^xsd:string ;
@@ -286244,17 +286655,9 @@ DISPEL TYPE: Basic Dispel"""^^xsd:string ;
     rdfs:label "Барьер урона"^^xsd:string ;
     kg:mechanicCategory "defense"^^xsd:string .
 
-<https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/mechanic/DAMAGE_REDUCTION> a kg:Mechanic ;
-    rdfs:label "Снижение входящего урона"^^xsd:string ;
-    kg:mechanicCategory "defense"^^xsd:string .
-
-<https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/mechanic/DEBUFF_IMMUNITY> a kg:Mechanic ;
-    rdfs:label "Невосприимчивость к отрицательным эффектам"^^xsd:string ;
-    kg:mechanicCategory "defense"^^xsd:string .
-
-<https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/mechanic/LEAP> a kg:Mechanic ;
-    rdfs:label "Прыжок"^^xsd:string ;
-    kg:mechanicCategory "mobility"^^xsd:string .
+<https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/mechanic/HEX> a kg:Mechanic ;
+    rdfs:label "Превращение"^^xsd:string ;
+    kg:mechanicCategory "control"^^xsd:string .
 
 <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/hero/155> a kg:Hero ;
     rdfs:label "Largo"^^xsd:string ;
@@ -286376,20 +286779,12 @@ DISPEL TYPE: Basic Dispel"""^^xsd:string ;
     rdfs:label "Break запрещает получение новых накоплений"^^xsd:string ;
     kg:mechanicCategory "interaction"^^xsd:string .
 
-<https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/mechanic/DAMAGE_BLOCK> a kg:Mechanic ;
-    rdfs:label "Блокирование урона"^^xsd:string ;
-    kg:mechanicCategory "defense"^^xsd:string .
-
 <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/mechanic/FEAR> a kg:Mechanic ;
     rdfs:label "Страх"^^xsd:string ;
     kg:mechanicCategory "control"^^xsd:string .
 
 <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/mechanic/SPELL_AMPLIFICATION> a kg:Mechanic ;
     rdfs:label "Усиление урона заклинаний"^^xsd:string ;
-    kg:mechanicCategory "interaction"^^xsd:string .
-
-<https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/mechanic/TRUE_STRIKE> a kg:Mechanic ;
-    rdfs:label "Атаки без промахов"^^xsd:string ;
     kg:mechanicCategory "interaction"^^xsd:string .
 
 <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/hero/145> a kg:Hero ;
@@ -286449,6 +286844,18 @@ DISPEL TYPE: Basic Dispel"""^^xsd:string ;
     kg:strengthGain "2.8"^^<http://www.w3.org/2001/XMLSchema#double> ;
     kg:supportLevel 0 ;
     kg:turnRate 1 .
+
+<https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/mechanic/ANTI_HEAL> a kg:Mechanic ;
+    rdfs:label "Противодействие лечению"^^xsd:string ;
+    kg:mechanicCategory "recovery"^^xsd:string .
+
+<https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/mechanic/DAMAGE_BLOCK> a kg:Mechanic ;
+    rdfs:label "Блокирование урона"^^xsd:string ;
+    kg:mechanicCategory "defense"^^xsd:string .
+
+<https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/mechanic/DAMAGE_REDUCTION> a kg:Mechanic ;
+    rdfs:label "Снижение входящего урона"^^xsd:string ;
+    kg:mechanicCategory "defense"^^xsd:string .
 
 <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/mechanic/INVULNERABILITY> a kg:Mechanic ;
     rdfs:label "Неуязвимость"^^xsd:string ;
@@ -286518,14 +286925,6 @@ DISPEL TYPE: Basic Dispel"""^^xsd:string ;
     kg:supportLevel 2 ;
     kg:turnRate "0.6"^^<http://www.w3.org/2001/XMLSchema#double> .
 
-<https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/mechanic/ANTI_HEAL> a kg:Mechanic ;
-    rdfs:label "Противодействие лечению"^^xsd:string ;
-    kg:mechanicCategory "recovery"^^xsd:string .
-
-<https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/mechanic/DISARM> a kg:Mechanic ;
-    rdfs:label "Запрет атак"^^xsd:string ;
-    kg:mechanicCategory "control"^^xsd:string .
-
 <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/mechanic/STATS_SCALING> a kg:Mechanic ;
     rdfs:label "Зависимость силы эффекта от характеристик"^^xsd:string ;
     kg:mechanicCategory "interaction"^^xsd:string .
@@ -286536,6 +286935,14 @@ DISPEL TYPE: Basic Dispel"""^^xsd:string ;
 
 <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/mechanic/ATTACK_SPEED_SLOW> a kg:Mechanic ;
     rdfs:label "Снижение скорости атак"^^xsd:string ;
+    kg:mechanicCategory "control"^^xsd:string .
+
+<https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/mechanic/DEBUFF_IMMUNITY> a kg:Mechanic ;
+    rdfs:label "Невосприимчивость к отрицательным эффектам"^^xsd:string ;
+    kg:mechanicCategory "defense"^^xsd:string .
+
+<https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/mechanic/DISARM> a kg:Mechanic ;
+    rdfs:label "Запрет атак"^^xsd:string ;
     kg:mechanicCategory "control"^^xsd:string .
 
 <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/hero/74> a kg:Hero ;
@@ -286638,10 +287045,6 @@ DISPEL TYPE: Basic Dispel"""^^xsd:string ;
     rdfs:label "Сильное развеивание"^^xsd:string ;
     kg:mechanicCategory "support"^^xsd:string .
 
-<https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/mechanic/ROOT> a kg:Mechanic ;
-    rdfs:label "Обездвиживание"^^xsd:string ;
-    kg:mechanicCategory "control"^^xsd:string .
-
 <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/mechanic/LIFESTEAL> a kg:Mechanic ;
     rdfs:label "Вампиризм от атак"^^xsd:string ;
     kg:mechanicCategory "recovery"^^xsd:string .
@@ -286652,6 +287055,10 @@ DISPEL TYPE: Basic Dispel"""^^xsd:string ;
 
 <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/mechanic/HIGH_MOBILITY> a kg:Mechanic ;
     rdfs:label "Высокая мобильность"^^xsd:string .
+
+<https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/mechanic/ROOT> a kg:Mechanic ;
+    rdfs:label "Обездвиживание"^^xsd:string ;
+    kg:mechanicCategory "control"^^xsd:string .
 
 <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/mechanic/INVISIBILITY> a kg:Mechanic ;
     rdfs:label "Невидимость"^^xsd:string ;
@@ -286669,6 +287076,10 @@ DISPEL TYPE: Basic Dispel"""^^xsd:string ;
     rdfs:label "Физический урон"^^xsd:string ;
     kg:mechanicCategory "damage"^^xsd:string .
 
+<https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/mechanic/SUSTAINED_AOE> a kg:Mechanic ;
+    rdfs:label "Продолжительный урон по области"^^xsd:string ;
+    kg:mechanicCategory "damage"^^xsd:string .
+
 <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/mechanic/SILENCE> a kg:Mechanic ;
     rdfs:label "Безмолвие"^^xsd:string ;
     kg:mechanicCategory "control"^^xsd:string .
@@ -286676,10 +287087,6 @@ DISPEL TYPE: Basic Dispel"""^^xsd:string ;
 <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/mechanic/FORCED_MOVEMENT> a kg:Mechanic ;
     rdfs:label "Принудительное перемещение"^^xsd:string ;
     kg:mechanicCategory "control"^^xsd:string .
-
-<https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/mechanic/SUSTAINED_AOE> a kg:Mechanic ;
-    rdfs:label "Продолжительный урон по области"^^xsd:string ;
-    kg:mechanicCategory "damage"^^xsd:string .
 
 <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/mechanic/HEALTH_REGEN> a kg:Mechanic ;
     rdfs:label "Регенерация здоровья"^^xsd:string ;
@@ -286689,13 +287096,13 @@ DISPEL TYPE: Basic Dispel"""^^xsd:string ;
     rdfs:label "Поддерживаемая способность"^^xsd:string ;
     kg:mechanicCategory "interaction"^^xsd:string .
 
-<https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/mechanic/BASIC_DISPEL> a kg:Mechanic ;
-    rdfs:label "Обычное развеивание"^^xsd:string ;
-    kg:mechanicCategory "support"^^xsd:string .
-
 <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/mechanic/ARMOR_BUFF> a kg:Mechanic ;
     rdfs:label "Повышение брони"^^xsd:string ;
     kg:mechanicCategory "defense"^^xsd:string .
+
+<https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/mechanic/BASIC_DISPEL> a kg:Mechanic ;
+    rdfs:label "Обычное развеивание"^^xsd:string ;
+    kg:mechanicCategory "support"^^xsd:string .
 
 <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/mechanic/MOVEMENT_SPEED_BUFF> a kg:Mechanic ;
     rdfs:label "Повышение скорости передвижения"^^xsd:string ;

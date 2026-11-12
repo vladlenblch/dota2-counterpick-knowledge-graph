@@ -77,11 +77,13 @@ class RankingScenarios(unittest.TestCase):
 
     def test_weight_dataset_is_present_in_rdf_without_new_classes(self):
         rules = pq.read_table(ROOT/'data/counter_rules.parquet').to_pylist()
-        self.assertEqual(len(rules), 80)
-        exported = {(r.source, r.target): r for r in self.model.rules if r.purpose == 'counter'}
+        self.assertEqual(sum(r['purpose'] == 'counter' for r in rules), 80)
+        self.assertGreater(sum(r['purpose'] == 'purchase' for r in rules), 0)
+        exported = {(r.source, r.target): r for r in self.model.rules if r.purpose in {'counter', 'purchase'}}
         for row in rules:
             actual = exported[row['source_mechanic'], row['target_mechanic']]
             self.assertEqual(actual.weight, row['weight'])
+            self.assertEqual(actual.purpose, row['purpose'])
             self.assertEqual(actual.family, row['family'])
             self.assertEqual(actual.scopes, frozenset(json.loads(row['source_scopes'])))
         report = json.loads((ROOT/'ontology/validation.json').read_text())
@@ -112,6 +114,65 @@ class RankingScenarios(unittest.TestCase):
                     if name.startswith('05'):
                         self.assertTrue(all(r.score.toPython() > 0 for r in rows))
         self.assertEqual(len(self.graph), before)
+
+    def test_personalized_item_scenarios_and_native_hero_rankings(self):
+        from dota_kg.item_ranking import ItemRanking
+        ranker = ItemRanking(self.model)
+        def names(hero, enemy, phase=None):
+            rows = ranker.rank(self.entity(hero), self.entity(enemy), phase=phase)
+            return [str(self.graph.value(r.item, RDFS.label)) for r in rows[:3]]
+        for hero in ('Rubick', 'Lion', 'Crystal Maiden'):
+            self.assertEqual(names(hero, 'Phantom Lancer'), ['Force Staff', 'Glimmer Cape', 'Ghost Scepter'])
+        self.assertEqual(names('Anti-Mage', 'Phantom Lancer')[0], 'Battle Fury')
+        sven = set(names('Sven', 'Phantom Lancer'))
+        self.assertTrue({'Black King Bar', 'Monkey King Bar'} <= sven)
+        self.assertTrue(sven <= {'Black King Bar', 'Monkey King Bar', 'Satanic'})
+        self.assertEqual(names('Drow Ranger', 'Phantom Lancer')[0], 'Hurricane Pike')
+        self.assertEqual(names('Phantom Assassin', 'Bristleback')[0], 'Silver Edge')
+        self.assertEqual(names('Anti-Mage', 'Morphling')[0], 'Abyssal Blade')
+        drow_options = ranker.rank(self.entity('Drow Ranger'), self.entity('Phantom Assassin'))
+        # MKB is a valid situational alternative, despite zero personal purchases
+        # in this snapshot; common fitting purchases can precede it.
+        self.assertIn('Monkey King Bar', [str(self.graph.value(r.item, RDFS.label)) for r in drow_options[:5]])
+        self.assertFalse({'Witch Blade', 'Parasma'} & set(names('Drow Ranger', 'Phantom Assassin')))
+        self.assertIn('Aeon Disk', names('Crystal Maiden', 'Legion Commander'))
+        for phase in (None, 'late'):
+            self.assertNotIn('Battle Fury', names('Sven', 'Phantom Lancer', phase))
+            self.assertNotIn('Scythe of Vyse', names('Anti-Mage', 'Phantom Lancer', phase))
+            self.assertFalse({'Radiance', 'Mjollnir', 'Battle Fury'} & set(names('Rubick', 'Phantom Lancer', phase)))
+        # Same approved hero score despite new purchase-only rules and item fixes.
+        self.assertAlmostEqual(self.model.assess(self.entity('Axe'), self.entity('Phantom Lancer')).score, 6.808952, places=5)
+
+    def test_personalized_item_sparql_uses_the_same_score_and_suitability(self):
+        from dota_kg.item_ranking import ItemRanking
+        hero, enemy = self.entity('Rubick'), self.entity('Phantom Lancer')
+        focus = {'units', 'GROUPED_UNITS', 'ILLUSIONS'}
+        expected = {r.item: r for r in ItemRanking(self.model).rank(hero, enemy, focus=focus)}
+        query = prepareQuery((ROOT/'queries/05_illusions.rq').read_text())
+        with ranking_query(self.graph, actor=hero) as view:
+            rows = list(view.query(query, initBindings={'hero': hero, 'enemy': enemy}))
+        items = [r for r in rows if r.source in self.model.items]
+        self.assertEqual({r.source for r in items}, set(expected))
+        for row in items:
+            self.assertAlmostEqual(float(row.score), round(expected[row.source].score, 6))
+            self.assertEqual(row.rule, expected[row.source].primary.rule.uri)
+
+    def test_item_results_for_all_enemies_are_finite_and_actual_purchasable_items(self):
+        from dota_kg.item_ranking import ItemRanking
+        ranker = ItemRanking(self.model)
+        checked = 0
+        for name in ('Anti-Mage', 'Rubick', 'Tidehunter'):
+            hero = self.entity(name)
+            for enemy in self.model.heroes:
+                if hero == enemy:
+                    continue
+                rows = ranker.rank(hero, enemy)
+                for row in rows:
+                    self.assertTrue(math.isfinite(row.score) and row.score > 0)
+                    self.assertTrue(ranker.purchasable(row.item))
+                    self.assertTrue(row.primary.need.facts)
+                checked += 1
+        self.assertEqual(checked, 378)
 
 
 if __name__ == '__main__':

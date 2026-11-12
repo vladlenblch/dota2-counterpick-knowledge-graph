@@ -10,9 +10,9 @@ WHERE {
     { ?hero kg:hasAbility ?source . ?enemy a kg:Hero }
     UNION
     { ?source a kg:Item ; kg:isPurchasable true . ?enemy a kg:Hero }
-    BIND (fn:ownerScore(?source, ?enemy, "units") AS ?score)
-    BIND (fn:ownerEffect(?source, ?enemy, "units") AS ?effect)
-    BIND (fn:ownerRule(?source, ?enemy, "units") AS ?rule)
+    BIND (fn:ownerScore(?source, ?enemy, "units,GROUPED_UNITS,ILLUSIONS") AS ?score)
+    BIND (fn:ownerEffect(?source, ?enemy, "units,GROUPED_UNITS,ILLUSIONS") AS ?effect)
+    BIND (fn:ownerRule(?source, ?enemy, "units,GROUPED_UNITS,ILLUSIONS") AS ?rule)
     FILTER (BOUND(?score) && BOUND(?effect))
   } }
   ?source rdfs:label ?name ; kg:hasEffect ?effect .

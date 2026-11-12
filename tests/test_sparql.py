@@ -7,7 +7,7 @@ import tempfile
 import unittest
 from unittest.mock import patch
 
-from rdflib import Graph, Literal, Namespace, RDFS, XSD
+from rdflib import Graph, Literal, Namespace, RDFS, URIRef, XSD
 from rdflib.compare import isomorphic
 
 from dota_kg.ontology_queries import run_query
@@ -56,6 +56,53 @@ class SparqlRunnerTests(unittest.TestCase):
                                         "datatype": str(XSD.integer)})
         self.assertNotIn("missing", row)
         self.assertEqual(row["text"]["value"], "SERVICE and FROM are literal text")
+
+    def test_table_uses_labels_and_short_names_without_changing_exported_uris(self):
+        unknown = URIRef("https://example.invalid/resource/unlabeled")
+        fragment = URIRef("https://example.invalid/schema#Mechanic")
+        self.graph.add((EX.rubick, EX.related, unknown))
+        self.graph.add((EX.rubick, RDFS.label, Literal("Rubick", lang="en")))
+        self.graph.add((unknown, EX.kind, fragment))
+        path = self.query_file('''
+            PREFIX ex: <urn:stat:>
+            SELECT ?hero ?other ?kind ?value WHERE {
+                ?hero ex:value ?value ; ex:related ?other .
+                ?other ex:kind ?kind .
+            }
+        ''')
+        for output_format in ("table", "json", "csv"):
+            with self.subTest(output_format=output_format):
+                output = io.StringIO()
+                with patch("dota_kg.ontology.load_ontology", return_value=self.graph):
+                    count = run_query(path, directory=self.ontology, output_format=output_format,
+                                      output=output, progress=io.StringIO())
+                self.assertEqual(count, 1)
+                text = output.getvalue()
+                if output_format == "table":
+                    cells = [cell.strip() for cell in text.splitlines()[2].split(" | ")]
+                    self.assertEqual(cells, ["Рубик", "unlabeled", "Mechanic", "0"])
+                    self.assertNotIn("https://", text)
+                    self.assertNotIn(str(EX.rubick), text)
+                else:
+                    self.assertIn(str(EX.rubick), text)
+                    self.assertIn(str(unknown), text)
+                    self.assertIn(str(fragment), text)
+
+    def test_table_keeps_literal_urls_and_escapes_multiline_labels(self):
+        self.graph.set((EX.rubick, RDFS.label, Literal("Рубик\nTelekinesis", lang="ru")))
+        path = self.query_file('''
+            PREFIX ex: <urn:stat:>
+            SELECT ?hero ?url WHERE {
+                ?hero ex:value ?value .
+                BIND("https://example.invalid/literal" AS ?url)
+            }
+        ''')
+        output = io.StringIO()
+        with patch("dota_kg.ontology.load_ontology", return_value=self.graph):
+            run_query(path, directory=self.ontology, output=output, progress=io.StringIO())
+        self.assertEqual(len(output.getvalue().splitlines()), 3)
+        self.assertIn("Рубик\\nTelekinesis", output.getvalue())
+        self.assertIn("https://example.invalid/literal", output.getvalue())
 
     def test_ask_json_preserves_both_boolean_outcomes(self):
         for value, expected in ((0, True), (1, False)):

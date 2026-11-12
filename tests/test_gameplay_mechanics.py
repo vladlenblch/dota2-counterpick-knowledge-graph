@@ -79,6 +79,12 @@ class GameplayMechanicsTests(unittest.TestCase):
             'lycan_wolf_bite': 'ANTI_HEAL',
             'lycan_summon_wolves': 'PERMANENT_SCALING',
             'item_black_king_bar': 'MAGIC_RESIST_REDUCTION',
+            'item_urn_of_shadows': 'SUSTAINED_AOE',
+            'item_spirit_vessel': 'SUSTAINED_AOE',
+            'item_mage_slayer': 'SUSTAINED_AOE',
+            'item_shivas_guard': 'MULTI_TARGET_ATTACK ANTI_HEAL',
+            'item_maelstrom': 'LEAP', 'item_mjollnir': 'LEAP',
+            'item_witch_blade': 'TRUE_STRIKE', 'item_devastator': 'TRUE_STRIKE',
         }
         for name, codes in rejected.items():
             with self.subTest(entity=name):

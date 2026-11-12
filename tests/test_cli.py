@@ -1,4 +1,4 @@
-"""CLI startup reports progress separately from JSON and handles cancellation."""
+"""Ask emits only its answer and handles cancellation and user errors."""
 import io
 import json
 import unittest
@@ -13,7 +13,7 @@ from dota_kg.ontology_schema import KG, RES
 
 
 class CliTests(unittest.TestCase):
-    def test_ask_json_keeps_progress_on_stderr(self):
+    def test_ask_json_has_no_progress_messages(self):
         graph = Graph()
         graph.add((RES["hero/109"], RDF.type, KG.Hero))
         graph.add((RES["hero/109"], RDFS.label, literal("Terrorblade")))
@@ -23,8 +23,8 @@ class CliTests(unittest.TestCase):
                 redirect_stdout(stdout), redirect_stderr(stderr):
             main()
         self.assertEqual(json.loads(stdout.getvalue())["status"], "no_data")
-        self.assertIn("Загрузка", stderr.getvalue())
-        self.assertIn("Готово", stderr.getvalue())
+        self.assertEqual(stderr.getvalue(), "")
+        self.assertNotIn("progress", loader.call_args.kwargs)
         self.assertTrue(loader.call_args.kwargs["cache"])
 
     def test_invalid_limit_does_not_load_graph(self):

@@ -4,7 +4,6 @@ from __future__ import annotations
 import argparse
 import json
 import sys
-import time
 from pathlib import Path
 
 def main():
@@ -34,22 +33,17 @@ def main():
     try:
         if args.command == "ask":
             from .common import ROOT
-            started = time.perf_counter()
-            progress = lambda message: print(message, file=sys.stderr, flush=True)
-            progress("Загрузка графа знаний...")
             from .ontology import load_ontology
             from .answers import KnowledgeBase, print_answer
             if args.limit < 1:
                 raise ValueError("Число вариантов должно быть положительным.")
-            graph = load_ontology(ROOT / "ontology", progress=progress, cache=True)
-            progress(f"Загружено {len(graph):,} троек за {time.perf_counter() - started:.1f} с. Поиск ответа...")
+            graph = load_ontology(ROOT / "ontology", cache=True)
             result = KnowledgeBase(graph).ask(args.question, limit=args.limit, own_items=args.with_item,
                                              enemy_items=args.enemy_item, level=args.level)
             if args.format == "json":
                 print(json.dumps(result, ensure_ascii=False, indent=2))
             else:
                 print_answer(result, sys.stdout)
-            progress(f"Готово за {time.perf_counter() - started:.1f} с.")
             return
         if args.command == "query":
             from .common import ROOT
