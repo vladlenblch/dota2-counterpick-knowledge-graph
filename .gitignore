@@ -7,3 +7,6 @@ data/raw/.*-*/
 /.ontology-*/
 /ontology/.cache/
 /*.egg-info/
+*.py[cod]
+/build/
+/dist/
