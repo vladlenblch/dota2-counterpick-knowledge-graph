@@ -8,7 +8,8 @@ import re
 from rdflib import Graph, RDF, RDFS, URIRef
 
 from .ontology import entity, literal
-from .ontology_schema import KG, RES, bind
+from .ontology_schema import (KG, RES, DISPEL_CODES, DISPELLABLE_DEBUFFS,
+                              DISPELLABLE_BUFFS, bind)
 
 SCOPES = {"self", "ally", "enemy", "area", "both"}
 CATEGORIES = {"control", "damage", "defense", "recovery", "support", "mobility",
@@ -124,20 +125,22 @@ def build_gameplay_mechanics(game, rows, legacy=None):
         graph.add((effect, RDFS.label, literal(title)))
         graph.add((effect, KG.effectMechanic, RES[f"mechanic/{fact['mechanic']}"]))
         graph.add((effect, KG.effectTarget, literal(fact["target_scope"])))
-        graph.add((effect, KG.effectStatus, literal("curated-description")))
         graph.add((effect, KG.evidence, literal(fact["evidence"])))
         graph.add((effect, RDFS.comment, literal(fact["detail_ru"])))
-        # Existing structured dispel requirements and melee restrictions remain
-        # attached to the refined description of the same mechanic.
+        code_value = game.value(owner, KG.dispellableCode)
+        if (fact['mechanic'] in DISPELLABLE_DEBUFFS or fact['mechanic'] in DISPELLABLE_BUFFS) and code_value is not None:
+            required = DISPEL_CODES.get(code_value.toPython())
+            if required is not None:
+                graph.add((effect, KG.requiredDispel, literal(required)))
+        # Preserve gameplay restrictions from coarse facts, such as melee cleave
+        # and positioning, without carrying technical review-status nodes.
         if legacy is not None:
             mechanic = RES[f"mechanic/{fact['mechanic']}"]
             for coarse in legacy.objects(owner, KG.hasEffect):
                 if legacy.value(coarse, KG.effectMechanic) != mechanic:
                     continue
-                for value in legacy.objects(coarse, KG.requiredDispel):
-                    graph.add((effect, KG.requiredDispel, value))
                 for condition in legacy.objects(coarse, KG.requiresCondition):
-                    if legacy.value(condition, KG.conditionKind) in {literal("has-mechanic"), literal("review")}:
+                    if legacy.value(condition, KG.conditionKind) in {literal("has-mechanic"), literal("gameplay")}:
                         graph.add((effect, KG.requiresCondition, condition))
         for requirement in conditions:
             condition = URIRef(f"{effect}/condition/{requirement['code']}")

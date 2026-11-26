@@ -7,7 +7,8 @@ from rdflib import Graph, RDF, RDFS
 
 from dota_kg.ontology import literal
 from dota_kg.ontology_interactions import build_interactions, validate_interactions
-from dota_kg.ontology_schema import KG, RES, schema_graph
+from dota_kg.ontology_mechanics import build_gameplay_mechanics
+from dota_kg.ontology_schema import KG, RES, DISPEL_CODES, schema_graph
 from dota_kg.ontology_validation import make_shapes
 from dota_kg.answers import KnowledgeBase
 from dota_kg.questions import Question
@@ -70,28 +71,26 @@ class InteractionTests(unittest.TestCase):
         self.assertEqual(enriched.value(requirement, KG.conditionItem), item)
         self.assertEqual(enriched.value(requirement, KG.conditionScope), literal("source"))
 
-    def test_explanation_query_retains_qualifications_and_target_equipment(self):
+    def test_explanation_query_retains_rule_evidence_and_item_blocker(self):
         owner = self.feature("STUN")
         bkb = self.item(2, "item_black_king_bar", "any negative effect from enemy spells has no effect")
         self.graph += build_interactions(self.graph)
-        context = RES["context/opponent"]
-        self.graph.add((context, KG.heldItem, bkb))
         rows = list(self.graph.query("""
             PREFIX kg: <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/ontology#>
-            SELECT ?source ?status ?qualification ?item WHERE {
+            SELECT ?source ?qualification ?item WHERE {
               ?source kg:hasEffect/kg:effectMechanic ?mechanic .
               ?rule kg:sourceMechanic ?mechanic ; kg:targetMechanic ?target ;
-                    kg:ruleStatus ?status ; kg:requiresCondition/kg:conditionText ?qualification ;
+                    kg:evidence ?qualification ;
                     kg:blockedByCondition/kg:conditionMechanic ?blocker .
-              ?context kg:heldItem ?item .
-              ?item kg:hasEffect/kg:effectMechanic ?blocker .
+              ?item a kg:Item ; kg:hasEffect/kg:effectMechanic ?blocker .
             }
         """))
         self.assertEqual(len(rows), 1)
         self.assertEqual(rows[0].source, owner)
-        self.assertEqual(str(rows[0].status), "heuristic")
         self.assertEqual(rows[0].item, bkb)
-        self.assertTrue(str(rows[0].qualification))
+        self.assertIn("Контроль должен попасть", str(rows[0].qualification))
+        rule = RES['counter-rule/STUN/CHANNELING']
+        self.assertFalse(list(self.graph.objects(rule, KG.requiresCondition)))
 
     def test_validation_rejects_invented_effects_or_lost_evidence(self):
         self.feature("STUN")
@@ -117,25 +116,89 @@ class InteractionTests(unittest.TestCase):
         self.graph.set((node, KG.conditionScope, literal("unknown")))
         self.assertFalse(validate(self.graph, shacl_graph=make_shapes())[0])
 
-    def test_official_dispel_codes_produce_concrete_requirements(self):
-        owner = self.feature("STUN")
-        self.graph.add((owner, KG.internalName, literal("lion_impale")))
-        for code, expected in ((1, "Strong"), (2, "Basic"), (3, "None")):
-            with self.subTest(code=code):
-                self.graph.set((owner, KG.dispellableCode, literal(code)))
-                enriched = build_interactions(self.graph)
-                effect = enriched.value(owner, KG.hasEffect)
-                self.assertEqual(enriched.value(effect, KG.requiredDispel), literal(expected))
+    def test_official_dispel_codes_cover_unnamed_debuffs_and_buffs(self):
+        for mechanic in ('STUN', 'ROOT', 'SLOW', 'ARMOR_BUFF', 'EVASION'):
+            for code, expected in DISPEL_CODES.items():
+                with self.subTest(mechanic=mechanic, code=code):
+                    self.graph = schema_graph()
+                    owner = self.feature(mechanic)
+                    self.graph.add((owner, KG.internalName, literal('unlisted_ability')))
+                    self.graph.add((owner, KG.dispellableCode, literal(code)))
+                    enriched = build_interactions(self.graph)
+                    effect = RES['ability/1/effect/' + mechanic]
+                    self.assertEqual(enriched.value(effect, KG.requiredDispel), literal(expected))
 
-    def test_scythe_preferences_do_not_forbid_carries_and_bfury_requires_melee(self):
+    def test_unknown_dispellability_and_unrelated_effects_stay_unknown(self):
+        for mechanic, code in (('ROOT', 0), ('ROOT', None), ('AOE_DAMAGE', 2)):
+            with self.subTest(mechanic=mechanic, code=code):
+                self.graph = schema_graph()
+                owner = self.feature(mechanic)
+                self.graph.add((owner, KG.dispelType, literal('Strong')))
+                if code is not None:
+                    self.graph.add((owner, KG.dispellableCode, literal(code)))
+                enriched = build_interactions(self.graph)
+                effect = RES['ability/1/effect/' + mechanic]
+                self.assertIsNone(enriched.value(effect, KG.requiredDispel))
+
+    def test_detailed_effect_decodes_its_source_flag_and_keeps_gameplay_conditions(self):
+        owner = RES['ability/1']
+        for prop, value in ((RDF.type, KG.Ability), (RDFS.label, literal('Root spell')),
+                            (KG.dispellableCode, literal(2))):
+            self.graph.add((owner, prop, value))
+        coarse, condition = RES['effect/coarse'], RES['condition/positioning']
+        legacy = Graph()
+        for subject, prop, target in ((owner, KG.hasEffect, coarse),
+                (coarse, KG.effectMechanic, RES['mechanic/ROOT']),
+                (coarse, KG.requiredDispel, literal('Strong')),
+                (coarse, KG.requiresCondition, condition),
+                (condition, KG.conditionKind, literal('gameplay'))):
+            legacy.add((subject, prop, target))
+        rows = {
+            'abilities': [{'ability_id': 1, 'description': 'Roots the enemy.', 'raw': '{}'}],
+            'mechanic_catalog': [{'mechanic': 'ROOT', 'label_ru': 'Обездвиживание', 'category': 'control'}],
+            'gameplay_mechanics': [{'entity_kind': 'ability', 'entity_id': 1, 'mechanic': 'ROOT',
+                'target_scope': 'enemy', 'variant': 'base', 'requirements': '[]',
+                'detail_ru': 'Обездвиживает противника.', 'evidence': 'Roots the enemy.',
+                'evidence_field': 'description'}],
+        }
+        detailed = build_gameplay_mechanics(self.graph, rows, legacy=legacy)
+        effect = detailed.value(owner, KG.hasEffect)
+        self.assertEqual(detailed.value(effect, KG.requiredDispel), literal('Basic'))
+        self.assertIn((effect, KG.requiresCondition, condition), detailed)
+        self.graph.set((owner, KG.dispellableCode, literal(0)))
+        detailed = build_gameplay_mechanics(self.graph, rows, legacy=legacy)
+        self.assertIsNone(detailed.value(effect, KG.requiredDispel))
+
+    def test_counter_rules_do_not_require_review_nodes(self):
+        rule = RES['rule/test']
+        for mechanic in (RES['mechanic/STUN'], RES['mechanic/CHANNELING']):
+            self.graph.add((mechanic, RDF.type, KG.Mechanic))
+        for prop, value in ((RDF.type, KG.CounterRule),
+                            (KG.sourceMechanic, RES['mechanic/STUN']),
+                            (KG.targetMechanic, RES['mechanic/CHANNELING']),
+                            (KG.evidence, literal('Оглушение прерывает поддерживаемую способность.'))):
+            self.graph.add((rule, prop, value))
+        self.assertTrue(validate(self.graph, shacl_graph=make_shapes())[0])
+
+    def test_positioning_conditions_remain_gameplay_facts(self):
+        owner = RES['ability/shackle']
+        for prop, value in ((RDF.type, KG.Ability), (RDFS.label, literal('Shackleshot')),
+                            (KG.internalName, literal('windrunner_shackleshot')),
+                            (KG.description, literal('If no unit or tree is present, applies a short stun.'))):
+            self.graph.add((owner, prop, value))
+        enriched = build_interactions(self.graph)
+        effect = enriched.value(owner, KG.hasEffect)
+        condition = enriched.value(effect, KG.requiresCondition)
+        self.assertEqual(enriched.value(condition, KG.conditionKind), literal('gameplay'))
+        self.assertIn('tree', str(enriched.value(condition, KG.conditionText)))
+        self.assertFalse(list(enriched.subjects(KG.conditionKind, literal('review'))))
+
+    def test_item_effects_preserve_melee_condition_without_role_priorities(self):
         bfury = self.item(145, "item_bfury", "Cleave (Melee Only)")
         scythe = self.item(96, "item_sheepstick", "Turns a unit harmless. Instantly destroys illusions.")
         enriched = build_interactions(self.graph)
-        scythe_roles = {str(enriched.value(p, KG.roleName)): int(enriched.value(p, KG.preferenceRank))
-                        for p in enriched.subjects(KG.item, scythe)}
-        self.assertEqual(scythe_roles, {"support": 3, "core": 2, "carry": 1})
-        preference = next(enriched.subjects(KG.item, bfury))
-        self.assertEqual(enriched.value(preference, KG.attackType), literal("Melee"))
+        self.assertTrue(list(enriched.objects(scythe, KG.hasEffect)))
+        self.assertFalse(list(enriched.subjects(KG.item, scythe)))
         requirement = enriched.value(enriched.value(bfury, KG.hasEffect), KG.requiresCondition)
         self.assertEqual(enriched.value(requirement, KG.conditionMechanic), RES["mechanic/MELEE"])
 

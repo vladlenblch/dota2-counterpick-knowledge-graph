@@ -29,7 +29,6 @@ class AnswerTests(unittest.TestCase):
         self.rule = self.node("rule/aoe", KG.CounterRule, "Area against illusions")
         self.add(self.rule, KG.sourceMechanic, RES["mechanic/AOE_DAMAGE"])
         self.add(self.rule, KG.targetMechanic, RES["mechanic/CREATES_ILLUSIONS"])
-        self.add(self.rule, KG.ruleStatus, literal("heuristic"))
         self.add(self.rule, KG.ruleWeight, literal(1.))
         self.add(self.rule, KG.ruleFamily, literal('units'))
         self.add(self.rule, KG.sourceEffectTarget, literal('enemy'))
@@ -113,11 +112,11 @@ class AnswerTests(unittest.TestCase):
         self.assertEqual(result["answers"][0]["target_abilities"], [str(self.target)])
         self.assertEqual(result["notes"], [])
 
-    def test_rule_review_messages_are_hidden_but_gameplay_conditions_and_graph_facts_remain(self):
+    def test_blocker_reminders_are_hidden_but_gameplay_conditions_and_graph_facts_remain(self):
         boilerplate = 'Урон по области — кандидат; достаточность урона и стойкость иллюзий не оценены.'
-        review = self.node('condition/review', KG.InteractionCondition, 'Review')
-        self.add(self.rule, KG.requiresCondition, review)
-        self.add(review, KG.conditionKind, literal('review'))
+        review = self.node('condition/blocker', KG.InteractionCondition, 'Blocker')
+        self.add(self.rule, KG.blockedByCondition, review)
+        self.add(review, KG.conditionKind, literal('gameplay'))
         self.add(review, KG.conditionText, literal(boilerplate))
         item = self.node('condition/item', KG.InteractionCondition, 'Upgrade required')
         self.add(self.effect, KG.requiresCondition, item)
@@ -128,7 +127,7 @@ class AnswerTests(unittest.TestCase):
         self.add(item, KG.conditionScope, literal('source'))
         gameplay = self.node('condition/gameplay', KG.InteractionCondition, 'Positioning')
         self.add(self.effect, KG.requiresCondition, gameplay)
-        self.add(gameplay, KG.conditionKind, literal('review'))
+        self.add(gameplay, KG.conditionKind, literal('gameplay'))
         self.add(gameplay, KG.conditionText, literal('За целью должно быть дерево.'))
         result = self.ask('кто контрит ПЛ на миде', own_items=(shard,))
         self.assertNotIn(boilerplate, json.dumps(result, ensure_ascii=False))
@@ -184,9 +183,11 @@ class AnswerTests(unittest.TestCase):
 
     def test_dispel_answer_uses_only_conditions_of_the_dispel_effect(self):
         self.add(self.effect, KG.requiredDispel, literal('Strong'))
+        self.graph.set((self.effect, KG.effectMechanic, RES['mechanic/STUN']))
         cleanser = self.node('ability/cleanser', KG.Ability, 'Cleanser')
-        self.add(cleanser, KG.dispelTarget, literal('ally'))
-        self.effect_node(cleanser, 'STRONG_DISPEL')
+        self.add(RES[str(cleanser).split('resource/')[1] + '/effect/STRONG_DISPEL'], KG.effectTarget, literal('ally'))
+        dispel = self.effect_node(cleanser, 'STRONG_DISPEL')
+        self.graph.set((dispel, KG.effectTarget, literal('ally')))
         upgrade_heal = self.effect_node(cleanser, 'HEAL')
         condition = self.node('condition/heal-upgrade', KG.InteractionCondition, 'Upgrade')
         self.add(upgrade_heal, KG.requiresCondition, condition)
@@ -276,21 +277,6 @@ class AnswerTests(unittest.TestCase):
         self.assertNotIn('win_rate', json.dumps(result))
         self.assertNotIn('matches', json.dumps(result))
 
-    def test_legacy_item_priority_does_not_override_mechanical_value(self):
-        first = self.node('item/first', KG.Item, 'First item')
-        second = self.node('item/second', KG.Item, 'Second item')
-        for item in (first, second):
-            self.add(item, KG.isPurchasable, literal(True))
-            self.effect_node(item, 'AOE_DAMAGE')
-        before = self.ask('что купить Test candidate против ПЛ')['answers']
-        pref = self.node('preference/arbitrary', KG.ItemRolePreference, 'Old priority')
-        self.add(pref, KG.item, second)
-        self.add(pref, KG.roleName, literal('core'))
-        self.add(pref, KG.preferenceRank, literal(999))
-        after = self.ask('что купить Test candidate против ПЛ')['answers']
-        self.assertEqual([(r['item'], r['score']) for r in before],
-                         [(r['item'], r['score']) for r in after])
-
     def test_unknown_and_ambiguous_names_and_tasks_are_rejected(self):
         for question in ("кто контрит несуществующего героя", "какая сегодня погода", "почему ПЛ"):
             with self.subTest(question=question), self.assertRaises(ValueError):
@@ -317,12 +303,14 @@ class AnswerTests(unittest.TestCase):
 
     def test_dispel_uses_strength_and_scope(self):
         self.add(self.target_effect, KG.requiredDispel, literal("Strong"))
+        self.graph.set((self.target_effect, KG.effectMechanic, RES["mechanic/STUN"]))
+        self.graph.set((self.target_effect, KG.effectTarget, literal("enemy")))
         basic = self.node("item/basic", KG.Item, "Basic cleanser")
         strong = self.node("ability/strong", KG.Ability, "Strong cleanser")
         self.effect_node(basic, "BASIC_DISPEL")
         self.effect_node(strong, "STRONG_DISPEL")
-        self.add(basic, KG.dispelTarget, literal("self"))
-        self.add(strong, KG.dispelTarget, literal("ally"))
+        self.graph.set((RES["ability/strong/effect/STRONG_DISPEL"], KG.effectTarget, literal("ally")))
+        self.add(basic, KG.isPurchasable, literal(True))
         rows = self.ask("какие эффекты ПЛ можно снять")["answers"]
         self.assertEqual([r["cleanser"] for r in rows], [str(strong)])
 
@@ -342,6 +330,8 @@ class AnswerTests(unittest.TestCase):
     def test_immunity_and_enemy_item_activation_are_distinct(self):
         bkb = self.node("item/bkb", KG.Item, "Black King Bar")
         self.effect_node(bkb, "DEBUFF_IMMUNITY")
+        self.graph.set((self.effect, KG.effectMechanic, RES["mechanic/STUN"]))
+        self.graph.set((self.rule, KG.sourceMechanic, RES["mechanic/STUN"]))
         blocker = RES["condition/immunity"]
         self.add(self.rule, KG.blockedByCondition, blocker)
         self.add(blocker, KG.conditionMechanic, RES["mechanic/DEBUFF_IMMUNITY"])
@@ -354,7 +344,7 @@ class AnswerTests(unittest.TestCase):
         base = "как Test candidate контрит ПЛ если у противника BKB"
         row = self.ask(base)["answers"][0]
         self.assertIsNone(row["active"])
-        self.assertIn("уточните", row["answer"])
+        self.assertIn("Если эффект активен", row["answer"])
         self.assertNotIn(reminder, row["answer"])
         row = self.ask(base + " не активирован")["answers"][0]
         self.assertIs(row["active"], False)
@@ -364,21 +354,22 @@ class AnswerTests(unittest.TestCase):
         self.assertTrue(row["pierces"])
 
     def test_list_immunity_excludes_nonpiercing_but_specific_check_reports_false(self):
+        self.graph.set((self.target_effect, KG.effectMechanic, RES["mechanic/STUN"]))
+        self.graph.set((self.target_effect, KG.effectTarget, literal("enemy")))
         self.assertEqual(self.ask("какие способности ПЛ проходят сквозь BKB")["answers"], [])
         checked = self.ask("проходит ли Target spell сквозь BKB")["answers"]
         self.assertEqual([r["pierces"] for r in checked], [False])
         self.add(self.target, KG.piercesDebuffImmunity, literal(True))
         self.assertEqual([r["pierces"] for r in self.ask("какие способности ПЛ проходят сквозь BKB")["answers"]], [True])
 
-    def test_named_purchase_phase_requires_graph_preference(self):
+    def test_named_purchase_phase_uses_observed_purchase_timing(self):
         item = self.node("item/area", KG.Item, "Area item")
         self.add(item, KG.isPurchasable, literal(True))
         self.effect_node(item, "AOE_DAMAGE")
-        pref = self.node("preference/late", KG.ItemRolePreference, "Late preference")
-        self.add(pref, KG.item, item)
-        self.add(pref, KG.roleName, literal("carry"))
-        self.add(pref, KG.purchasePhase, literal("late"))
-        self.add(pref, KG.preferenceRank, literal(3))
+        observation = self.node('usage/late', KG.ItemUsageObservation, 'Late purchase')
+        for prop, value in ((KG.hero, self.hero), (KG.item, item), (KG.phase, literal('late')),
+                            (KG.usageCount, literal(10))):
+            self.add(observation, prop, value)
         self.assertFalse(self.ask("что купить Test candidate против ПЛ в начале игры")["answers"])
         self.assertTrue(self.ask("что купить Test candidate против ПЛ в поздней игре")["answers"])
         self.assertTrue(self.ask("что купить Test candidate против ПЛ")["answers"])

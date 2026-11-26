@@ -6,7 +6,8 @@ No closed-world assumption is made about missing effects or equipment.
 from rdflib import Graph, RDF, RDFS, URIRef
 
 from .ontology import literal
-from .ontology_schema import KG, RES, FEATURE_LABELS, bind
+from .ontology_schema import (KG, RES, FEATURE_LABELS, DISPEL_CODES,
+                              DISPELLABLE_DEBUFFS, DISPELLABLE_BUFFS, bind)
 
 
 EFFECT_CODES = {
@@ -53,28 +54,6 @@ ABILITY_EFFECTS = {
     "bloodseeker_thirst": [("DETECTION", "True Sight")],
 }
 
-# Valve's official tooltip renderer: 1=strong only, 2=yes, 3=no, 0=not specified.
-# https://www.dota2.com/public/javascript/dota_react/main.js
-DISPEL_CODES = {1: "Strong", 2: "Basic", 3: "None"}
-DISPEL_EFFECTS = {"lion_impale": {"STUN"}, "lion_voodoo": {"HEX"},
-                  "item_orchid": {"SILENCE"}, "item_bloodthorn": {"SILENCE"},
-                  "silencer_global_silence": {"SILENCE"}, "drow_ranger_wave_of_silence": {"SILENCE"},
-                  "ancient_apparition_ice_blast": {"ANTI_HEAL"}}
-DISPEL_TARGETS = {"item_manta": "self", "item_lotus_orb": "ally",
-                  "abaddon_aphotic_shield": "ally", "legion_commander_press_the_attack": "ally",
-                  "oracle_false_promise": "ally", "slark_dark_pact": "self", "item_satanic": "self"}
-
-# Authored purchase priorities, not restrictions on who can buy an item.
-# (role, phase, priority, required attack type). Position may be overridden in queries.
-ITEM_ROLE_PREFERENCES = {
-    "item_bfury": [("carry", "mid", 3, "Melee")],
-    "item_mjollnir": [("carry", "late", 3, None), ("core", "late", 3, None)],
-    "item_sheepstick": [("support", "late", 3, None), ("core", "late", 2, None), ("carry", "late", 1, None)],
-    "item_lotus_orb": [("support", "late", 3, None), ("core", "late", 2, None)],
-    "item_buckler": [("support", "early", 3, None), ("core", "early", 2, None)],
-    "item_assault": [("core", "late", 3, None), ("carry", "late", 2, None)],
-}
-
 # (source mechanic, target mechanic, qualification). All remain heuristic.
 COUNTER_RULES = [
     ("ARMOR_BUFF", "LOW_ARMOR", "Повышение брони компенсирует низкую броню; проверить величину бонуса, стадию игры и условия применения."),
@@ -98,15 +77,14 @@ COUNTER_RULES = [
     ("CHAIN_LIGHTNING", "CREATES_ILLUSIONS", "Chain Lightning procs can damage multiple illusions; it is not an instant-kill effect."),
 ]
 
-NEW_CLASSES = {KG.Effect, KG.Mechanic, KG.CounterRule, KG.InteractionCondition, KG.HeroContext, KG.ItemRolePreference}
+NEW_CLASSES = {KG.Effect, KG.Mechanic, KG.CounterRule, KG.InteractionCondition}
 NEW_PROPERTIES = {KG.hasEffect, KG.effectMechanic, KG.derivedFromFeatureValue,
                   KG.requiresCondition, KG.blockedByCondition, KG.conditionScope,
                   KG.conditionKind, KG.conditionText, KG.conditionItem,
-                  KG.conditionMechanic, KG.conditionTalent, KG.sourceMechanic,
-                  KG.targetMechanic, KG.ruleStatus, KG.effectStatus,
-                  KG.heldItem, KG.selectedTalent, KG.contextComplete, KG.requiredDispel,
-                  KG.purchasePhase, KG.preferenceRank, KG.dispelTarget, KG.featureMechanic, KG.rulePurpose, KG.effectTarget, KG.mechanicCategory,
-                  KG.ruleWeight, KG.ruleFamily, KG.sourceEffectTarget}
+                  KG.conditionMechanic, KG.sourceMechanic, KG.targetMechanic,
+                  KG.requiredDispel, KG.featureMechanic, KG.rulePurpose,
+                  KG.effectTarget, KG.mechanicCategory, KG.ruleWeight,
+                  KG.ruleFamily, KG.sourceEffectTarget}
 
 
 def build_interactions(game, rows=None):
@@ -134,18 +112,16 @@ def build_interactions(game, rows=None):
             graph.add((uri, KG.conditionMechanic, mechanic(target)))
         return uri
 
-    def effect(owner, code, evidence, status, observation=None):
+    def effect(owner, code, evidence, observation=None):
         uri = node(URIRef(str(owner) + "/effect/" + code), KG.Effect,
                    f"{game.value(owner, RDFS.label)}: {FEATURE_LABELS.get(code, code)}")
         graph.add((owner, KG.hasEffect, uri))
         graph.add((uri, KG.effectMechanic, mechanic(code)))
         graph.add((uri, KG.evidence, literal(evidence)))
-        graph.add((uri, KG.effectStatus, literal(status)))
         if observation is not None:
             graph.add((uri, KG.derivedFromFeatureValue, observation))
-        name = str(game.value(owner, KG.internalName))
         code_value = game.value(owner, KG.dispellableCode)
-        if code in DISPEL_EFFECTS.get(name, set()) and code_value is not None:
+        if (code in DISPELLABLE_DEBUFFS or code in DISPELLABLE_BUFFS) and code_value is not None:
             required = DISPEL_CODES.get(code_value.toPython())
             if required is not None:
                 graph.add((uri, KG.requiredDispel, literal(required)))
@@ -153,7 +129,7 @@ def build_interactions(game, rows=None):
             graph.add((uri, KG.requiresCondition, condition(uri, "melee", "has-mechanic",
                 "Cleave требует атак ближнего боя.", "source", target="MELEE")))
         if code == "RETALIATORY_LIGHTNING":
-            graph.add((uri, KG.requiresCondition, condition(uri, "static-charge", "review",
+            graph.add((uri, KG.requiresCondition, condition(uri, "static-charge", "gameplay",
                 "Наложить Static Charge на атакуемую цель; ответные молнии срабатывают с вероятностью.", "source")))
         for prop, name in ((KG.grantedByScepter, "item_ultimate_scepter"),
                            (KG.grantedByShard, "item_aghanims_shard")):
@@ -173,7 +149,7 @@ def build_interactions(game, rows=None):
         if code not in EFFECT_CODES or value is None or value.toPython() <= 0:
             continue
         for owner in game.objects(observation, KG.supportedByAbility):
-            effect(owner, code, str(game.value(observation, KG.evidence)), "feature-derived", observation)
+            effect(owner, code, str(game.value(observation, KG.evidence)), observation)
 
     for owner in sorted(game.subjects(RDF.type, KG.Item), key=str):
         name = str(game.value(owner, KG.internalName))
@@ -190,19 +166,10 @@ def build_interactions(game, rows=None):
                 if not armor:
                     raise ValueError("Lotus Orb armor bonus needs review")
                 evidence += "; bonus_armor = " + ", ".join(armor)
-            effect(owner, code, evidence, "curated-description")
+            effect(owner, code, evidence)
         dispel = str(game.value(owner, KG.dispelType) or "")
         if dispel in {"Basic", "Strong"}:
-            effect(owner, dispel.upper() + "_DISPEL", description, "structured-description")
-        for role, phase, priority, attack in ITEM_ROLE_PREFERENCES.get(name, []):
-            preference = node(URIRef(str(owner) + f"/preference/{role}/{phase}"), KG.ItemRolePreference,
-                              f"{name}: {role}, {phase}")
-            for prop, value in ((KG.item, owner), (KG.roleName, literal(role)),
-                                (KG.purchasePhase, literal(phase)), (KG.preferenceRank, literal(priority)),
-                                (KG.evidence, literal("Авторский приоритет покупки по роли, стадии и механике предмета."))):
-                graph.add((preference, prop, value))
-            if attack:
-                graph.add((preference, KG.attackType, literal(attack)))
+            effect(owner, dispel.upper() + "_DISPEL", description)
 
     for owner in sorted(game.subjects(RDF.type, KG.Ability), key=str):
         name = str(game.value(owner, KG.internalName))
@@ -210,29 +177,22 @@ def build_interactions(game, rows=None):
         for code, phrase in ABILITY_EFFECTS.get(name, []):
             if phrase.casefold() not in description.casefold():
                 raise ValueError(f"Ability effect needs review after description change: {name}/{code}")
-            effect(owner, code, description, "curated-description")
+            effect(owner, code, description)
             uri = URIRef(str(owner) + "/effect/" + code)
             if code == "BASE_ARMOR_BYPASS":
-                graph.add((uri, KG.requiresCondition, condition(uri, "positioning", "review",
+                graph.add((uri, KG.requiresCondition, condition(uri, "positioning", "gameplay",
                     "Learn Marksmanship and keep every enemy hero outside its disable range. Procs ignore base armor only.", "source")))
             if name == "windrunner_shackleshot":
-                graph.add((uri, KG.requiresCondition, condition(uri, "shackle", "review",
+                graph.add((uri, KG.requiresCondition, condition(uri, "shackle", "gameplay",
                     "A unit or tree behind the target enables the full stun; otherwise only the short stun applies.", "target")))
-
-    for owner, name in game.subject_objects(KG.internalName):
-        if str(name) in DISPEL_TARGETS:
-            graph.add((owner, KG.dispelTarget, literal(DISPEL_TARGETS[str(name)])))
 
     for source, target, qualification in COUNTER_RULES:
         rule = node(RES[f"counter-rule/{source}/{target}"], KG.CounterRule,
                     f"{source} против {target}")
         graph.add((rule, KG.sourceMechanic, mechanic(source)))
         graph.add((rule, KG.targetMechanic, mechanic(target)))
-        graph.add((rule, KG.ruleStatus, literal("heuristic")))
         graph.add((rule, KG.rulePurpose, literal("compensate" if target == "LOW_ARMOR" else "counter")))
-        graph.add((rule, KG.evidence, literal("Авторское правило подбора кандидатов; не статистическое доказательство преимущества.")))
-        requirement = condition(rule, "applicability", "review", qualification)
-        graph.add((rule, KG.requiresCondition, requirement))
+        graph.add((rule, KG.evidence, literal(qualification)))
         if source in {"STUN", "HEX", "SILENCE", "ROOT"}:
             blocker = condition(rule, "immunity", "has-mechanic",
                                 "Невосприимчивость цели: проверить, проходит ли конкретный эффект сквозь неё.",
@@ -243,6 +203,10 @@ def build_interactions(game, rows=None):
         from .ontology_ranking import build_weighted_rules
         graph += build_gameplay_mechanics(game, rows, legacy=graph)
         graph += build_weighted_rules(graph, rows)
+    # The catalog supplies one human-readable mechanic name, not a second code label.
+    if rows:
+        for entry in rows.get('mechanic_catalog', ()):
+            graph.set((RES[f"mechanic/{entry['mechanic']}"], RDFS.label, literal(entry['label_ru'])))
     for feature in game.subjects(RDF.type, KG.Feature):
         code = str(game.value(feature, KG.identifier))
         represented = RES[f"mechanic/{code}"]

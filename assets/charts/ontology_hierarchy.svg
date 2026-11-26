@@ -147,7 +147,7 @@ L 659.07 188.6976
    </g>
    <g id="line2d_14">
     <path d="M 483.8976 195.74784
-L 483.8976 417.8304
+L 483.8976 407.25504
 " clip-path="url(#peb293b677c)" style="fill: none; stroke: #3869ae; stroke-width: 1.2; stroke-linecap: square"/>
    </g>
    <g id="line2d_15">
@@ -156,66 +156,56 @@ L 498.1248 216.89856
 " clip-path="url(#peb293b677c)" style="fill: none; stroke: #3869ae; stroke-width: 1.1; stroke-linecap: square"/>
    </g>
    <g id="line2d_16">
-    <path d="M 483.8976 242.01504
-L 498.1248 242.01504
+    <path d="M 483.8976 248.62464
+L 498.1248 248.62464
 " clip-path="url(#peb293b677c)" style="fill: none; stroke: #3869ae; stroke-width: 1.1; stroke-linecap: square"/>
    </g>
    <g id="line2d_17">
-    <path d="M 483.8976 267.13152
-L 498.1248 267.13152
+    <path d="M 483.8976 280.35072
+L 498.1248 280.35072
 " clip-path="url(#peb293b677c)" style="fill: none; stroke: #3869ae; stroke-width: 1.1; stroke-linecap: square"/>
    </g>
    <g id="line2d_18">
-    <path d="M 483.8976 292.248
-L 498.1248 292.248
+    <path d="M 483.8976 312.0768
+L 498.1248 312.0768
 " clip-path="url(#peb293b677c)" style="fill: none; stroke: #3869ae; stroke-width: 1.1; stroke-linecap: square"/>
    </g>
    <g id="line2d_19">
-    <path d="M 483.8976 317.36448
-L 498.1248 317.36448
+    <path d="M 483.8976 343.80288
+L 498.1248 343.80288
 " clip-path="url(#peb293b677c)" style="fill: none; stroke: #3869ae; stroke-width: 1.1; stroke-linecap: square"/>
    </g>
    <g id="line2d_20">
-    <path d="M 483.8976 342.48096
-L 498.1248 342.48096
+    <path d="M 483.8976 375.52896
+L 498.1248 375.52896
 " clip-path="url(#peb293b677c)" style="fill: none; stroke: #3869ae; stroke-width: 1.1; stroke-linecap: square"/>
    </g>
    <g id="line2d_21">
-    <path d="M 483.8976 367.59744
-L 498.1248 367.59744
+    <path d="M 483.8976 407.25504
+L 498.1248 407.25504
 " clip-path="url(#peb293b677c)" style="fill: none; stroke: #3869ae; stroke-width: 1.1; stroke-linecap: square"/>
    </g>
    <g id="line2d_22">
-    <path d="M 483.8976 392.71392
-L 498.1248 392.71392
-" clip-path="url(#peb293b677c)" style="fill: none; stroke: #3869ae; stroke-width: 1.1; stroke-linecap: square"/>
-   </g>
-   <g id="line2d_23">
-    <path d="M 483.8976 417.8304
-L 498.1248 417.8304
-" clip-path="url(#peb293b677c)" style="fill: none; stroke: #3869ae; stroke-width: 1.1; stroke-linecap: square"/>
-   </g>
-   <g id="line2d_24">
     <path d="M 703.53 188.6976
 L 881.37 188.6976
 " clip-path="url(#peb293b677c)" style="fill: none; stroke: #dce4ed; stroke-linecap: square"/>
    </g>
-   <g id="line2d_25">
+   <g id="line2d_23">
     <path d="M 706.1976 195.74784
 L 706.1976 280.35072
 " clip-path="url(#peb293b677c)" style="fill: none; stroke: #3869ae; stroke-width: 1.2; stroke-linecap: square"/>
    </g>
-   <g id="line2d_26">
+   <g id="line2d_24">
     <path d="M 706.1976 216.89856
 L 720.4248 216.89856
 " clip-path="url(#peb293b677c)" style="fill: none; stroke: #3869ae; stroke-width: 1.1; stroke-linecap: square"/>
    </g>
-   <g id="line2d_27">
+   <g id="line2d_25">
     <path d="M 706.1976 248.62464
 L 720.4248 248.62464
 " clip-path="url(#peb293b677c)" style="fill: none; stroke: #3869ae; stroke-width: 1.1; stroke-linecap: square"/>
    </g>
-   <g id="line2d_28">
+   <g id="line2d_26">
     <path d="M 706.1976 280.35072
 L 720.4248 280.35072
 " clip-path="url(#peb293b677c)" style="fill: none; stroke: #3869ae; stroke-width: 1.1; stroke-linecap: square"/>
@@ -1750,7 +1740,7 @@ z
    </g>
    <g id="text_15">
     <!-- Значение параметра -->
-    <g style="fill: #17263c" transform="translate(503.46 244.525868) scale(0.094 -0.094)">
+    <g style="fill: #17263c" transform="translate(503.46 251.135468) scale(0.094 -0.094)">
      <use xlink:href="#DejaVuSans-3ab"/>
      <use xlink:href="#DejaVuSans-3d1" transform="translate(64.109375 0)"/>
      <use xlink:href="#DejaVuSans-3c4" transform="translate(129.484375 0)"/>
@@ -1773,7 +1763,7 @@ z
    </g>
    <g id="text_16">
     <!-- Модификатор параметра -->
-    <g style="fill: #17263c" transform="translate(503.46 269.580661) scale(0.094 -0.094)">
+    <g style="fill: #17263c" transform="translate(503.46 282.799861) scale(0.094 -0.094)">
      <defs>
       <path id="DejaVuSans-3b0" d="M 628 4666
 L 1569 4666
@@ -1860,7 +1850,7 @@ z
    </g>
    <g id="text_17">
     <!-- Игровое примечание -->
-    <g style="fill: #17263c" transform="translate(503.46 294.697141) scale(0.094 -0.094)">
+    <g style="fill: #17263c" transform="translate(503.46 314.525941) scale(0.094 -0.094)">
      <use xlink:href="#DejaVuSans-3ac"/>
      <use xlink:href="#DejaVuSans-3c7" transform="translate(74.8125 0)"/>
      <use xlink:href="#DejaVuSans-3d4" transform="translate(127.359375 0)"/>
@@ -1882,68 +1872,8 @@ z
     </g>
    </g>
    <g id="text_18">
-    <!-- Приоритет покупки -->
-    <g style="fill: #17263c" transform="translate(503.46 314.549621) scale(0.094 -0.094)">
-     <defs>
-      <path id="DejaVuSans-3d7" d="M 2059 -325
-Q 1816 -950 1584 -1140
-Q 1353 -1331 966 -1331
-L 506 -1331
-L 506 -850
-L 844 -850
-Q 1081 -850 1212 -737
-Q 1344 -625 1503 -206
-L 1606 56
-L 191 3500
-L 800 3500
-L 1894 763
-L 2988 3500
-L 3597 3500
-L 2059 -325
-z
-" transform="scale(0.015625)"/>
-     </defs>
-     <use xlink:href="#DejaVuSans-3b3"/>
-     <use xlink:href="#DejaVuSans-3d4" transform="translate(75.203125 0)"/>
-     <use xlink:href="#DejaVuSans-3cc" transform="translate(138.6875 0)"/>
-     <use xlink:href="#DejaVuSans-3d2" transform="translate(203.671875 0)"/>
-     <use xlink:href="#DejaVuSans-3d4" transform="translate(264.859375 0)"/>
-     <use xlink:href="#DejaVuSans-3cc" transform="translate(328.34375 0)"/>
-     <use xlink:href="#DejaVuSans-3d6" transform="translate(393.328125 0)"/>
-     <use xlink:href="#DejaVuSans-3c9" transform="translate(451.578125 0)"/>
-     <use xlink:href="#DejaVuSans-3d6" transform="translate(513.109375 0)"/>
-     <use xlink:href="#DejaVuSans-3" transform="translate(571.359375 0)"/>
-     <use xlink:href="#DejaVuSans-3d3" transform="translate(603.140625 0)"/>
-     <use xlink:href="#DejaVuSans-3d2" transform="translate(668.515625 0)"/>
-     <use xlink:href="#DejaVuSans-3ce" transform="translate(729.703125 0)"/>
-     <use xlink:href="#DejaVuSans-3d7" transform="translate(790.109375 0)"/>
-     <use xlink:href="#DejaVuSans-3d3" transform="translate(849.296875 0)"/>
-     <use xlink:href="#DejaVuSans-3ce" transform="translate(914.671875 0)"/>
-     <use xlink:href="#DejaVuSans-3cc" transform="translate(975.078125 0)"/>
-    </g>
-    <!-- предмета по роли -->
-    <g style="fill: #17263c" transform="translate(503.46 324.283027) scale(0.094 -0.094)">
-     <use xlink:href="#DejaVuSans-3d3"/>
-     <use xlink:href="#DejaVuSans-3d4" transform="translate(65.375 0)"/>
-     <use xlink:href="#DejaVuSans-3c9" transform="translate(128.859375 0)"/>
-     <use xlink:href="#DejaVuSans-3c8" transform="translate(190.390625 0)"/>
-     <use xlink:href="#DejaVuSans-3d0" transform="translate(259.53125 0)"/>
-     <use xlink:href="#DejaVuSans-3c9" transform="translate(334.96875 0)"/>
-     <use xlink:href="#DejaVuSans-3d6" transform="translate(396.5 0)"/>
-     <use xlink:href="#DejaVuSans-3c4" transform="translate(454.75 0)"/>
-     <use xlink:href="#DejaVuSans-3" transform="translate(516.03125 0)"/>
-     <use xlink:href="#DejaVuSans-3d3" transform="translate(547.8125 0)"/>
-     <use xlink:href="#DejaVuSans-3d2" transform="translate(613.1875 0)"/>
-     <use xlink:href="#DejaVuSans-3" transform="translate(674.375 0)"/>
-     <use xlink:href="#DejaVuSans-3d4" transform="translate(706.15625 0)"/>
-     <use xlink:href="#DejaVuSans-3d2" transform="translate(769.640625 0)"/>
-     <use xlink:href="#DejaVuSans-3cf" transform="translate(830.828125 0)"/>
-     <use xlink:href="#DejaVuSans-3cc" transform="translate(894.75 0)"/>
-    </g>
-   </g>
-   <g id="text_19">
     <!-- Эффект способности или -->
-    <g style="fill: #17263c" transform="translate(503.46 339.890819) scale(0.094 -0.094)">
+    <g style="fill: #17263c" transform="translate(503.46 341.212739) scale(0.094 -0.094)">
      <defs>
       <path id="DejaVuSans-3c1" d="M 347 1019
 Q 1006 428 1806 428
@@ -1990,7 +1920,7 @@ z
      <use xlink:href="#DejaVuSans-3cc" transform="translate(1277.65625 0)"/>
     </g>
     <!-- предмета -->
-    <g style="fill: #17263c" transform="translate(503.46 349.399507) scale(0.094 -0.094)">
+    <g style="fill: #17263c" transform="translate(503.46 350.721427) scale(0.094 -0.094)">
      <use xlink:href="#DejaVuSans-3d3"/>
      <use xlink:href="#DejaVuSans-3d4" transform="translate(65.375 0)"/>
      <use xlink:href="#DejaVuSans-3c9" transform="translate(128.859375 0)"/>
@@ -2001,9 +1931,9 @@ z
      <use xlink:href="#DejaVuSans-3c4" transform="translate(454.75 0)"/>
     </g>
    </g>
-   <g id="text_20">
+   <g id="text_19">
     <!-- Условное правило -->
-    <g style="fill: #17263c" transform="translate(503.46 364.782581) scale(0.094 -0.094)">
+    <g style="fill: #17263c" transform="translate(503.46 372.714101) scale(0.094 -0.094)">
      <defs>
       <path id="DejaVuSans-3b7" d="M 2047 566
 Q 1981 409 1881 291
@@ -2041,7 +1971,7 @@ z
      <use xlink:href="#DejaVuSans-3d2" transform="translate(897.828125 0)"/>
     </g>
     <!-- противодействия -->
-    <g style="fill: #17263c" transform="translate(503.46 375.454518) scale(0.094 -0.094)">
+    <g style="fill: #17263c" transform="translate(503.46 383.386038) scale(0.094 -0.094)">
      <use xlink:href="#DejaVuSans-3d3"/>
      <use xlink:href="#DejaVuSans-3d4" transform="translate(65.375 0)"/>
      <use xlink:href="#DejaVuSans-3d2" transform="translate(128.859375 0)"/>
@@ -2059,9 +1989,9 @@ z
      <use xlink:href="#DejaVuSans-3e3" transform="translate(866.21875 0)"/>
     </g>
    </g>
-   <g id="text_21">
+   <g id="text_20">
     <!-- Условие взаимодействия -->
-    <g style="fill: #17263c" transform="translate(503.46 395.635264) scale(0.094 -0.094)">
+    <g style="fill: #17263c" transform="translate(503.46 410.176384) scale(0.094 -0.094)">
      <use xlink:href="#DejaVuSans-3b7"/>
      <use xlink:href="#DejaVuSans-3d5" transform="translate(60.9375 0)"/>
      <use xlink:href="#DejaVuSans-3cf" transform="translate(115.921875 0)"/>
@@ -2086,43 +2016,7 @@ z
      <use xlink:href="#DejaVuSans-3e3" transform="translate(1266.078125 0)"/>
     </g>
    </g>
-   <g id="text_22">
-    <!-- Контекст героя -->
-    <g style="fill: #17263c" transform="translate(503.46 420.279541) scale(0.094 -0.094)">
-     <defs>
-      <path id="DejaVuSans-3ae" d="M 628 4666
-L 1259 4666
-L 1259 2359
-L 3516 4666
-L 4325 4666
-L 2522 2822
-L 4419 0
-L 3731 0
-L 2113 2403
-L 1259 1531
-L 1259 0
-L 628 0
-L 628 4666
-z
-" transform="scale(0.015625)"/>
-     </defs>
-     <use xlink:href="#DejaVuSans-3ae"/>
-     <use xlink:href="#DejaVuSans-3d2" transform="translate(71 0)"/>
-     <use xlink:href="#DejaVuSans-3d1" transform="translate(132.1875 0)"/>
-     <use xlink:href="#DejaVuSans-3d6" transform="translate(197.5625 0)"/>
-     <use xlink:href="#DejaVuSans-3c9" transform="translate(255.8125 0)"/>
-     <use xlink:href="#DejaVuSans-3ce" transform="translate(317.34375 0)"/>
-     <use xlink:href="#DejaVuSans-3d5" transform="translate(377.75 0)"/>
-     <use xlink:href="#DejaVuSans-3d6" transform="translate(432.734375 0)"/>
-     <use xlink:href="#DejaVuSans-3" transform="translate(490.984375 0)"/>
-     <use xlink:href="#DejaVuSans-3c7" transform="translate(522.765625 0)"/>
-     <use xlink:href="#DejaVuSans-3c9" transform="translate(575.3125 0)"/>
-     <use xlink:href="#DejaVuSans-3d4" transform="translate(636.84375 0)"/>
-     <use xlink:href="#DejaVuSans-3d2" transform="translate(700.328125 0)"/>
-     <use xlink:href="#DejaVuSans-3e3" transform="translate(761.515625 0)"/>
-    </g>
-   </g>
-   <g id="text_23">
+   <g id="text_21">
     <!-- Статистика -->
     <g style="fill: #3869ae" transform="translate(703.53 133.279742) scale(0.114 -0.114)">
      <defs>
@@ -2160,7 +2054,7 @@ z
      <use xlink:href="#DejaVuSans-Bold-3c4" transform="translate(582.015625 0)"/>
     </g>
    </g>
-   <g id="text_24">
+   <g id="text_22">
     <!-- Statistics -->
     <g style="fill: #617187" transform="translate(703.53 176.35968) scale(0.085 -0.085)">
      <defs>
@@ -2208,7 +2102,7 @@ z
      <use xlink:href="#DejaVuSans-56" transform="translate(405.015625 0)"/>
     </g>
    </g>
-   <g id="text_25">
+   <g id="text_23">
     <!-- Общая статистика героя -->
     <g style="fill: #17263c" transform="translate(725.76 219.572419) scale(0.094 -0.094)">
      <defs>
@@ -2277,7 +2171,7 @@ z
      <use xlink:href="#DejaVuSans-3e3" transform="translate(1255.984375 0)"/>
     </g>
    </g>
-   <g id="text_26">
+   <g id="text_24">
     <!-- Статистика противостояния -->
     <g style="fill: #17263c" transform="translate(725.76 251.135468) scale(0.094 -0.094)">
      <use xlink:href="#DejaVuSans-3b5"/>
@@ -2307,9 +2201,28 @@ z
      <use xlink:href="#DejaVuSans-3e3" transform="translate(1442.625 0)"/>
     </g>
    </g>
-   <g id="text_27">
+   <g id="text_25">
     <!-- Популярность предмета -->
     <g style="fill: #17263c" transform="translate(725.76 282.799861) scale(0.094 -0.094)">
+     <defs>
+      <path id="DejaVuSans-3d7" d="M 2059 -325
+Q 1816 -950 1584 -1140
+Q 1353 -1331 966 -1331
+L 506 -1331
+L 506 -850
+L 844 -850
+Q 1081 -850 1212 -737
+Q 1344 -625 1503 -206
+L 1606 56
+L 191 3500
+L 800 3500
+L 1894 763
+L 2988 3500
+L 3597 3500
+L 2059 -325
+z
+" transform="scale(0.015625)"/>
+     </defs>
      <use xlink:href="#DejaVuSans-3b3"/>
      <use xlink:href="#DejaVuSans-3d2" transform="translate(75.203125 0)"/>
      <use xlink:href="#DejaVuSans-3d3" transform="translate(136.390625 0)"/>
@@ -2334,7 +2247,7 @@ z
     </g>
    </g>
   </g>
-  <g id="text_28">
+  <g id="text_26">
    <!-- Иерархия предметной области -->
    <g style="fill: #17263c" transform="translate(33.12 31.0425) scale(0.21 -0.21)">
     <defs>
@@ -2514,7 +2427,7 @@ z
     <use xlink:href="#DejaVuSans-Bold-3cc" transform="translate(1731.6875 0)"/>
    </g>
   </g>
-  <g id="text_29">
+  <g id="text_27">
    <!-- Четыре ветви классов и их игровые понятия -->
    <g style="fill: #617187" transform="translate(33.12 59.097539) scale(0.105 -0.105)">
     <defs>
@@ -2609,7 +2522,7 @@ z
     <use xlink:href="#DejaVuSans-3e3" transform="translate(2307.453125 0)"/>
    </g>
   </g>
-  <g id="text_30">
+  <g id="text_28">
    <!-- Оценки 9 ролей заданы свойствами героя. Талант наследует свойства способности. -->
    <g style="fill: #617187" transform="translate(33.12 452.592) scale(0.095 -0.095)">
     <defs>

@@ -26,37 +26,82 @@ def _check_local_query(value):
             _check_local_query(child)
 
 
-def _write_query_table(result, output, graph):
-    names = {}
+_FIELD_NAMES = {
+    'hero': 'Герой', 'enemy': 'Противник', 'name': 'Название', 'score': 'Балл',
+    'source': 'Источник эффекта', 'subject': 'Способность или предмет',
+    'ability': 'Способность', 'mechanic': 'Механика', 'rule': 'Правило',
+    'weight': 'Вес правила', 'targetMechanic': 'Механика противника',
+    'targetFact': 'Основание', 'evidence': 'Объяснение', 'targetEvidence': 'Объяснение цели',
+    'condition': 'Условие', 'requiredItem': 'Необходимый предмет',
+    'kind': 'Тип условия', 'scope': 'Участник', 'effect': 'Эффект',
+    'description': 'Описание', 'note': 'Примечание',
+}
+_VALUE_NAMES = {
+    'gameplay': 'Игровое условие', 'has-item': 'Наличие предмета',
+    'has-mechanic': 'Наличие механики', 'source': 'Наш герой', 'target': 'Противник',
+    'self': 'На себе', 'ally': 'На союзнике', 'enemy': 'На противнике',
+    'both': 'На себе или союзнике', 'area': 'В области',
+}
 
-    def cell(value):
+
+def _write_query_text(result, output, graph):
+    """Print independent wrapped records, retaining every projected binding."""
+    from textwrap import fill
+    from .localization import russian_text
+
+    names = {}
+    def cell(value, variable):
         if value is None:
-            return ""
+            return 'Нет значения'
         if isinstance(value, URIRef):
             if value not in names:
                 labels = [label for label in graph.objects(value, RDFS.label) if str(label)]
                 labels.sort(key=lambda label: (
-                    not (getattr(label, "language", None) or "").lower().startswith("ru"), str(label)))
-                local_name = str(value).rstrip("/#").rsplit("#", 1)[-1].rsplit("/", 1)[-1].rsplit(":", 1)[-1]
+                    not (getattr(label, 'language', None) or '').lower().startswith('ru'), str(label)))
+                local_name = str(value).rstrip('/#').rsplit('#', 1)[-1].rsplit('/', 1)[-1].rsplit(':', 1)[-1]
                 names[value] = str(labels[0]) if labels else local_name
             value = names[value]
-        return str(value).replace("\\", "\\\\").replace("\n", "\\n").replace("\r", "\\r").replace("\t", "\\t")
+        if isinstance(value, Literal) and isinstance(value.toPython(), bool):
+            return 'Да' if value.toPython() else 'Нет'
+        text = russian_text(value) if isinstance(value, Literal) else str(value)
+        if variable in {'evidence', 'targetEvidence', 'condition', 'rule'}:
+            text = russian_text(text)
+        if variable in {'scope', 'kind'}:
+            text = _VALUE_NAMES.get(text, text)
+        return ' '.join(text.split())
 
-    headers = [str(variable) for variable in result.vars]
-    rows = [[cell(binding.get(variable)) for variable in result.vars]
-            for binding in result.bindings]
-    widths = [max([len(header), *(len(row[index]) for row in rows)])
-              for index, header in enumerate(headers)]
-    render = lambda row: " | ".join(value.ljust(width) for value, width in zip(row, widths))
-    print(render(headers), file=output)
-    print("-+-".join("-" * width for width in widths), file=output)
-    for row in rows:
-        print(render(row), file=output)
-    return len(rows)
+    if not result.bindings:
+        print('В размеченных данных подходящих вариантов не найдено.', file=output)
+        return 0
+    answer_variable = next((v for v in result.vars if str(v) == 'answer'), None)
+    if answer_variable is not None:
+        answers = [row.get(answer_variable) for row in result.bindings]
+        if any(value is None for value in answers):
+            raise RuntimeError('Запрос оставил ?answer без значения')
+        for answer in answers:
+            print(fill('- ' + russian_text(answer), width=88, subsequent_indent='  '), file=output)
+        return len(answers)
+    for index, binding in enumerate(result.bindings, 1):
+        if index > 1:
+            print(file=output)
+        print(f'{index}.', file=output)
+        displayed = set()
+        for variable in result.vars:
+            value = binding.get(variable)
+            key = str(variable)
+            # Do not repeat a projected label or the same translated explanation.
+            text = cell(value, key)
+            if key in {'name', 'ability', 'targetEvidence'} and text in displayed:
+                continue
+            label = _FIELD_NAMES.get(key, key)
+            print(fill(f'{label}: {text}', width=88, initial_indent='   ',
+                       subsequent_indent='   '), file=output)
+            displayed.add(text)
+    return len(result.bindings)
 
 
 def run_query(query_file: Path, *, directory: Path,
-              output_format: str = "table", output=None, progress=None,
+              output_format: str = "text", output=None, progress=None,
               bindings=None, own_items=(), enemy_items=(), level=18) -> int:
     """Execute a saved query on the local game ontology."""
     from .ontology import load_ontology, turtle_bytes
@@ -66,7 +111,7 @@ def run_query(query_file: Path, *, directory: Path,
     path = Path(query_file).expanduser()
     if path.suffix.lower() not in (".rq", ".sparql"):
         raise RuntimeError("Откройте и сохраните SPARQL-файл с расширением .rq или .sparql")
-    if output_format not in ("text", "table", "json", "csv", "turtle"):
+    if output_format not in ("text", "json", "csv", "turtle"):
         raise RuntimeError(f"Неизвестный формат результата: {output_format}")
     try:
         text = path.read_text(encoding="utf-8-sig")
@@ -77,20 +122,16 @@ def run_query(query_file: Path, *, directory: Path,
         raise RuntimeError(f"Неверный SPARQL-запрос в {path}: {error}") from error
     _check_local_query(prepared.algebra)
     graph_query = prepared.algebra.name in ("ConstructQuery", "DescribeQuery")
-    if graph_query and output_format not in ("table", "turtle"):
+    if graph_query and output_format not in ("text", "turtle"):
         raise RuntimeError("Для CONSTRUCT и DESCRIBE используйте формат turtle")
     if not graph_query and output_format == "turtle":
         raise RuntimeError("Формат turtle предназначен для CONSTRUCT и DESCRIBE")
     if prepared.algebra.name == "AskQuery" and output_format == "csv":
-        raise RuntimeError("Для ASK используйте формат table или json")
-    if output_format == "text" and (
-            prepared.algebra.name != "SelectQuery"
-            or "answer" not in {str(v) for v in prepared.algebra.PV}):
-        raise RuntimeError("Для формата text нужен SELECT с переменной ?answer")
+        raise RuntimeError("Для ASK используйте формат text или json")
     started = time.perf_counter()
     print("Загрузка игровой модели...", file=progress, flush=True)
     try:
-        graph = load_ontology(directory)
+        graph = load_ontology(directory, cache=True)
         print(f"Загружено {len(graph):,} троек. Выполняется {path.name}...", file=progress, flush=True)
         from .questions import QuestionParser
         from .ontology_schema import KG
@@ -139,16 +180,6 @@ def run_query(query_file: Path, *, directory: Path,
         if graph_query:
             output.write(turtle_bytes(result.graph).decode("utf-8"))
             count = len(result.graph)
-        elif output_format == "text":
-            answer_variable = next(v for v in result.vars if str(v) == "answer")
-            answers = [row.get(answer_variable) for row in result.bindings]
-            if any(value is None for value in answers):
-                raise RuntimeError("Запрос оставил ?answer без значения")
-            if not answers:
-                print("В размеченных данных подходящих вариантов не найдено.", file=output)
-            for answer in answers:
-                print(f"- {answer}", file=output)
-            count = len(answers)
         elif output_format == "json":
             output.write(result.serialize(format="json").decode("utf-8"))
             count = 1 if result.type == "ASK" else len(result)
@@ -161,10 +192,10 @@ def run_query(query_file: Path, *, directory: Path,
                 writer.writerow(value.n3() if isinstance(value, BNode) else value for value in values)
             count = len(result)
         elif result.type == "ASK":
-            print("true" if result.askAnswer else "false", file=output)
+            print("Да." if result.askAnswer else "Нет.", file=output)
             count = 1
         else:
-            count = _write_query_table(result, output, query_graph)
+            count = _write_query_text(result, output, query_graph)
     except Exception as error:
         raise RuntimeError(f"Не удалось выполнить SPARQL-запрос: {error}") from error
     print(f"Результат: {count}. Время: {time.perf_counter() - started:.2f} с.", file=progress, flush=True)

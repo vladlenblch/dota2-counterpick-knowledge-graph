@@ -87,7 +87,7 @@ class RankingScenarios(unittest.TestCase):
             self.assertEqual(actual.family, row['family'])
             self.assertEqual(actual.scopes, frozenset(json.loads(row['source_scopes'])))
         report = json.loads((ROOT/'ontology/validation.json').read_text())
-        self.assertEqual(report['package_structure']['named_classes'], 23)
+        self.assertEqual(report['package_structure']['named_classes'], 21)
         self.assertTrue(report['conforms'])
 
     def test_four_queries_return_rdf_lineage_and_scores_match_text_search(self):

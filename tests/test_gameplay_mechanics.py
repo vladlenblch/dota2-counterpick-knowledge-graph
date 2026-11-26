@@ -169,6 +169,7 @@ class GameplayMechanicsTests(unittest.TestCase):
         owner = entity('ability', self.abilities['lion_impale']['ability_id'])
         game.add((owner, RDF.type, KG.Ability))
         game.add((owner, RDFS.label, literal('Earth Spike')))
+        game.add((owner, KG.dispellableCode, literal(1)))
         legacy = Graph()
         coarse = RES['effect/coarse-stun']
         legacy.add((owner, KG.hasEffect, coarse))
@@ -176,7 +177,7 @@ class GameplayMechanicsTests(unittest.TestCase):
         legacy.add((coarse, KG.requiredDispel, literal('Strong')))
         condition = RES['condition/positioning']
         legacy.add((coarse, KG.requiresCondition, condition))
-        legacy.add((condition, KG.conditionKind, literal('review')))
+        legacy.add((condition, KG.conditionKind, literal('gameplay')))
         detail = build_gameplay_mechanics(game, rows, legacy=legacy)
         effect = detail.value(owner, KG.hasEffect)
         self.assertEqual(detail.value(effect, KG.requiredDispel), literal('Strong'))

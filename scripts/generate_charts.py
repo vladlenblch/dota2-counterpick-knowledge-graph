@@ -537,7 +537,7 @@ def ontology_graph(graph):
         raise ValueError("Update the ontology graph routes for the changed class connections")
 
     fig = figure("Базовые классы и связи онтологии",
-                 f"{len(classes)} базовых классов; расширение эффектов и правил описано в docs/interactions.md", (17, 15))
+                 f"{len(classes)} базовых классов и их связи; эффекты и правила представлены в разделе онтологии README", (17, 15))
     ax = fig.add_axes([.07, .255, .87, .585])
     ax.set_xlim(-.115, 1.055)
     ax.set_ylim(-.025, .96)
