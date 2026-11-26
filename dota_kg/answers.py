@@ -97,11 +97,8 @@ class KnowledgeBase:
         for node in nodes:
             for prop in (KG.requiresCondition, KG.blockedByCondition):
                 for condition in sorted(self.graph.objects(node, prop), key=str):
-                    # Generic rule qualifications and blocker reminders are not
-                    # user instructions. CQ11 checks blockers directly in RDF.
                     if ((node, RDF.type, KG.CounterRule) in self.graph
-                            and (self.value(condition, KG.conditionKind) == "review"
-                                 or prop == KG.blockedByCondition)):
+                            and self.value(condition, KG.conditionKind) == "review"):
                         continue
                     text = self.value(condition, KG.conditionText)
                     if text:
@@ -192,6 +189,9 @@ class KnowledgeBase:
             if not details and not parameters:
                 continue
             text = " ".join(details)
+            values = "; ".join(f"{p['name']}={p['values']}" for p in parameters if p["values"])
+            if values:
+                text = (text + " Параметры: " + values).strip()
             if not text:
                 continue
             rows.append({"source": str(owner), "conditions": details, "parameters": parameters,
@@ -213,13 +213,9 @@ class KnowledgeBase:
         for hero in heroes:
             for app in self.ranking.applications(hero, q.enemy, focus=focus, needs=needs):
                 rows.append(self.application_row(app))
-        from .item_ranking import ItemRanking
-        for assessment in ItemRanking(self.ranking).rank(q.hero, q.enemy, position=q.role,
-                phase=q.phase, owner=q.item, focus=focus, needs=needs):
-            row = self.application_row(assessment.primary)
-            row['score'] = round(assessment.score, 6)
-            rows.append(row)
-        return sorted(rows, key=lambda r: (-r.get('score', r['mechanic_score']), r['source'], r['rule']))
+        for app in self.ranking.applications(q.hero, q.enemy, items=True, focus=focus, needs=needs):
+            rows.append(self.application_row(app))
+        return sorted(rows, key=lambda r: (-r['mechanic_score'], r['source'], r['rule']))
 
     def cq04(self, q):
         return self.mechanic_task(q, {'CHANNELING'})
@@ -258,6 +254,9 @@ class KnowledgeBase:
                     if not usable:
                         continue
                     conditions = self.conditions(*self.alternative_facts(usable))
+                    # A self dispel under hard disable cannot be assumed usable.
+                    if required == "Strong" and scope == "self":
+                        conditions.append("Проверить возможность применения под этим контролем; обычное нажатие предмета не гарантируется.")
                     rows.append({"source": str(owner), "effect": str(effect), "cleanser": str(cleanser),
                                  "required": required, "scope": scope, "conditions": conditions,
                                  "evidence": self.value(effect, KG.evidence),
@@ -270,22 +269,39 @@ class KnowledgeBase:
         return [{"ability": str(owner), "pierces": self.value(owner, KG.piercesDebuffImmunity) is True,
                  "answer": f"{self.label(owner)}: " + ("проходит сквозь невосприимчивость к эффектам."
                  if self.value(owner, KG.piercesDebuffImmunity) is True else
-                 "не проходит сквозь невосприимчивость к эффектам.")}
+                 "явного прохода сквозь невосприимчивость в графе нет; по принятому правилу — не проходит.")}
                 for owner in owners if q.subject or self.value(owner, KG.piercesDebuffImmunity) is True]
 
+    def item_priority(self, item, q):
+        role = {1: "carry", 2: "core", 3: "core", 4: "support", 5: "support"}.get(q.role)
+        preferences = []
+        phase_known = not q.phase
+        for pref in self.graph.subjects(KG.item, item):
+            if (pref, RDF.type, KG.ItemRolePreference) not in self.graph:
+                continue
+            if q.phase and self.value(pref, KG.purchasePhase) != q.phase:
+                continue
+            phase_known = True
+            if role and self.value(pref, KG.roleName) != role:
+                continue
+            attack = self.value(pref, KG.attackType)
+            if attack and attack != self.value(q.hero, KG.attackType):
+                continue
+            preferences.append(self.value(pref, KG.preferenceRank, 0))
+        return max(preferences, default=0) if phase_known else None
+
     def item_rows(self, q, purpose="counter"):
-        from .item_ranking import ItemRanking
         enemy = q.hero if purpose == "compensate" else q.enemy
         rows = []
-        for assessment in ItemRanking(self.ranking).rank(q.hero, enemy, position=q.role,
-                phase=q.phase, owner=q.item, purpose=purpose):
-            row = self.application_row(assessment.primary, item=str(assessment.item))
-            row.update(score=round(assessment.score, 6), mechanical_score=round(assessment.mechanical, 6),
-                       suitability=round(assessment.suitability, 6), timing=round(assessment.timing, 6))
+        for app in self.ranking.applications(q.hero, enemy, items=True, owner=q.item, purpose=purpose):
+            item = app.fact.owner
+            priority = self.item_priority(item, q)
+            if priority is None:
+                continue
+            row = self.application_row(app, item=str(item), priority=priority)
             row['answer'] = f"Для {self.label(q.hero)}: " + row['answer']
-            row['reasons'] = [self.application_row(app) for group in assessment.groups for app in group['applications']]
             rows.append(row)
-        return rows
+        return sorted(rows, key=lambda r: (-r['priority'], -r['mechanic_score'], r['item'], r['rule']))
 
     def cq09(self, q):
         return self.item_rows(q)
@@ -311,16 +327,16 @@ class KnowledgeBase:
                             continue
                         pierces = self.value(owner, KG.piercesDebuffImmunity) is True
                         if q.active is False:
-                            conclusion = "Предмет не активирован, его эффект не действует."
+                            conclusion = "Предмет не активирован: этот блокирующий эффект не применяем."
                         elif q.active is None:
                             conclusion = "Одного владения предметом недостаточно: уточните, действует ли его эффект."
                         elif block == RES["mechanic/DEBUFF_IMMUNITY"] and pierces:
-                            conclusion = "Способность проходит сквозь невосприимчивость к эффектам."
+                            conclusion = "Есть явный проход сквозь невосприимчивость: этот блокирующий эффект не исключает способность."
                         else:
-                            conclusion = "Активный эффект предмета ограничивает это противодействие."
+                            conclusion = "Активный эффект предмета ограничивает это противодействие; явного обхода в графе нет."
                         rows.append({"source": str(owner), "item": str(q.item), "rule": str(rule),
                                      "active": q.active, "pierces": pierces,
-                                     "answer": (f"{self.label(owner)} против {self.label(q.item)}: {conclusion} " + " ".join(self.conditions(effect, rule))).rstrip()})
+                                     "answer": f"{self.label(owner)} против {self.label(q.item)}: {conclusion} " + " ".join(self.conditions(effect, rule))})
         return rows
 
     def cq12(self, q):
@@ -338,13 +354,12 @@ class KnowledgeBase:
                               if list(self.graph.objects(p, series))]
                 granted = self.value(owner, KG.grantedByScepter if kind == "scepter" else KG.grantedByShard)
                 if text or parameters or granted is True:
-                    if not text and granted is not True:
-                        continue
-                    description = text or "Добавляет способность."
-                    upgrade_name = "Aghanim's Scepter" if kind == "scepter" else "Aghanim's Shard"
+                    detail = "; ".join(f"{p['name']}: база {p['base']}, ряд {kind} {p['upgraded']}" for p in parameters)
+                    if detail:
+                        detail += ". Итоговое значение не рассчитано: ряд улучшения может задавать модификатор."
                     rows.append({"ability": str(owner), "upgrade": kind, "evidence": text,
                                  "parameters": parameters, "grants_ability": granted is True,
-                                 "answer": f"{self.label(owner)}, {upgrade_name}: {description}"})
+                                 "answer": f"{self.label(owner)}, {kind}: {text or ''} {detail}".strip()})
             for parameter in sorted(self.graph.objects(owner, KG.hasParameter), key=str):
                 for modifier in sorted(self.graph.objects(parameter, KG.hasModifier), key=str):
                     talent = self.graph.value(modifier, KG.requiresTalent)
@@ -358,7 +373,7 @@ class KnowledgeBase:
                     rows.append({"ability": str(owner), "modifier": str(modifier), "upgrade": kind,
                                  "talent": str(talent) if talent else None, "value": value,
                                  "operation": self.value(modifier, KG.operation),
-                                 "answer": f"{self.label(owner)}: {name}."})
+                                 "answer": f"{self.label(owner)}: {name}; параметр {self.value(parameter, KG.parameterName)}, значение модификатора {value}, код операции {self.value(modifier, KG.operation)}."})
         return rows
 
     def ask(self, text, limit=3, *, own_items=(), enemy_items=(), level=18):
@@ -375,7 +390,6 @@ class KnowledgeBase:
                 self._own_items |= {q.item}
         self._ranking = None
         rows = getattr(self, f"cq{q.cq:02d}")(q)
-        # Select per role/entity rather than letting one hero's many effects fill the top.
         selected, counts, seen = [], {}, set()
         for row in rows:
             group = row.get("role", "all")

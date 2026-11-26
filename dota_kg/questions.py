@@ -71,7 +71,6 @@ def parse_role(text):
             if role not in ROLES:
                 raise ValueError("Номер позиции должен быть от 1 до 5.")
             matches.append((match.start(), match.end(), role))
-    # Prefer complete phrases such as 'hard support' over their 'support' substring.
     selected = []
     for start, end, role in sorted(matches, key=lambda m: (-(m[1] - m[0]), m[0])):
         if not any(start < b and end > a for a, b, _ in selected):
@@ -90,7 +89,6 @@ def alias_pattern(alias):
     words = normalize(alias).split()
     last = words[-1]
     if re.fullmatch(r"[а-я]{4,}", last):
-        # shortcut: common Russian case endings, not a general morphology engine.
         if last.endswith("а"):
             last = re.escape(last[:-1]) + r"(?:а|ы|е|у|ой|ою)"
         elif last[-1] not in "еиоуыэюяьй":
@@ -167,7 +165,6 @@ class QuestionParser:
         preferred_type = KG.Ability if re.search(r"способност|заклинани|умени", text) else KG.Hero
         found = self.entities(text, preferred_type)
         has_item = any((entity, RDF.type, KG.Item) in self.graph for _, _, entity in found)
-        # Routing order prevents e.g. an enemy BKB question being treated as CQ08.
         if re.search(r"кто контрит|кого взять|кто.*против|контрпик", text):
             cq = 1
         elif re.search(r"талант|аспект|аганим|септер|шард|scepter|shard", text):

@@ -50,7 +50,7 @@ def main():
         lines.extend("- " + row["answer"] for row in result["answers"])
         lines.extend(["", *result["notes"], ""])
     (directory / "competency-answers.md").write_text("\n".join(lines).rstrip() + "\n", encoding="utf-8")
-    print("\nПроверены 12 вопросов. Ответы: data/reports/competency-answers.md", flush=True)
+
 
 
 if __name__ == "__main__":

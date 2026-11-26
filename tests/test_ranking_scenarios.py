@@ -32,9 +32,9 @@ class RankingScenarios(unittest.TestCase):
         # Names belong to test expectations only, never to ranking code or queries.
         for enemy, position, expected in (
             ('Phantom Lancer', 1, ['Leshrac', 'Sven', 'Anti-Mage']),
-            ('Phantom Lancer', 2, ['Leshrac', 'Sand King', 'Earthshaker']),
+            ('Phantom Lancer', 2, ['Earthshaker', 'Leshrac', 'Sand King']),
             ('Phantom Lancer', 3, ['Axe', 'Sand King', 'Timbersaw']),
-            ('Phantom Lancer', None, ['Axe', 'Leshrac', 'Sven', 'Sand King', 'Earthshaker', 'Timbersaw']),
+            ('Phantom Lancer', None, ['Earthshaker', 'Axe', 'Leshrac', 'Sven', 'Sand King', 'Timbersaw']),
             ('Huskar', None, ['Viper', 'Necrophos', 'Ancient Apparition']),
             ('Bristleback', None, ['Viper', 'Legion Commander', 'Hoodwink']),
             ('Morphling', None, ['Ancient Apparition', 'Doom', 'Lion']),

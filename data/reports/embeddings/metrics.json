@@ -1,0 +1,217 @@
+{
+  "seed": 42,
+  "data_dates": [
+    "2026-10-07"
+  ],
+  "minimum_matches": 20,
+  "complex_dimensions": 32,
+  "epochs": {
+    "structural": 50,
+    "matchup": 45
+  },
+  "heroes": 127,
+  "structure": {
+    "rdf_triples": 599625,
+    "training_triples": 4508,
+    "validation_triples": 795,
+    "train_entities": 1348,
+    "validation_entities": 935,
+    "triples_by_relation": {
+      "abilityHasMechanic": 1881,
+      "featureMechanic": 51,
+      "hasAbility": 734,
+      "hasObservedFeature": 2103,
+      "itemHasMechanic": 430,
+      "countersMechanic": 80,
+      "purchaseCountersMechanic": 24
+    },
+    "metrics": {
+      "queries": 1590,
+      "MR": 104.48930817610064,
+      "MRR": 0.10899428548099471,
+      "Hits@1": 0.04968553459119497,
+      "Hits@3": 0.10440251572327044,
+      "Hits@10": 0.21446540880503145
+    }
+  },
+  "matchup_split": {
+    "train": {
+      "pairs": 8768,
+      "positive": 4736
+    },
+    "validation": {
+      "pairs": 1880,
+      "positive": 1035
+    },
+    "test": {
+      "pairs": 1880,
+      "positive": 1020
+    }
+  },
+  "clustering": {
+    "adjusted_rand_index": 0.03250820386356659,
+    "pca_explained_variance": [
+      0.06728097796440125,
+      0.054192397743463516
+    ]
+  },
+  "classification": {
+    "metrics": {
+      "majority_train": {
+        "accuracy": 0.5425531914893617,
+        "balanced_accuracy": 0.5,
+        "f1": 0.7034482758620689
+      },
+      "one_hot": {
+        "accuracy": 0.6404255319148936,
+        "balanced_accuracy": 0.6202918376652986,
+        "f1": 0.7211221122112211
+      },
+      "embeddings": {
+        "accuracy": 0.6893617021276596,
+        "balanced_accuracy": 0.6852713178294574,
+        "f1": 0.7192307692307692
+      }
+    },
+    "majority_class_train": 1,
+    "majority_frequency_test": 0.5425531914893617
+  },
+  "link_prediction": {
+    "validation": {
+      "complex": {
+        "queries": 1002,
+        "MR": 3.3552894211576847,
+        "MRR": 0.5135857627624094,
+        "Hits@1": 0.31137724550898205,
+        "Hits@3": 0.6187624750499002,
+        "Hits@10": 0.9720558882235529
+      },
+      "train_hero_frequency": {
+        "queries": 1002,
+        "MR": 2.683632734530938,
+        "MRR": 0.6142512455386707,
+        "Hits@1": 0.436127744510978,
+        "Hits@3": 0.7385229540918163,
+        "Hits@10": 0.9950099800399201
+      },
+      "mean_candidates": 7.730538922155689
+    },
+    "test": {
+      "complex": {
+        "queries": 987,
+        "MR": 3.2462006079027357,
+        "MRR": 0.5272184135271925,
+        "Hits@1": 0.3161094224924012,
+        "Hits@3": 0.6382978723404256,
+        "Hits@10": 0.977710233029382
+      },
+      "train_hero_frequency": {
+        "queries": 987,
+        "MR": 2.8206686930091185,
+        "MRR": 0.59449113772375,
+        "Hits@1": 0.4012158054711246,
+        "Hits@3": 0.7254305977710233,
+        "Hits@10": 0.9848024316109423
+      },
+      "mean_candidates": 8.043566362715298
+    }
+  },
+  "test_examples": {
+    "Phantom Lancer": [
+      {
+        "hero": "Shadow Fiend",
+        "score": 16.325000762939453,
+        "normalized_advantage": 0.11369774771170299,
+        "matches": 87
+      },
+      {
+        "hero": "Ringmaster",
+        "score": 14.22634506225586,
+        "normalized_advantage": -0.08565173939941939,
+        "matches": 25
+      },
+      {
+        "hero": "Clockwerk",
+        "score": 7.665378570556641,
+        "normalized_advantage": 0.10944881889763786,
+        "matches": 36
+      },
+      {
+        "hero": "Disruptor",
+        "score": 6.710243225097656,
+        "normalized_advantage": 0.07869536740603456,
+        "matches": 60
+      },
+      {
+        "hero": "Invoker",
+        "score": 5.871829032897949,
+        "normalized_advantage": -0.013541730078529268,
+        "matches": 55
+      }
+    ],
+    "Anti-Mage": [
+      {
+        "hero": "Shadow Fiend",
+        "score": 26.888120651245117,
+        "normalized_advantage": 0.10471786265423172,
+        "matches": 64
+      },
+      {
+        "hero": "Crystal Maiden",
+        "score": 23.997529983520508,
+        "normalized_advantage": 0.0983950556404134,
+        "matches": 34
+      },
+      {
+        "hero": "Sniper",
+        "score": 15.308629989624023,
+        "normalized_advantage": 0.11065504191159775,
+        "matches": 33
+      },
+      {
+        "hero": "Axe",
+        "score": 10.786633491516113,
+        "normalized_advantage": 0.01410411754059493,
+        "matches": 27
+      },
+      {
+        "hero": "Vengeful Spirit",
+        "score": 9.933671951293945,
+        "normalized_advantage": 0.026015516988164844,
+        "matches": 20
+      }
+    ],
+    "Crystal Maiden": [
+      {
+        "hero": "Hoodwink",
+        "score": 23.388681411743164,
+        "normalized_advantage": 0.12368073708381072,
+        "matches": 94
+      },
+      {
+        "hero": "Kez",
+        "score": 18.974498748779297,
+        "normalized_advantage": 0.10922301334561746,
+        "matches": 64
+      },
+      {
+        "hero": "Dazzle",
+        "score": 15.86760425567627,
+        "normalized_advantage": -0.02129190314458479,
+        "matches": 39
+      },
+      {
+        "hero": "Tusk",
+        "score": 10.453028678894043,
+        "normalized_advantage": 0.07683291990784225,
+        "matches": 99
+      },
+      {
+        "hero": "Undying",
+        "score": 7.589205265045166,
+        "normalized_advantage": 0.074487462046114,
+        "matches": 35
+      }
+    ]
+  }
+}

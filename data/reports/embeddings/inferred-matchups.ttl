@@ -1,0 +1,101 @@
+@prefix kg: <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/ontology#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/prediction/matchup/103/4> a rdf:Statement ;
+    rdf:object <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/hero/4> ;
+    rdf:predicate kg:hasPredictedAboveBaselineWinRateAgainst ;
+    rdf:subject <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/hero/103> ;
+    kg:predictionModel "ComplEx" ;
+    kg:predictionScore 1.516219e+01 .
+
+<https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/prediction/matchup/103/44> a rdf:Statement ;
+    rdf:object <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/hero/44> ;
+    rdf:predicate kg:hasPredictedAboveBaselineWinRateAgainst ;
+    rdf:subject <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/hero/103> ;
+    kg:predictionModel "ComplEx" ;
+    kg:predictionScore 4.922005e+00 .
+
+<https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/prediction/matchup/112/92> a rdf:Statement ;
+    rdf:object <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/hero/92> ;
+    rdf:predicate kg:hasPredictedAboveBaselineWinRateAgainst ;
+    rdf:subject <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/hero/112> ;
+    kg:predictionModel "ComplEx" ;
+    kg:predictionScore 7.44603e+00 .
+
+<https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/prediction/matchup/32/76> a rdf:Statement ;
+    rdf:object <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/hero/76> ;
+    rdf:predicate kg:hasPredictedAboveBaselineWinRateAgainst ;
+    rdf:subject <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/hero/32> ;
+    kg:predictionModel "ComplEx" ;
+    kg:predictionScore 1.073718e+01 .
+
+<https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/prediction/matchup/4/82> a rdf:Statement ;
+    rdf:object <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/hero/82> ;
+    rdf:predicate kg:hasPredictedAboveBaselineWinRateAgainst ;
+    rdf:subject <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/hero/4> ;
+    kg:predictionModel "ComplEx" ;
+    kg:predictionScore 1.221974e-01 .
+
+<https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/prediction/matchup/4/92> a rdf:Statement ;
+    rdf:object <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/hero/92> ;
+    rdf:predicate kg:hasPredictedAboveBaselineWinRateAgainst ;
+    rdf:subject <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/hero/4> ;
+    kg:predictionModel "ComplEx" ;
+    kg:predictionScore 8.868008e+00 .
+
+<https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/prediction/matchup/55/103> a rdf:Statement ;
+    rdf:object <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/hero/103> ;
+    rdf:predicate kg:hasPredictedAboveBaselineWinRateAgainst ;
+    rdf:subject <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/hero/55> ;
+    kg:predictionModel "ComplEx" ;
+    kg:predictionScore 8.475328e+00 .
+
+<https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/prediction/matchup/61/103> a rdf:Statement ;
+    rdf:object <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/hero/103> ;
+    rdf:predicate kg:hasPredictedAboveBaselineWinRateAgainst ;
+    rdf:subject <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/hero/61> ;
+    kg:predictionModel "ComplEx" ;
+    kg:predictionScore 3.713943e+00 .
+
+<https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/prediction/matchup/66/67> a rdf:Statement ;
+    rdf:object <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/hero/67> ;
+    rdf:predicate kg:hasPredictedAboveBaselineWinRateAgainst ;
+    rdf:subject <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/hero/66> ;
+    kg:predictionModel "ComplEx" ;
+    kg:predictionScore 1.308723e+01 .
+
+<https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/prediction/matchup/82/4> a rdf:Statement ;
+    rdf:object <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/hero/4> ;
+    rdf:predicate kg:hasPredictedAboveBaselineWinRateAgainst ;
+    rdf:subject <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/hero/82> ;
+    kg:predictionModel "ComplEx" ;
+    kg:predictionScore 2.584466e+00 .
+
+<https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/prediction/matchup/92/44> a rdf:Statement ;
+    rdf:object <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/hero/44> ;
+    rdf:predicate kg:hasPredictedAboveBaselineWinRateAgainst ;
+    rdf:subject <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/hero/92> ;
+    kg:predictionModel "ComplEx" ;
+    kg:predictionScore 6.803242e+00 .
+
+<https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/hero/112> kg:hasPredictedAboveBaselineWinRateAgainst <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/hero/92> .
+
+<https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/hero/32> kg:hasPredictedAboveBaselineWinRateAgainst <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/hero/76> .
+
+<https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/hero/55> kg:hasPredictedAboveBaselineWinRateAgainst <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/hero/103> .
+
+<https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/hero/61> kg:hasPredictedAboveBaselineWinRateAgainst <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/hero/103> .
+
+<https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/hero/66> kg:hasPredictedAboveBaselineWinRateAgainst <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/hero/67> .
+
+<https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/hero/82> kg:hasPredictedAboveBaselineWinRateAgainst <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/hero/4> .
+
+<https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/hero/92> kg:hasPredictedAboveBaselineWinRateAgainst <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/hero/44> .
+
+<https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/hero/103> kg:hasPredictedAboveBaselineWinRateAgainst <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/hero/4>,
+        <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/hero/44> .
+
+<https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/hero/4> kg:hasPredictedAboveBaselineWinRateAgainst <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/hero/82>,
+        <https://github.com/vladlenblch/dota2-counterpick-knowledge-graph/resource/hero/92> .
+

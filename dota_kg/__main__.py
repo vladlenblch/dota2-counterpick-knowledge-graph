@@ -24,6 +24,11 @@ def main():
     ask.add_argument("question", help="Например: кто контрит ПЛ на миде")
     ask.add_argument("--format", choices=("text", "json"), default="text")
     ask.add_argument("--limit", type=int, default=3, help="Вариантов на группу/вопрос, по умолчанию 3")
+    rank = sub.add_parser("rank", help="Общий топ контрпиков по взвешенным игровым механикам")
+    predict = sub.add_parser("predict", help="Показать сохранённые гипотезы ComplEx о матчапах")
+    for command in (rank, predict):
+        command.add_argument("opponent", help="Имя противника, например ВР или Windranger")
+        command.add_argument("--limit", type=int, default=5, help="Количество кандидатов")
     query.add_argument('--bind', action='append', default=[], help='Параметр запроса: имя=значение; можно повторять')
     for command in (ask, query):
         command.add_argument('--with-item', action='append', default=[], help='Предмет у нашего героя; можно повторять')
@@ -31,6 +36,34 @@ def main():
         command.add_argument('--level', type=int, default=18, help='Уровень для оценки запаса здоровья; по умолчанию 18')
     args = parser.parse_args()
     try:
+        if args.command in {"rank", "predict"}:
+            from rdflib import RDFS
+            from .common import ROOT
+            from .ontology import load_ontology
+            from .ontology_schema import KG
+            from .questions import QuestionParser
+
+            if args.limit < 1:
+                raise ValueError("Число вариантов должно быть положительным.")
+            graph = load_ontology(ROOT / "ontology", cache=True)
+            opponent = QuestionParser(graph).resolve_entity(args.opponent, KG.Hero)
+            if args.command == "predict":
+                from .embeddings import read_predictions
+
+                predictions = read_predictions(opponent)
+                if not predictions:
+                    print(f"Для {graph.value(opponent, RDFS.label)} нет сохранённых гипотез о матчапах.")
+                for hero, score in predictions[:args.limit]:
+                    print(f"{graph.value(hero, RDFS.label)} — прогноз винрейта выше среднего (балл ComplEx {score:+.3f})")
+                return
+            from .ranking import RankingModel
+
+            results = RankingModel(graph, use_statistics=False).rank(opponent)
+            for position, result in enumerate(results[:args.limit], start=1):
+                name = graph.value(result.hero, RDFS.label)
+                ability = graph.value(result.primary.fact.owner, RDFS.label)
+                print(f"{position}. {name} — {ability}: {result.score:.3f}")
+            return
         if args.command == "ask":
             from .common import ROOT
             from .ontology import load_ontology
@@ -78,7 +111,7 @@ def main():
         parser.exit(1, f"В этом Python нет зависимости {error.name}. Запустите команду через .\\.venv\\Scripts\\python.exe или активируйте .venv.\n")
     except KeyboardInterrupt:
         parser.exit(130, "\nВыполнение отменено.\n")
-    except (RuntimeError, ValueError) as error:
+    except (RuntimeError, ValueError, FileNotFoundError) as error:
         parser.exit(1, f"{error}\n")
     print(json.dumps(result, ensure_ascii=False, indent=2))
 

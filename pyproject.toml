@@ -1,0 +1,18 @@
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "dota-kg"
+version = "0.1.0"
+requires-python = ">=3.10"
+dynamic = ["dependencies"]
+
+[project.scripts]
+dota_kg = "dota_kg.__main__:main"
+
+[tool.setuptools.packages.find]
+include = ["dota_kg"]
+
+[tool.setuptools.dynamic]
+dependencies = {file = ["requirements.txt"]}

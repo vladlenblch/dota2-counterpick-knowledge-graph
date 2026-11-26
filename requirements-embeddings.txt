@@ -1,0 +1,5 @@
+-r requirements.txt
+numpy>=2,<3
+scikit-learn>=1.8,<2
+torch>=2.10,<3
+xgboost>=3.2,<4

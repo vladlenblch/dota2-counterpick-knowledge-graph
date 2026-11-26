@@ -6,3 +6,4 @@ data/raw/.*-*/
 .env
 /.ontology-*/
 /ontology/.cache/
+/*.egg-info/

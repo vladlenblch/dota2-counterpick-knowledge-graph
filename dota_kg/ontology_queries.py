@@ -134,7 +134,6 @@ def run_query(query_file: Path, *, directory: Path,
                     position=bound['position'].toPython() if 'position' in bound else None,
                     phase=str(bound['phase']) if 'phase' in bound else None))
             result = query_graph.query(prepared, initBindings=bound)
-            # Materialize SELECT/ASK/graph results before unregistering functions.
             if result.type == 'SELECT':
                 result.bindings = list(result.bindings)
         if graph_query:

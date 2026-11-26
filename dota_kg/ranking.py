@@ -77,7 +77,7 @@ class Assessment:
 
 
 class RankingModel:
-    def __init__(self, graph, *, own_items=(), enemy_items=(), level=DEFAULT_LEVEL):
+    def __init__(self, graph, *, own_items=(), enemy_items=(), level=DEFAULT_LEVEL, use_statistics=True):
         if not 1 <= level <= 30:
             raise ValueError("Уровень для сравнения должен быть от 1 до 30.")
         self.graph = graph
@@ -163,10 +163,11 @@ class RankingModel:
         for rule in self.rules:
             self.rules_by_source[rule.source].append(rule)
         self.matchups = {}
-        for hero in self.heroes:
-            for node in graph.objects(hero, KG.hasMatchup):
-                self.matchups[(hero, graph.value(node, KG.opponent))] = (
-                    self.value(node, KG.normalizedAdvantage), self.value(node, KG.matches, 0))
+        if use_statistics:
+            for hero in self.heroes:
+                for node in graph.objects(hero, KG.hasMatchup):
+                    self.matchups[(hero, graph.value(node, KG.opponent))] = (
+                        self.value(node, KG.normalizedAdvantage), self.value(node, KG.matches, 0))
         self._profiles = {}
         self._assessments = {}
         self._strength = {}
@@ -290,8 +291,8 @@ class RankingModel:
     def parameter_values(self, owner):
         return [(p, p["heading"], max(p["values"]) if p["values"] else 0) for p in self.parameters.get(owner, ())]
 
-    def strength(self, fact, hero, enemy, held):
-        key = fact.owner, fact.code, hero, enemy, frozenset(held)
+    def strength(self, fact, hero, enemy, held, illusion_count=0):
+        key = fact.owner, fact.code, hero, enemy, frozenset(held), illusion_count
         if key in self._strength:
             return self._strength[key]
         owner, code = fact.owner, fact.code
@@ -365,6 +366,10 @@ class RankingModel:
             value = .4 if thresholds else min(1.3, math.sqrt(max(amounts) / 160)) if amounts else .75
         elif code == "BONUS_DAMAGE_PER_TARGET":
             amounts = [v for p, h, v in ps if h.rstrip(':') in {"ECHO DAMAGE", "DAMAGE PER CREEP", "DAMAGE PER UNIT"} and v > 0]
+            echoes = [v for p, h, v in ps if h.rstrip(':') == "ECHO DAMAGE" and v > 0]
+            # Each nearby illusion hit can emit an echo. The existing strength cap bounds the full-group estimate.
+            if echoes and illusion_count > 1:
+                amounts.append(max(echoes) * illusion_count)
             value = max(.4, min(1.6, math.sqrt(max(amounts) / 80))) if amounts else 1.
         elif code == "AOE_DAMAGE":
             amounts = [v for p, h, v in ps if h.rstrip(':') in {"DAMAGE", "INITIAL DAMAGE"} and not p["percentage"] and v > 0]
@@ -424,7 +429,13 @@ class RankingModel:
                 need = needs[rule.target]
                 if need.facts and not any(self.conditions_available(f, enemy_held, held) for f in need.facts):
                     continue
-                value = rule.weight * need.importance * self.strength(fact, hero, enemy, held)
+                illusion_count = 0
+                if fact.code == "BONUS_DAMAGE_PER_TARGET" and need.code == "GROUPED_UNITS":
+                    illusion_count = max((v for witness in need.facts if witness.code == "CREATES_ILLUSIONS"
+                                          and self.conditions_available(witness, enemy_held, held)
+                                          for p, heading, v in self.parameter_values(witness.owner)
+                                          if heading.rstrip(':') == "MAX ILLUSIONS"), default=0)
+                value = rule.weight * need.importance * self.strength(fact, hero, enemy, held, illusion_count)
                 if rule.family == "units" and fact.code in {"CLEAVE_DAMAGE", "MULTI_TARGET_ATTACK"} and "HIGH_ARMOR" in needs:
                     value *= .85
                 if rule.family == "control":
