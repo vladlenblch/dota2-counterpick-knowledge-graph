@@ -58,7 +58,6 @@ def split_structure(triples, rng):
     entity_counts = Counter(e for h, _, t in triples for e in (h, t))
     relation_counts = Counter(triples[:, 1])
     holdout = np.zeros(len(triples), dtype=bool)
-    # First cover as many entities as possible. Keep singleton entities and relations in train.
     uncovered = set(entity_counts)
     order = rng.permutation(len(triples))
     target = max(1, round(len(triples) * 0.15))
